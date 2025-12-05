@@ -1,0 +1,55 @@
+{
+  "name": "dash_uploader_uppy5",
+  "version": "0.1.0",
+  "description": "A modern Dash file uploader component powered by Uppy 5",
+  "main": "index.ts",
+"repository": {
+    "type": "git",
+    "url": "git://github.com/Ozx-68102/dash-uploader-uppy5.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ozx-68102/dash-uploader-uppy5/issues"
+  },
+  "homepage": "https://github.com/Ozx-68102/dash-uploader-uppy5",
+  "scripts": {
+    "build:js::dev": "webpack --mode development",
+    "build:js": "webpack",
+    "build:backends": "dash-generate-components ./src/ts/components dash_uploader_uppy5 -p package-info.json  --ignore \\.test\\.",
+    "build": "npm run build:js && npm run build:backends",
+    "watch": "npm run build:js::dev -- --watch",
+    "dist": "python -m build --sdist --wheel --outdir dist/",
+    "format":  "prettier --write src --ignore-path=.prettierignore"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "css-loader": "^7.1.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.7.4",
+    "react-docgen": "^8.0.2",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@uppy/core": "^5.2.0",
+    "@uppy/dashboard": "^5.1.0",
+    "@uppy/file-input": "^4.2.2",
+    "@uppy/golden-retriever": "^5.2.0",
+    "@uppy/progress-bar": "^4.3.2",
+    "@uppy/react": "^5.1.1",
+    "@uppy/xhr-upload": "^5.1.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "peerDependencies": {
+    "react": "16 - 19",
+    "react-dom": "16 - 19"
+  },
+  "author": "Zhixin Ou <ozx1072960726@gmail.com>",
+  "license": "MIT"
+}

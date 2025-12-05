@@ -1,0 +1,2 @@
+recursive-include dash_uploader_uppy5/** *.js *.css *.json *.html
+prune tests

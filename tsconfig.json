@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "jsx": "react",
+
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": true,
+    "noEmit": false,
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    "baseUrl": "src/ts",
+    "inlineSources": true
+  },
+  "include": ["src/ts/**/*", "webpack.config.ts"],
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "moduleResolution": "node",
+    }
+  }
+}
