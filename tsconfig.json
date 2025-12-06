@@ -4,12 +4,12 @@
     "lib": ["ES2024", "DOM", "DOM.Iterable"],
 
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsx": "react",
 
-    "outDir": "./dist",
+//    "outDir": "./dash_uploader_uppy5/dist",
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false,
     "noEmit": false,
 
     "strict": true,

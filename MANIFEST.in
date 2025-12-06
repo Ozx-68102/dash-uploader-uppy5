@@ -1,2 +1,8 @@
-recursive-include dash_uploader_uppy5/** *.js *.css *.json *.html
-prune tests
+include README.md
+include LICENSE
+include package.json
+
+recursive-include dash_uploader_uppy5/build *.js *.js.map *.json *.py
+
+global-exclude *.py[co]
+global-exclude __pycache__

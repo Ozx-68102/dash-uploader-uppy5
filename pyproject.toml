@@ -1,10 +1,23 @@
+[build-system]
+requires = ["setuptools >= 80.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "dash-uploader-uppy5"
 version = "0.1.0"
 description = "A modern Dash file uploader component powered by Uppy 5"
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "dash>=3.3.0",
+]
+
+[tool.setuptools]
+packages = ["dash_uploader_uppy5", "dash_uploader_uppy5.build"]
+
+[tool.setuptools.package-data]
+dash_uploader_uppy5 = ["build/**/*.js", "build/**/*.json"]
 
 [dependency-groups]
 dev = [

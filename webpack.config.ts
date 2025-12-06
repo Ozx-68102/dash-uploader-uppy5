@@ -1,21 +1,15 @@
 import path from 'path';
 import type {Configuration} from 'webpack';
-import packageJson from './package.json'
+import packageJson from './package.json';
 
 const dashLibraryName: string = packageJson.name.replace(/-/g, '_');
 
-declare global {
-  interface Window {
-    _lastElementInsertedByStyleLoader: HTMLElement | null
-  }
-}
-
-export default (_env: Record<string, any> = {}, argv: Record<string, any> = {}): Configuration => {
+const config = (_env: Record<string, any> = {}, argv: Record<string, any> = {}): Configuration => {
   const mode: any = argv.mode || 'production';
   const entry: string[] = [path.join(__dirname, 'src/ts/index.ts')];
 
   const output = {
-    path: path.join(__dirname, dashLibraryName),
+    path: path.join(__dirname, dashLibraryName, 'build'),
     filename: `${dashLibraryName}.js`,
     library: dashLibraryName,
     libraryTarget: 'umd',
@@ -61,20 +55,7 @@ export default (_env: Record<string, any> = {}, argv: Record<string, any> = {}):
             {
               loader: 'style-loader',
               options: {
-                insert: function insertAtTop(element: any) {
-                  const parent: HTMLHeadElement | null = document.querySelector("head");
-                  const lastInsertedElement: HTMLElement | null = window._lastElementInsertedByStyleLoader;
-
-                  if (!lastInsertedElement) {
-                    parent?.insertBefore(element, parent.firstChild);
-                  } else if (lastInsertedElement.nextSibling) {
-                    parent?.insertBefore(element, lastInsertedElement.nextSibling);
-                  } else {
-                    parent?.appendChild(element);
-                  }
-
-                  window._lastElementInsertedByStyleLoader = element;
-                },
+                insert: 'head',
               },
             },
             {
@@ -85,4 +66,7 @@ export default (_env: Record<string, any> = {}, argv: Record<string, any> = {}):
       ]
     }
   }
-}
+};
+
+
+export default config;
