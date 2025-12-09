@@ -4,8 +4,6 @@ import json
 
 import dash as _dash
 
-from .configure_upload import configure_upload
-
 # noinspection PyUnresolvedReferences
 from .build._imports_ import *  # noqa: F403,F401
 from .build._imports_ import __all__ as build_all
@@ -37,6 +35,7 @@ _current_path = _os.path.dirname(_os.path.abspath(__file__))
 _this_module = _sys.modules[__name__]
 _js_dist = [
     {"relative_package_path": "build/dash_uploader_uppy5.js", "namespace": package_name},
+    {"relative_package_path": "build/dash_uploader_uppy5.js.map", "namespace": package_name, "dynamic": True},
 ]
 
 _css_dist = []

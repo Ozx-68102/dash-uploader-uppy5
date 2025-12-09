@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A modern Dash file uploader component powered by Uppy 5",
   "main": "index.ts",
-"repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/Ozx-68102/dash-uploader-uppy5.git"
   },
@@ -14,12 +14,12 @@
   "scripts": {
     "build:js::dev": "webpack --mode development",
     "build:js": "webpack",
-    "build:py": "dash-generate-components ./src/ts/components dash_uploader_uppy5 -p package-info.json  --ignore \\.test\\.",
+    "build:py": "dash-generate-components ./src/components dash_uploader_uppy5 -p package-info.json  --ignore \\.test\\.",
     "build:postpy": "python devscripts/post_build.py",
     "build": "pnpm run build:js && pnpm run build:py && pnpm run build:postpy",
     "watch": "pnpm run build:js::dev -- --watch",
     "dist": "python -m build --sdist --wheel --outdir dist/",
-    "format":  "prettier --write src --ignore-path=.prettierignore"
+    "format": "prettier --write src --ignore-path=.prettierignore"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
@@ -38,14 +38,15 @@
   },
   "dependencies": {
     "@uppy/core": "^5.2.0",
-    "@uppy/dashboard": "^5.1.0",
     "@uppy/file-input": "^4.2.2",
     "@uppy/golden-retriever": "^5.2.0",
     "@uppy/progress-bar": "^4.3.2",
     "@uppy/react": "^5.1.1",
+    "@uppy/status-bar": "^5.1.0",
     "@uppy/xhr-upload": "^5.1.0",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react-dom": "^19.2.1",
+    "tailwindcss": "^4.1.17"
   },
   "peerDependencies": {
     "react": "16 - 19",

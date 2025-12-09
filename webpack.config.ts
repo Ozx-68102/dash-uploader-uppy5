@@ -6,7 +6,7 @@ const dashLibraryName: string = packageJson.name.replace(/-/g, '_');
 
 const config = (_env: Record<string, any> = {}, argv: Record<string, any> = {}): Configuration => {
   const mode: any = argv.mode || 'production';
-  const entry: string[] = [path.join(__dirname, 'src/ts/index.ts')];
+  const entry: string[] = [path.join(__dirname, 'src/index.ts')];
 
   const output = {
     path: path.join(__dirname, dashLibraryName, 'build'),

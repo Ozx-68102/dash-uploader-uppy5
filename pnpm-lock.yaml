@@ -11,9 +11,6 @@ importers:
       '@uppy/core':
         specifier: ^5.2.0
         version: 5.2.0
-      '@uppy/dashboard':
-        specifier: ^5.1.0
-        version: 5.1.0(@uppy/core@5.2.0)
       '@uppy/file-input':
         specifier: ^4.2.2
         version: 4.2.2(@uppy/core@5.2.0)
@@ -25,7 +22,10 @@ importers:
         version: 4.3.2(@uppy/core@5.2.0)
       '@uppy/react':
         specifier: ^5.1.1
-        version: 5.1.1(@uppy/core@5.2.0)(@uppy/dashboard@5.1.0(@uppy/core@5.2.0))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 5.1.1(@uppy/core@5.2.0)(@uppy/dashboard@5.1.0(@uppy/core@5.2.0))(@uppy/screen-capture@5.1.0(@uppy/core@5.2.0))(@uppy/status-bar@5.1.0(@uppy/core@5.2.0))(@uppy/webcam@5.1.0(@uppy/core@5.2.0))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@uppy/status-bar':
+        specifier: ^5.1.0
+        version: 5.1.0(@uppy/core@5.2.0)
       '@uppy/xhr-upload':
         specifier: ^5.1.0
         version: 5.1.0(@uppy/core@5.2.0)
@@ -35,6 +35,9 @@ importers:
       react-dom:
         specifier: ^19.2.1
         version: 19.2.1(react@19.2.1)
+      tailwindcss:
+        specifier: ^4.1.17
+        version: 4.1.17
     devDependencies:
       '@types/node':
         specifier: ^24.10.1
@@ -302,6 +305,16 @@ packages:
       '@uppy/webcam':
         optional: true
 
+  '@uppy/screen-capture@5.1.0':
+    resolution: {integrity: sha512-+/AAU6Uxmup+Pzuy8/8S1ZttDAcMLnQleapxQLVpzSeddFCCeM+t6CfQ5tL/huSolz0o4v5rZWNaoUm+m5+wUw==}
+    peerDependencies:
+      '@uppy/core': ^5.2.0
+
+  '@uppy/status-bar@5.1.0':
+    resolution: {integrity: sha512-0rq+t/i++bbWdgXF6VfsLRF49mxtdf8PIZ62rmRbK+X3HvZdCA4RVWeZlMk+hfAP9th9g9a1rn5lkhAImr/XgQ==}
+    peerDependencies:
+      '@uppy/core': ^5.2.0
+
   '@uppy/store-default@5.0.0':
     resolution: {integrity: sha512-hQtCSQ1yGiaval/wVYUWquYGDJ+bpQ7e4FhUUAsRQz1x1K+o7NBtjfp63O9I4Ks1WRoKunpkarZ+as09l02cPw==}
 
@@ -315,6 +328,11 @@ packages:
 
   '@uppy/utils@7.1.4':
     resolution: {integrity: sha512-vFRVoxEl4/qEsI6cu0ZENRvKE6s/Ps1cONUinO8RcZqw0g7rDkcKhyW56qMLO9YUwxT5gsVp2eqNoms6Gf7Uhw==}
+
+  '@uppy/webcam@5.1.0':
+    resolution: {integrity: sha512-SHI+yiNrD4JrTFhQPyt7Mi9nL5r5YDwyXtYXuSRM3URB0etKes6u02MKY5GEn2LEpCSqSceXUi84Prig7UWYIw==}
+    peerDependencies:
+      '@uppy/core': ^5.2.0
 
   '@uppy/xhr-upload@5.1.0':
     resolution: {integrity: sha512-beD1QMGTfeSve3pWR+n5wAYnROopfdLS3ut5wu2XbkCdpdzQQEWnsVdDY6m55p0zLCqOmmetj3NcmhnSLj+Dnw==}
@@ -870,6 +888,9 @@ packages:
     resolution: {integrity: sha512-1Qed0/Hr2m+YqxnM09CjA2d/i6YZNfF6R2oRAOj36eUdS6qIV/huPJNSEpKbupewFs+ZsJlxsjjPbc0/afW6Lw==}
     engines: {node: '>= 0.4'}
 
+  is-mobile@4.0.0:
+    resolution: {integrity: sha512-mlcHZA84t1qLSuWkt2v0I2l61PYdyQDt4aG1mLIXF5FDMm4+haBCxCPYSr/uwqQNRk1MiTizn0ypEuRAOLRAew==}
+
   is-negative-zero@2.0.3:
     resolution: {integrity: sha512-5KoIu2Ngpyek75jXodFvnafB6DJgr3u8uuK0LEZJjrU19DrMD3EVERaR8sjz8CCGgpZvxPl9SuE1GMVPFHx1mw==}
     engines: {node: '>= 0.4'}
@@ -1406,6 +1427,9 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  tailwindcss@4.1.17:
+    resolution: {integrity: sha512-j9Ee2YjuQqYT9bbRTfTZht9W/ytp5H+jJpZKiYdP/bpnXARAuELt9ofP0lPnmHjbga7SNQIxdTAXCmtKVYjN+Q==}
+
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
@@ -1785,13 +1809,16 @@ snapshots:
       namespace-emitter: 2.0.1
       p-retry: 6.2.1
 
-  '@uppy/components@1.1.0(@uppy/core@5.2.0)':
+  '@uppy/components@1.1.0(@uppy/core@5.2.0)(@uppy/screen-capture@5.1.0(@uppy/core@5.2.0))(@uppy/webcam@5.1.0(@uppy/core@5.2.0))':
     dependencies:
       '@uppy/core': 5.2.0
       clsx: 2.1.1
       dequal: 2.0.3
       preact: 10.28.0
       pretty-bytes: 6.1.1
+    optionalDependencies:
+      '@uppy/screen-capture': 5.1.0(@uppy/core@5.2.0)
+      '@uppy/webcam': 5.1.0(@uppy/core@5.2.0)
 
   '@uppy/core@5.2.0':
     dependencies:
@@ -1816,6 +1843,7 @@ snapshots:
       nanoid: 5.1.6
       preact: 10.28.0
       shallow-equal: 3.1.0
+    optional: true
 
   '@uppy/file-input@4.2.2(@uppy/core@5.2.0)':
     dependencies:
@@ -1844,10 +1872,11 @@ snapshots:
       nanoid: 5.1.6
       p-queue: 8.1.1
       preact: 10.28.0
+    optional: true
 
-  '@uppy/react@5.1.1(@uppy/core@5.2.0)(@uppy/dashboard@5.1.0(@uppy/core@5.2.0))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+  '@uppy/react@5.1.1(@uppy/core@5.2.0)(@uppy/dashboard@5.1.0(@uppy/core@5.2.0))(@uppy/screen-capture@5.1.0(@uppy/core@5.2.0))(@uppy/status-bar@5.1.0(@uppy/core@5.2.0))(@uppy/webcam@5.1.0(@uppy/core@5.2.0))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
-      '@uppy/components': 1.1.0(@uppy/core@5.2.0)
+      '@uppy/components': 1.1.0(@uppy/core@5.2.0)(@uppy/screen-capture@5.1.0(@uppy/core@5.2.0))(@uppy/webcam@5.1.0(@uppy/core@5.2.0))
       '@uppy/core': 5.2.0
       preact: 10.28.0
       react: 19.2.1
@@ -1855,8 +1884,26 @@ snapshots:
       use-sync-external-store: 1.6.0(react@19.2.1)
     optionalDependencies:
       '@uppy/dashboard': 5.1.0(@uppy/core@5.2.0)
+      '@uppy/screen-capture': 5.1.0(@uppy/core@5.2.0)
+      '@uppy/status-bar': 5.1.0(@uppy/core@5.2.0)
+      '@uppy/webcam': 5.1.0(@uppy/core@5.2.0)
     transitivePeerDependencies:
       - '@uppy/image-editor'
+
+  '@uppy/screen-capture@5.1.0(@uppy/core@5.2.0)':
+    dependencies:
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.1.4
+      preact: 10.28.0
+    optional: true
+
+  '@uppy/status-bar@5.1.0(@uppy/core@5.2.0)':
+    dependencies:
+      '@transloadit/prettier-bytes': 0.3.5
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.1.4
+      classnames: 2.5.1
+      preact: 10.28.0
 
   '@uppy/store-default@5.0.0': {}
 
@@ -1865,6 +1912,7 @@ snapshots:
       '@uppy/core': 5.2.0
       '@uppy/utils': 7.1.4
       exifr: 7.1.3
+    optional: true
 
   '@uppy/utils@6.2.2':
     dependencies:
@@ -1875,6 +1923,14 @@ snapshots:
     dependencies:
       lodash: 4.17.21
       preact: 10.28.0
+
+  '@uppy/webcam@5.1.0(@uppy/core@5.2.0)':
+    dependencies:
+      '@uppy/core': 5.2.0
+      '@uppy/utils': 7.1.4
+      is-mobile: 4.0.0
+      preact: 10.28.0
+    optional: true
 
   '@uppy/xhr-upload@5.1.0(@uppy/core@5.2.0)':
     dependencies:
@@ -2314,11 +2370,13 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  eventemitter3@5.0.1: {}
+  eventemitter3@5.0.1:
+    optional: true
 
   events@3.3.0: {}
 
-  exifr@7.1.3: {}
+  exifr@7.1.3:
+    optional: true
 
   fast-deep-equal@3.1.3: {}
 
@@ -2491,6 +2549,9 @@ snapshots:
       safe-regex-test: 1.1.0
 
   is-map@2.0.3: {}
+
+  is-mobile@4.0.0:
+    optional: true
 
   is-negative-zero@2.0.3: {}
 
@@ -2682,6 +2743,7 @@ snapshots:
     dependencies:
       eventemitter3: 5.0.1
       p-timeout: 6.1.4
+    optional: true
 
   p-retry@6.2.1:
     dependencies:
@@ -2689,7 +2751,8 @@ snapshots:
       is-network-error: 1.3.0
       retry: 0.13.1
 
-  p-timeout@6.1.4: {}
+  p-timeout@6.1.4:
+    optional: true
 
   p-try@2.2.0: {}
 
@@ -2902,7 +2965,8 @@ snapshots:
     dependencies:
       kind-of: 6.0.3
 
-  shallow-equal@3.1.0: {}
+  shallow-equal@3.1.0:
+    optional: true
 
   shebang-command@1.2.0:
     dependencies:
@@ -3027,6 +3091,8 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  tailwindcss@4.1.17: {}
 
   tapable@2.3.0: {}
 
