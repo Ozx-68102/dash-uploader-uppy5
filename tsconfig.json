@@ -7,7 +7,6 @@
     "moduleResolution": "bundler",
     "jsx": "react",
 
-//    "outDir": "./dash_uploader_uppy5/dist",
     "sourceMap": true,
     "declaration": false,
     "noEmit": false,
@@ -24,10 +23,10 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
 
-    "baseUrl": "src/ts",
+    "baseUrl": "src/components",
     "inlineSources": true
   },
-  "include": ["src/ts/**/*", "webpack.config.ts"],
+  "include": ["src/components/**/*", "webpack.config.ts"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {
     "compilerOptions": {

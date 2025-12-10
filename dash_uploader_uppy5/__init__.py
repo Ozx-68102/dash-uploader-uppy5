@@ -1,17 +1,22 @@
+import json
 import os as _os
 import sys as _sys
-import json
 
 import dash as _dash
 
+from dash_uploader_uppy5.configurator import configurator
+from dash_uploader_uppy5.upload import Upload
+from dash_uploader_uppy5.uploadhandler import UploadHandler
 # noinspection PyUnresolvedReferences
 from .build._imports_ import *  # noqa: F403,F401
 from .build._imports_ import __all__ as build_all
 
 # Defines all exposed APIs of this package.
 __all__ = [
-    "configure_upload",
-] + build_all
+    "configurator",
+    "UploadHandler",
+    "Upload",
+]
 
 if not hasattr(_dash, "development"):
     print(

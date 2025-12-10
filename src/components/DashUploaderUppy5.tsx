@@ -10,12 +10,13 @@ import React, { useState } from 'react';
 import { Props } from './types/Uploader';
 import CreateUppyInstance from './utils/createUppy';
 
-import 'tailwindcss';
+import './uploader.css';
 import '@uppy/react/css/style.css';
 
 
 /**
  * Component description
+ * TODO: Logic about listening, style customizing and `disabled` have not completed yet.
  */
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
