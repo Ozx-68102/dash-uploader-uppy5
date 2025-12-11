@@ -6,21 +6,21 @@ import DashComponentProps from './DashComponent';
 // https://uppy.io/docs/dashboard/
 
 
-export interface DashboardSize {
+interface DashboardSize {
   /**
    * Width of the Dashboard in pixels.
    */
-  width?: number | string;
+  width?: number;
 
   /**
    * Height of the Dashboard in pixels.
    */
-  height?: number | string;
+  height?: number;
 }
 
-export interface UploaderBody extends Record<string, unknown> {
+interface ResponseInfo {
   filename: string;
-  status?: string;
+  status: number;
 }
 
 
@@ -88,8 +88,9 @@ export interface UppyDashboard {
   /**
    * Light or dark theme for the Dashboard.
    * When it is set to `auto`, it will respect the user’s system settings and switch automatically.
+   * It only can be one of the string ('light', 'dark' and 'auto').
    */
-  theme?: 'light' | 'dark' | 'auto';
+  theme?: string;
 
   /**
    * A string of text to be placed in the Dashboard UI.
@@ -97,7 +98,7 @@ export interface UppyDashboard {
   note?: string;
 
   /**
-  * Size of the Dashboard in pixels.
+  * Size of the Dashboard in pixels or percentages.
   */
   size?: DashboardSize;
 
@@ -128,12 +129,30 @@ export interface UppyDashboard {
 
   /**
    * Configure the type of selections allowed when browsing your file system via the file manager selection window.
+   * It only can be one of the string ('files', 'folders' and 'both').
    */
-  fileManagerSelectionType?: 'files' | 'folders' | 'both';
+  fileManagerSelectionType?: string;
+}
+
+export interface UppyCallbacks {
+  /**
+   * List of successfully uploaded files
+   */
+  uploadedFiles?: Array<{
+    name: string;
+    size: number;
+    type: string;
+    response: ResponseInfo;
+  }>;
+
+  failedFiles?: Array<{
+    name: string;
+    error: string;
+  }>;
 }
 
 
-type Props = UppyCore & UppyDashboard & DashComponentProps;
+type Props = UppyCore & UppyDashboard & UppyCallbacks & DashComponentProps;
 
 
 export default Props;
