@@ -38,10 +38,9 @@
   },
   "dependencies": {
     "@uppy/core": "^5.2.0",
+    "@uppy/dashboard": "^5.1.0",
     "@uppy/react": "^5.1.1",
-    "@uppy/status-bar": "^5.1.0",
-    "@uppy/xhr-upload": "^5.1.0",
-    "tailwindcss": "^4.1.17"
+    "@uppy/xhr-upload": "^5.1.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",

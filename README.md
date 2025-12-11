@@ -43,4 +43,4 @@ We adopted some parts of its proven Python wrapper patterns and configuration lo
 Special thanks to the original authors for all their groundwork on Dash integration.
 
 ## License
-MIT
+MIT License © 2025 Ozx-68102

@@ -21,7 +21,6 @@ app.layout = html.Div([
         id='uploader',
         upload_id='upload',
     ),
-    html.Div(id='upload-status'),
 ])
 
 if __name__ == '__main__':

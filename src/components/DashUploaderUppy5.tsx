@@ -1,40 +1,40 @@
-import Uppy from "@uppy/core";
-
-import {
-  Dropzone,
-  UploadButton,
-  FilesList,
-  UppyContextProvider
-} from '@uppy/react';
+import Uppy from '@uppy/core';
+import Dashboard from '@uppy/react/dashboard';
 import React, { useState } from 'react';
-import { Props } from './types/Uploader';
+import Props from './types/Uploader';
 import CreateUppyInstance from './utils/createUppy';
 
-import './uploader.css';
-import '@uppy/react/css/style.css';
+import '@uppy/core/css/style.min.css';
+import '@uppy/dashboard/css/style.min.css';
 
 
-/**
- * Component description
- * TODO: Logic about listening, style customizing and `disabled` have not completed yet.
- */
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
 
   return (
-    <UppyContextProvider uppy={uppy}>
-      <main className="p-5 max-w-xl mx-auto">
-        <h1 className="text-4xl font-bold my-4">Welcome to Uppy5!</h1>
+    <Dashboard
+      id={props.id}
+      uppy={uppy}
 
-        <UploadButton />
+      disabled={props.disabled}
+      theme={props.theme}
+      note={props.note}
 
-        <article>
-          <h2 className="text-2xl my-4">With list</h2>
-          <Dropzone />
-          <FilesList />
-        </article>
-      </main>
-    </UppyContextProvider>
+      width={props.size?.width || '100%'}
+      height={props.size?.height || 550}
+
+      hideProgressDetails={props.hideProgressDetails}
+      disableThumbnailGenerator={props.disableThumbnailGenerator}
+      waitForThumbnailsBeforeUpload={props.waitForThumbnailsBeforeUpload}
+      showSelectedFiles={props.showSelectedFiles}
+      singleFileFullScreen={props.singleFileFullScreen}
+      fileManagerSelectionType={props.fileManagerSelectionType}
+
+      hideUploadButton={false}
+      hideRetryButton={false}
+      hideCancelButton={false}
+      hidePauseResumeButton={false}
+    />
   );
 }
 
