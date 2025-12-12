@@ -1,4 +1,8 @@
 # dash-uploader-uppy5
+
+![PyPI](https://img.shields.io/pypi/v/dash-uploader-uppy5?style=flat-square&logo=pypi&logoColor=white)
+![Python](https://img.shields.io/pypi/pyversions/dash-uploader-uppy5?style=flat-square&logo=python&logoColor=white)
+![Downloads](https://img.shields.io/pypi/dm/dash-uploader-uppy5?style=flat-square&color=blueviolet)
 ![Static Badge](https://img.shields.io/badge/license-MIT-green)
 
 A modern [Dash](https://dash.plotly.com) file uploader component powered by [Uppy 5](https://uppy.io/).
