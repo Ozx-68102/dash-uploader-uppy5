@@ -27,7 +27,7 @@ def Upload(
         note: str | None = None,
         size: dict[str, int] | None = None,
         hide_progress_details: bool = False,
-        disable_thumbnail_generator: bool = False,
+        disable_thumbnail_generator: bool = True,
         wait_for_thumbnails_before_upload: bool = False,
         show_selected_files: bool = True,
         single_file_full_screen: bool = False,
@@ -74,14 +74,14 @@ def Upload(
     hide_progress_details: bool
         Show or hide progress details in the status bar. Defaults to False.
     disable_thumbnail_generator: bool
-        Disable the thumbnail generator completely. Defaults to False.
+        Disable the thumbnail generator completely. Defaults to True.
     wait_for_thumbnails_before_upload: bool
         Whether to wait for all thumbnails to be ready before starting the upload. Defaults to False.
     show_selected_files: bool
         Show the list of added files with a preview and file information. Defaults to True.
     single_file_full_screen: bool
-        When only one file is selected, its preview and meta information will be centered and enlarged.
-    file_manager_selection_type: Literal["files", "folders", "both"] = "files",
+        When only one file is selected, its preview and meta information will be centered and enlarged. Defaults to False.
+    file_manager_selection_type: Literal["files", "folders", "both"],
         Configure the type of selections allowed when browsing your file system via the file manager selection window. Defaults to "files".
 
     Returns

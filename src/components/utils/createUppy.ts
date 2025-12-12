@@ -33,7 +33,7 @@ const createUppy = (props: UppyCore) => {
      * Whether to send debugging and warning logs
      * [WARNING: Remember that for development only!!!]
      */
-    debug: true,
+    debug: false,
   });
 
   uppy.setMeta({ uploadId });

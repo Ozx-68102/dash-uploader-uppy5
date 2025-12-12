@@ -1,6 +1,6 @@
 import dash_uploader_uppy5 as du
 import dash
-from dash import html
+from dash import html, Input, Output
 
 # Create Dash app
 # Dash will automatically discover and load component libraries from installed packages
@@ -20,8 +20,28 @@ app.layout = html.Div([
     du.Upload(
         id='uploader',
         upload_id='upload',
+        max_number_of_files=10
     ),
+    html.Div(id="output-zone")
 ])
+
+@app.callback(
+    Output("output-zone", "children"),
+    [
+        Input("uploader", "uploadedFiles"),
+        Input("uploader", "failedFiles")
+    ],
+    prevent_initial_call=True
+)
+def test(
+        uploaded_files: list[dict[str, str | int | dict[str, str | int]]],
+        failed_files: list[dict[str, str]]
+):
+    print("Callback Triggered !")
+    print(uploaded_files)
+    print(failed_files)
+
+    return "Successful Triggered callback!"
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -41,6 +41,7 @@ _this_module = _sys.modules[__name__]
 _js_dist = [
     {"relative_package_path": "build/dash_uploader_uppy5.js", "namespace": package_name},
     {"relative_package_path": "build/dash_uploader_uppy5.js.map", "namespace": package_name, "dynamic": True},
+    {"dev_package_path": "build/proptypes.js", "dev_only": True, "namespace": package_name},
 ]
 
 _css_dist = []
