@@ -8,30 +8,18 @@ import CreateUppyInstance from './utils/createUppy';
 import '@uppy/core/css/style.min.css';
 import '@uppy/dashboard/css/style.min.css';
 
+function createStringUnionGuard<const T extends readonly string[]>(values: T) {
+  return (value: string | undefined): value is T[number] | undefined => value === undefined || values.includes(value);
+}
+
+const isValidTheme = createStringUnionGuard(["auto", "dark", "light"] as const);
+const isValidSelectType = createStringUnionGuard(["files", "folders", "both"] as const);
+
 /**
  * A dash Component.
  */
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
-  const correctTheme = () => {
-        const isValidTheme = (value: string): value is "auto" | "dark" | "light" => {
-          return ["auto", "dark", "light"].includes(value);
-        };
-
-        if (props.theme === undefined) return undefined;
-
-        return isValidTheme(props.theme) ? props.theme : undefined;
-  };
-
-  const correctFileManagerSelectionType = () => {
-    const isValidType = (value: string): value is "files" | "folders" | "both" => {
-      return ["files", "folders", "both"].includes(value);
-    };
-
-    if (props.fileManagerSelectionType === undefined) return undefined;
-
-    return isValidType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined;
-  };
 
   useUppyEvent(uppy, 'complete', (result) => {
     if (!props.setProps) return;
@@ -63,7 +51,7 @@ const DashUploaderUppy5 = (props: Props) => {
       uppy={uppy}
 
       disabled={props.disabled}
-      theme={correctTheme()}
+      theme={isValidTheme(props.theme) ? props.theme : undefined}
       note={props.note}
 
       width={props.size?.width}
@@ -74,7 +62,7 @@ const DashUploaderUppy5 = (props: Props) => {
       waitForThumbnailsBeforeUpload={props.waitForThumbnailsBeforeUpload}
       showSelectedFiles={props.showSelectedFiles}
       singleFileFullScreen={props.singleFileFullScreen}
-      fileManagerSelectionType={correctFileManagerSelectionType()}
+      fileManagerSelectionType={isValidSelectType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined}
 
       hideUploadButton={false}
       hideRetryButton={false}

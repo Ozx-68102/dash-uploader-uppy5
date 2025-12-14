@@ -22,9 +22,10 @@ pip install dash-uploader-uppy5
 ## Usage
 
 ```python
-import dash_uploader_uppy5 as du
 import dash
 from dash import html, Input, Output, no_update
+
+import dash_uploader_uppy5 as du
 
 app = dash.Dash(__name__)
 
@@ -35,13 +36,14 @@ app.layout = html.Div([
     html.H1('Dash Application'),
     du.Upload(
         id='uploader',
-        max_file_size=1024, # in Megabyte, 1GB
+        max_file_size=1024,  # in Megabyte, 1GB
         allowed_file_types=['.csv'],
         theme='auto',
         upload_id='files'
     ),
     html.Div(id="output-zone")
 ])
+
 
 # Handle the callback
 @app.callback(
@@ -57,11 +59,12 @@ def handle_upload(uploaded_files, failed_files):
         last_file = uploaded_files[-1]
         server_name = last_file['response']['filename']
         return f"Uploaded: {server_name}"
-    
+
     if failed_files:
         return f"Error: {failed_files[0]['error']}"
-    
+
     return no_update
+
 
 if __name__ == '__main__':
     app.run()
@@ -73,7 +76,7 @@ if __name__ == '__main__':
 | `id`                                | str                                 | "uppy5-uploader"  | The id of this component.                                                                                                             |
 | `upload_url`                        | str                                 | (Auto)            | The API endpoint (configured by `du.configurator`)                                                                                    |
 | `allow_multiple_upload_batches`     | bool                                | True              | Whether to allow several upload batches. Defaults to True.                                                                            |
-| `allowed_file_types`                | list[str]                           | None              | Wildcards ["image/*"], or exact mime types ["image/jpeg"], or file extensions [".jpg"].                                               |
+| `allowed_file_types`                | list[str]                           | None              | Wildcards ["image/*"], or exact MIME types ["image/jpeg"], or file extensions [".jpg"].                                               |
 | `auto_proceed`                      | bool                                | False             | If True, it will upload as soon as files are added.                                                                                   |
 | `max_file_size`                     | int                                 | 1024              | Maximum file size in **Megabytes** for each individual file.                                                                          |
 | `min_file_size`                     | int                                 | None              | Minimum file size in **Megabytes** for each individual file.                                                                          |
@@ -95,9 +98,11 @@ if __name__ == '__main__':
 
 These properties are read-only and updated by the components upon upload events. Use them in `Input` to trigger Dash callbacks.
 
-### UploadedFiles
+### `uploadedFiles`
 
 A list of dictionaries representing successfully uploaded files in the current batch.
+
+**Type:** `list[dict[str, str | int | dict[str, str | int]]]`
 
 **Structure:**
 ```json
@@ -119,9 +124,11 @@ A list of dictionaries representing successfully uploaded files in the current b
 - **type:** MIME type.
 - **response.filename:** Sanitized filename saved on the server.
 
-### failedFiles
+### `failedFiles`
 
 A list of dictionaries representing files that failed to upload.
+
+**Type:** `list[dict[str, str]]`
 
 **Structure:**
 
