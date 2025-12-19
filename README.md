@@ -21,7 +21,7 @@ pip install dash-uploader-uppy5
 
 ## Usage
 
-See [usage.py](/usage.py) or example below.
+See [usage.py](https://github.com/Ozx-68102/dash-uploader-uppy5/blob/main/usage.py) or example below.
 
 ```python
 import dash
