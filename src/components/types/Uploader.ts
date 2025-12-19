@@ -145,10 +145,18 @@ export interface UppyCallbacks {
     response: ResponseInfo;
   }>;
 
+  /**
+   * List of upload failed files
+   */
   failedFiles?: Array<{
     name: string;
     error: string;
   }>;
+
+  /**
+   * True when starting upload, False when completed (regardless of success or failure)
+   */
+  isUploading?: boolean;
 }
 
 

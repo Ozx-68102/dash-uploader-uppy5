@@ -21,6 +21,8 @@ pip install dash-uploader-uppy5
 
 ## Usage
 
+See [usage.py](/usage.py) or example below.
+
 ```python
 import dash
 from dash import html, Input, Output, no_update
@@ -97,6 +99,13 @@ if __name__ == '__main__':
 ## Callback Variables
 
 These properties are read-only and updated by the components upon upload events. Use them in `Input` to trigger Dash callbacks.
+
+
+### `isUploading`
+
+Indicates whether an upload is currently in progress. It reverts to False upon completion, regardless of success or failure.
+
+**Type:** `bool`
 
 ### `uploadedFiles`
 

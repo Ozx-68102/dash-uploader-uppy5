@@ -4,22 +4,25 @@ import Dashboard from '@uppy/react/dashboard';
 import React, {useState} from 'react';
 import Props from './types/Uploader';
 import CreateUppyInstance from './utils/createUppy';
+import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 
 import '@uppy/core/css/style.min.css';
 import '@uppy/dashboard/css/style.min.css';
 
-function createStringUnionGuard<const T extends readonly string[]>(values: T) {
-  return (value: string | undefined): value is T[number] | undefined => value === undefined || values.includes(value);
-}
-
-const isValidTheme = createStringUnionGuard(["auto", "dark", "light"] as const);
-const isValidSelectType = createStringUnionGuard(["files", "folders", "both"] as const);
+const isValidTheme = CreateStringUnionGuard(["auto", "dark", "light"] as const);
+const isValidSelectType = CreateStringUnionGuard(["files", "folders", "both"] as const);
 
 /**
  * A dash Component.
  */
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
+
+  useUppyEvent(uppy, 'upload', () => {
+    if (!props.setProps) return;
+
+    props.setProps({ isUploading: true });
+  });
 
   useUppyEvent(uppy, 'complete', (result) => {
     if (!props.setProps) return;
@@ -41,7 +44,8 @@ const DashUploaderUppy5 = (props: Props) => {
 
     props.setProps({
       uploadedFiles,
-      failedFiles
+      failedFiles,
+      isUploading: false,
     });
   });
 
