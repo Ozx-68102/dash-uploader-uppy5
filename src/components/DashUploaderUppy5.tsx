@@ -31,6 +31,7 @@ const DashUploaderUppy5 = (props: Props) => {
       name: f.name,
       size: f.size,
       type: f.type,
+      upload_id: props.uploadId || '',
       response: {
         status: f.response?.status || 200,
         filename: f.response?.body?.filename || f.name

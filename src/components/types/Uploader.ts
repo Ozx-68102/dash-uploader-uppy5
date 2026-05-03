@@ -142,6 +142,7 @@ export interface UppyCallbacks {
     name: string;
     size: number;
     type: string;
+    upload_id: string;
     response: ResponseInfo;
   }>;
 

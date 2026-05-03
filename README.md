@@ -120,6 +120,7 @@ A list of dictionaries representing successfully uploaded files in the current b
     "name": "example.csv",
     "size": 1048576,
     "type": "text/csv",
+    "upload_id": "1c06f981-0a5f-4cf8-99a3-8b898f8a1480",
     "response": {
       "status": 200,
       "filename": "example.csv"
@@ -131,6 +132,7 @@ A list of dictionaries representing successfully uploaded files in the current b
 - **name:** Original filename on user's disk.
 - **size:** File size in bytes.
 - **type:** MIME type.
+- **upload_id:** The UUID of the upload session.
 - **response.filename:** Sanitized filename saved on the server.
 
 ### `failedFiles`
