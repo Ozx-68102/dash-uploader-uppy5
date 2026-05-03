@@ -1,6 +1,6 @@
 {
   "name": "dash_uploader_uppy5",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A modern Dash file uploader component powered by Uppy 5",
   "main": "index.ts",
   "repository": {
@@ -14,7 +14,7 @@
   "scripts": {
     "build:js::dev": "webpack --mode development",
     "build:js": "webpack",
-    "build:py": "dash-generate-components ./src/components dash_uploader_uppy5 -p package-info.json  --ignore \\.test\\.",
+    "build:py": "uv run python -m dash.development.component_generator ./src/components dash_uploader_uppy5 -p package-info.json --ignore \\.test\\.",
     "build:postpy": "python devscripts/post_build.py",
     "build": "pnpm run build:js && pnpm run build:py && pnpm run build:postpy",
     "watch": "pnpm run build:js::dev -- --watch",

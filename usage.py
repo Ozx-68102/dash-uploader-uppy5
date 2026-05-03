@@ -13,13 +13,13 @@ app = dash.Dash(__name__)
 
 # Configure upload - this sets up the file upload endpoint in the component library
 UPLOAD_FOLDER = 'uploads'
-du.configurator(app, UPLOAD_FOLDER, use_upload_id=False)
+du.configurator(app, UPLOAD_FOLDER)
 
 app.layout = html.Div([
     html.H1('Dash Uploader Uppy5 Demo'),
     du.Upload(
         id='uploader',
-        upload_id='upload',
+        upload_id=None,
         max_number_of_files=10
     ),
     html.Div(id="output-zone")
