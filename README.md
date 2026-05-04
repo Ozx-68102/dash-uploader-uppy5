@@ -85,7 +85,7 @@ if __name__ == '__main__':
 | `max_total_file_size`               | int                                 | None              | Maximum file size in **Megabytes** for all the files that can be selected for upload.                                                 |
 | `max_number_of_files`               | int                                 | 1                 | Total number of files that can be selected.                                                                                           |
 | `min_number_of_files`               | int                                 | None              | Minimum number of files that must be selected before the upload.                                                                      |
-| `upload_id`                         | str                                 | str(uuid.uuid4()) | The unique identifier for the upload session.                                                                                         |
+| `upload_id`                         | str                                 | str(uuid.uuid4()) | Custom upload session identifier (UUID by default). Affects subfolder creation via `use_upload_id` in `du.configurator()`.            |
 | `disabled`                          | bool                                | False             | Enabling this option makes the Dashboard grayed-out and non-interactive.                                                              |
 | `theme`                             | Literal["auto", "light", "dark"]    | "auto"            | Light or dark theme for the Dashboard. When it is set to `auto`, it will respect the user’s system settings and switch automatically. |
 | `note`                              | str                                 | None              | A string of text to be placed in the Dashboard UI.                                                                                    |
@@ -120,7 +120,7 @@ A list of dictionaries representing successfully uploaded files in the current b
     "name": "example.csv",
     "size": 1048576,
     "type": "text/csv",
-    "upload_id": "1c06f981-0a5f-4cf8-99a3-8b898f8a1480",
+    "upload_id": "files",
     "response": {
       "status": 200,
       "filename": "example.csv"
@@ -132,7 +132,7 @@ A list of dictionaries representing successfully uploaded files in the current b
 - **name:** Original filename on user's disk.
 - **size:** File size in bytes.
 - **type:** MIME type.
-- **upload_id:** The UUID of the upload session.
+- **upload_id:** Custom upload session identifier (UUID by default).
 - **response.filename:** Sanitized filename saved on the server.
 
 ### `failedFiles`

@@ -59,7 +59,8 @@ def Upload(
     min_number_of_files : int or None
         Minimum number of files that must be selected before the upload. Defaults to None.
     upload_id : str or None
-        The unique identifier for the upload session. By default, it will be created with uuid.uuid4().
+        Custom upload session identifier (defaults to UUID if None). Used for subfolder
+        creation when `use_upload_id=True` in `du.configurator()`.
         Defaults to None.
     disabled: bool
         Enabling this option makes the Dashboard grayed-out and non-interactive. Defaults to False.
