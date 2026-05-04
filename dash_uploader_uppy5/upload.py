@@ -1,8 +1,9 @@
+from typing import Literal
 from uuid import uuid4
 
 import dash_uploader_uppy5.settings as settings
 from dash_uploader_uppy5.build.DashUploaderUppy5 import DashUploaderUppy5
-from typing import Literal
+
 
 def update_upload_uri(pathname_prefix: str, upload_api: str) -> str:
     if pathname_prefix == "/":
@@ -13,6 +14,7 @@ def update_upload_uri(pathname_prefix: str, upload_api: str) -> str:
 
 def Upload(
         id: str = "uppy5-uploader",
+        *,
         allow_multiple_upload_batches: bool = True,
         allowed_file_types: list[str] | None = None,
         auto_proceed: bool = False,
