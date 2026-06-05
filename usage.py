@@ -1,6 +1,9 @@
-import dash_uploader_uppy5 as du
+from typing import Final
+
 import dash
 from dash import html, Input, Output, no_update
+
+import dash_uploader_uppy5 as du
 
 # Create Dash app
 # Dash will automatically discover and load component libraries from installed packages
@@ -12,7 +15,7 @@ from dash import html, Input, Output, no_update
 app = dash.Dash(__name__)
 
 # Configure upload - this sets up the file upload endpoint in the component library
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER: Final[str] = 'uploads'
 du.configurator(app, UPLOAD_FOLDER)
 
 app.layout = html.Div([
