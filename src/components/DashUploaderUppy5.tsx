@@ -1,8 +1,8 @@
 import Uppy from '@uppy/core';
-import {useUppyEvent} from "@uppy/react";
 import Dashboard from '@uppy/react/dashboard';
 import React, {useState} from 'react';
 import Props from './types/Uploader';
+import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
 import CreateUppyInstance from './utils/createUppy';
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 
@@ -18,37 +18,7 @@ const isValidSelectType = CreateStringUnionGuard(["files", "folders", "both"] as
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
 
-  useUppyEvent(uppy, 'upload', () => {
-    if (!props.setProps) return;
-
-    props.setProps({ isUploading: true });
-  });
-
-  useUppyEvent(uppy, 'complete', (result) => {
-    if (!props.setProps) return;
-
-    const uploadedFiles = result.successful?.map(f => ({
-      name: f.name,
-      size: f.size,
-      type: f.type,
-      upload_id: props.uploadId || '',
-      response: {
-        status: f.response?.status || 200,
-        filename: f.response?.body?.filename || f.name
-      }
-    }));
-
-    const failedFiles = result.failed?.map(f => ({
-      name: f.name,
-      error: f.error || 'Unknown error'
-    }));
-
-    props.setProps({
-      uploadedFiles,
-      failedFiles,
-      isUploading: false,
-    });
-  });
+  useSetupUppyEventHandlers(uppy, props);
 
   return (
     <Dashboard
