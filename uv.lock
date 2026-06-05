@@ -268,7 +268,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "dash", specifier = ">=3.4.0,<4.0.0" }]
+requires-dist = [{ name = "dash", specifier = ">=3.4.0" }]
 
 [package.metadata.requires-dev]
 dev = [
