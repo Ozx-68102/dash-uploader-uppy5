@@ -14,7 +14,7 @@
   "scripts": {
     "build:js::dev": "webpack --mode development",
     "build:js": "webpack",
-    "build:py": "uv run python -m dash.development.component_generator ./src/components dash_uploader_uppy5 -p package-info.json --ignore \\.test\\.",
+    "build:py": "dash-generate-components ./src/components dash_uploader_uppy5 -p package-info.json  --ignore \\.test\\.",
     "build:postpy": "python devscripts/post_build.py",
     "build": "pnpm run build:js && pnpm run build:py && pnpm run build:postpy",
     "watch": "pnpm run build:js::dev -- --watch",
