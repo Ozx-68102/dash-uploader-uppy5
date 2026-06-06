@@ -19,10 +19,28 @@ interface DashboardSize {
 }
 
 interface ResponseInfo {
+  /**
+   * Sanitized filename saved on the server.
+   */
   filename: string;
+
+  /**
+   * HTTP status code returned by the upload server.
+   */
   status: number;
 }
 
+export interface ClearOperation {
+  /**
+   * Only is one of `"success"` and `"error"`.
+   */
+  status: string;
+
+  /**
+   * Error details when `status` is `"error"`, otherwise `null`.
+   */
+  errorMessage: string | null;
+}
 
 export interface UppyCore {
   /**
@@ -163,6 +181,16 @@ export interface UppyCallbacks {
    * True when starting upload, False when completed (regardless of success or failure)
    */
   isUploading?: boolean;
+
+  /**
+   * Increment or change this value from a Dash callback to clear all files in the uploader.
+   */
+  clearTrigger?: number;
+
+  /**
+   * Result of the last clear operation. Emitted by the component after `clearTrigger` changes.
+   */
+  clearOperation?: ClearOperation;
 }
 
 

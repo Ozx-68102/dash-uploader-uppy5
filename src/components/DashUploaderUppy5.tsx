@@ -1,13 +1,14 @@
-import Uppy from '@uppy/core';
-import Dashboard from '@uppy/react/dashboard';
-import React, {useState} from 'react';
-import Props from './types/Uploader';
+import Uppy from "@uppy/core";
+import Dashboard from "@uppy/react/dashboard";
+import React, {useState} from "react";
+import Props from "./types/Uploader";
 import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
-import CreateUppyInstance from './utils/createUppy';
+import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
+import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 
-import '@uppy/core/css/style.min.css';
-import '@uppy/dashboard/css/style.min.css';
+import "@uppy/core/css/style.min.css";
+import "@uppy/dashboard/css/style.min.css";
 
 const isValidTheme = CreateStringUnionGuard(["auto", "dark", "light"] as const);
 const isValidSelectType = CreateStringUnionGuard(["files", "folders", "both"] as const);
@@ -19,6 +20,11 @@ const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
 
   useSetupUppyEventHandlers(uppy, props);
+  useHandleClearTrigger(uppy, props.clearTrigger, (result) => {
+    if (props.setProps) {
+      props.setProps({clearOperation: result});
+    }
+  });
 
   return (
     <Dashboard

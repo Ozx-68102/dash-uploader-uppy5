@@ -23,8 +23,10 @@ app.layout = html.Div([
     du.Upload(
         id='uploader',
         upload_id=None,
+        disable_done_button=True,
         max_number_of_files=10
     ),
+    html.Button("Clear", id="clear-btn"),
     html.Div(id="output-zone")
 ])
 
@@ -50,6 +52,25 @@ def test1(
 )
 def test2(is_uploading: bool):
     print(f"Callback 2 Triggered ! isUploading: {is_uploading}")
+    return no_update
+
+
+@app.callback(
+    Output("uploader", "clearTrigger"),
+    Input("clear-btn", "n_clicks"),
+)
+def test3(n_clicks: int):
+    print(f"Callback 3 Triggered ! n_clicks: {n_clicks}")
+    return n_clicks
+
+
+@app.callback(
+    Output("output-zone", "children", allow_duplicate=True),
+    Input("uploader", "clearOperation"),
+    prevent_initial_call=True,
+)
+def test4(clear_operation: dict | None):
+    print(f"Clear result: {clear_operation}")
     return no_update
 
 if __name__ == '__main__':

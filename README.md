@@ -92,6 +92,7 @@ if __name__ == '__main__':
 | `size`                              | dict[str, int]                      | None              | Size of the Dashboard in pixels. It only accepts "width" and "height". Example: `{"width": 500, "height": 300}`.                      |
 | `hide_progress_details`             | bool                                | False             | Show or hide progress details in the status bar.                                                                                      |
 | `disable_thumbnail_generator`       | bool                                | True              | Disable the thumbnail generator completely.                                                                                           |
+| `disable_done_button`               | bool                                | False             | Disable the Dashboard Done button.                                                                                                    |
 | `wait_for_thumbnails_before_upload` | bool                                | False             | Show the list of added files with a preview and file information.                                                                     |
 | `single_file_full_screen`           | bool                                | False             | When only one file is selected, its preview and meta information will be centered and enlarged.                                       |
 | `file_manager_selection_type`       | Literal["files", "folders", "both"] | "files"           | Configure the type of selections allowed when browsing your file system via the file manager selection window.                        |
@@ -154,6 +155,43 @@ A list of dictionaries representing files that failed to upload.
 
 - **name:** Original filename on user's disk.
 - **error:** Error message from Uppy or Server.
+
+### `clearTrigger`
+
+Write to this property from a Dash callback to clear all files in the uploader. Increment or change the value on each
+clear request (for example, use a button's `n_clicks`).
+
+**Type:** `int`
+
+**Usage:**
+
+```python
+@app.callback(
+    Output("uploader", "clearTrigger"),
+    Input("clear-btn", "n_clicks"),
+)
+def clear_uploader(n_clicks):
+    return n_clicks
+```
+
+### `clearOperation`
+
+Result of the last clear operation. Updated by the component after `clearTrigger` changes. Use as `Input` to react to
+clear success or failure.
+
+**Type:** `dict[str, str | int | None]`
+
+**Structure:**
+
+```json
+{
+  "status": "success",
+  "errorMessage": null
+}
+```
+
+- **status:** `"success"` or `"error"`.
+- **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
 
 ## Credits & Inspiration
 

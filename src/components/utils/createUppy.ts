@@ -1,6 +1,6 @@
-import Uppy from '@uppy/core';
+import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
-import { UppyCore } from "../types/Uploader";
+import {UppyCore} from "../types/Uploader";
 
 
 const createUppy = (props: UppyCore) => {

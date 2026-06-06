@@ -7,12 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.1] - 2026-05-04
+### Added
+
+- Add `disable_done_button` option to hide the Dashboard "Done" button after upload completes (12060ee)
+- Add Pydantic models (`UploadConfig`, `SizeConfig`) for type validation and conversion of `Upload()` parameters (
+  a386256)
+  - Export `UploadConfig` and `SizeConfig` from package `__init__.py`
+  - Add `pydantic>=2.13.4` as a runtime dependency
+- Extract Uppy event handlers into `useSetupUppyEventHandlers` custom hook (c6a102c)
+- Split clear API into `clearTrigger` (Dash input) and `clearOperation` (component response) for programmatic file
+  clearing
+  - Add `useHandleClearTrigger` hook and `ClearOperation` TypeScript interface
+- Add `CHANGELOG.md` (00e8ad2)
 
 ### Changed
 
-- Refine `upload_id` documentation and examples (cef5bf4)
-- Update project dependencies and lock file (a0501dc)
+- Make `Upload()` parameters keyword-only (after `id`) (97affed)
+- Refactor `Upload()` to build component props via `UploadConfig.model_dump()` (a386256)
+- Upgrade Node.js to 22.22.0 in `.nvmrc` (bee52a4)
+- Upgrade dash dependency to `>=3.4.0`, constrain dev dependency to `<4.0.0` (2c4dcfc, ef535dd)
+- Update project dependencies and lock file (a0501dc, ef535dd)
+  - setuptools, cookiecutter, wheel, build, and related dev tools
+- Revert component generator command to `dash-generate-components` (ff47cf4)
+- Refine `upload_id` documentation and examples in README and `Upload()` docstring (cef5bf4)
+
+### Fixed
+
+- Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
+- Correct field name in `max_number_of_files` validator (`min_file_size` → `min_number_of_files`) (ed7ebbf)
+
+### Documentation
+
+- Document `disable_done_button`, `clearTrigger`, and `clearOperation` in README
+
+## [0.2.1] - 2026-05-04
 
 ### Fixed
 
