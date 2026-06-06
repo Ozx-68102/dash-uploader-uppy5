@@ -25,8 +25,9 @@ app.layout = html.Div([
         upload_id=None,
         disable_done_button=True,
         max_number_of_files=10,
-        size={"width": "75%"},
-        note="hello!"
+        size={"width": "10%", "height": "10%"},
+        note="hello!",
+        locale_string={"dropPasteFiles": "Drop your files here"},
     ),
     html.Button("Clear", id="clear-btn"),
     html.Div(id="output-zone")

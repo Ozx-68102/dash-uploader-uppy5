@@ -5,7 +5,7 @@ import sys as _sys
 import dash as _dash
 
 from dash_uploader_uppy5.configurator import configurator
-from dash_uploader_uppy5.models import UploadConfig, SizeConfig
+from dash_uploader_uppy5.models import UploadConfig, LocaleStringConfig, SizeConfig
 from dash_uploader_uppy5.upload import Upload
 from dash_uploader_uppy5.uploadhandler import UploadHandler
 # noinspection PyUnresolvedReferences

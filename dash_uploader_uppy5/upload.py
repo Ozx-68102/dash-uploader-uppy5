@@ -35,6 +35,7 @@ def Upload(
         wait_for_thumbnails_before_upload: bool = False,
         show_selected_files: bool = True,
         single_file_full_screen: bool = False,
+        locale_string: dict[str, str] | None = None,
         file_manager_selection_type: Literal["files", "folders", "both"] = "files",
 ) -> DashUploaderUppy5:
     """
@@ -89,6 +90,12 @@ def Upload(
         Show the list of added files with a preview and file information. Defaults to True.
     single_file_full_screen: bool
         When only one file is selected, its preview and meta information will be centered and enlarged. Defaults to False.
+    locale_string: dict[str, str] or None
+        Partial Dashboard locale strings to override Uppy defaults. Defaults to None.
+        Only the keys you provide are replaced; omitted keys keep Uppy defaults.
+        Keys use camelCase as in Uppy (e.g. "dropPasteFiles", "browseFiles").
+        Placeholders such as %{browseFiles} are supported but not required.
+        Examples: {"dropPasteFiles": "Drop your files here"}
     file_manager_selection_type: Literal["files", "folders", "both"],
         Configure the type of selections allowed when browsing your file system via the file manager selection window. Defaults to "files".
 
@@ -122,6 +129,7 @@ def Upload(
         waitForThumbnailsBeforeUpload=wait_for_thumbnails_before_upload,
         showSelectedFiles=show_selected_files,
         singleFileFullScreen=single_file_full_screen,
+        localeString=locale_string,  # type: ignore
         fileManagerSelectionType=file_manager_selection_type  # type: ignore
     )
 

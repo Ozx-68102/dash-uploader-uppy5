@@ -10,6 +10,16 @@ class SizeConfig(BaseModel):
     height: int | str | None = Field(default=None)
 
 
+class LocaleStringConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    drop_paste_files: str | None = Field(default=None, alias="dropPasteFiles")
+    drop_paste_folders: str | None = Field(default=None, alias="dropPasteFolders")
+    drop_paste_both: str | None = Field(default=None, alias="dropPasteBoth")
+    browse_files: str | None = Field(default=None, alias="browseFiles")
+    browse_folders: str | None = Field(default=None, alias="browseFolders")
+
+
 class UploadConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -34,6 +44,7 @@ class UploadConfig(BaseModel):
     wait_for_thumbnails_before_upload: bool = Field(default=False, alias="waitForThumbnailsBeforeUpload")
     show_selected_files: bool = Field(default=True, alias="showSelectedFiles")
     single_file_full_screen: bool = Field(default=False, alias="singleFileFullScreen")
+    locale_string: LocaleStringConfig | None = Field(default=None, alias="localeString")
     file_manager_selection_type: Literal["files", "folders", "both"] = Field(
         default="files", alias="fileManagerSelectionType"
     )
@@ -66,6 +77,15 @@ class UploadConfig(BaseModel):
     def parse_size(cls, v: dict | None) -> SizeConfig | None:
         return SizeConfig(**v) if v is not None else None
 
+    @field_validator("locale_string", mode="before")
+    @classmethod
+    def parse_locale_string(cls, v: dict | None) -> LocaleStringConfig | None:
+        return LocaleStringConfig(**v) if v is not None else None
+
     @field_serializer("size", when_used="json")
     def serialize_size(self, v: SizeConfig | None) -> dict[str, int | str | None] | None:
         return v.model_dump() if v is not None else None
+
+    @field_serializer("locale_string", when_used="json")
+    def serialize_locale_string(self, v: LocaleStringConfig | None) -> dict[str, str] | None:
+        return v.model_dump(by_alias=True, exclude_none=True) if v is not None else None

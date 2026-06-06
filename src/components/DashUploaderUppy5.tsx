@@ -6,6 +6,7 @@ import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
 import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
 import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
+import buildLocaleString from "./utils/buildLocaleString";
 
 import "@uppy/core/css/style.min.css";
 import "@uppy/dashboard/css/style.min.css";
@@ -37,6 +38,8 @@ const DashUploaderUppy5 = (props: Props) => {
 
       width={props.size?.width}
       height={props.size?.height}
+
+      locale={buildLocaleString(props.localeString)}
 
       hideProgressDetails={props.hideProgressDetails}
       disableThumbnailGenerator={props.disableThumbnailGenerator}

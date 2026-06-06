@@ -20,6 +20,36 @@ interface DashboardSize {
   height?: number | string;
 }
 
+interface LocaleStrings {
+  /**
+   * Drop/paste hint when `fileManagerSelectionType` is `"files"`.
+   * May include the `%{browseFiles}` placeholder, or plain text without placeholders.
+   */
+  dropPasteFiles?: string;
+
+  /**
+   * Drop/paste hint when `fileManagerSelectionType` is `"folders"`.
+   * May include the `%{browseFolders}` placeholder, or plain text without placeholders.
+   */
+  dropPasteFolders?: string;
+
+  /**
+   * Drop/paste hint when `fileManagerSelectionType` is `"both"`.
+   * May include `%{browseFiles}` and/or `%{browseFolders}` placeholders, or plain text.
+   */
+  dropPasteBoth?: string;
+
+  /**
+   * Label for the "browse files" control. Used when resolving `%{browseFiles}` placeholders.
+   */
+  browseFiles?: string;
+
+  /**
+   * Label for the "browse folders" control. Used when resolving `%{browseFolders}` placeholders.
+   */
+  browseFolders?: string;
+}
+
 interface ResponseInfo {
   /**
    * Sanitized filename saved on the server.
@@ -158,6 +188,12 @@ export interface UppyDashboard {
    * Custom prop that simply determine able or disable "done" button.
    */
   disableDoneButton?: boolean;
+
+  /**
+   * Partial Dashboard locale strings. Only the keys you provide override Uppy defaults;
+   * omitted keys keep the built-in English text.
+   */
+  localeString?: LocaleStrings;
 }
 
 export interface UppyCallbacks {

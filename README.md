@@ -96,7 +96,66 @@ if __name__ == '__main__':
 | `disable_done_button`               | bool                                | False             | Disable the Dashboard Done button.                                                                                                                                                                                                     |
 | `wait_for_thumbnails_before_upload` | bool                                | False             | Show the list of added files with a preview and file information.                                                                                                                                                                      |
 | `single_file_full_screen`           | bool                                | False             | When only one file is selected, its preview and meta information will be centered and enlarged.                                                                                                                                        |
+| `locale_string`                     | dict[str, str]                      | None              | Partial Dashboard locale strings. Only provided keys override Uppy defaults; omitted keys keep built-in text. Keys use camelCase (e.g. `"dropPasteFiles"`, `"browseFiles"`). Example: `{"dropPasteFiles": "Drop your files here"}`.    |
 | `file_manager_selection_type`       | Literal["files", "folders", "both"] | "files"           | Configure the type of selections allowed when browsing your file system via the file manager selection window.                                                                                                                         |
+
+### About `locale_string`
+
+`locale_string` lets you override a **subset** of Uppy Dashboard drop/paste and browse labels from Python. Keys you omit
+keep Uppy’s built-in English defaults; only the keys you pass are replaced.
+
+This component exposes five string keys (camelCase,
+matching [Uppy Dashboard locale](https://uppy.io/docs/dashboard/#locale)):
+
+| Key                | Uppy default                                          |
+|--------------------|-------------------------------------------------------|
+| `dropPasteFiles`   | `Drop files here or %{browseFiles}`                   |
+| `dropPasteFolders` | `Drop files here or %{browseFolders}`                 |
+| `dropPasteBoth`    | `Drop files here, %{browseFiles} or %{browseFolders}` |
+| `browseFiles`      | `browse files`                                        |
+| `browseFolders`    | `browse folders`                                      |
+
+#### Placeholders
+
+Some default strings embed placeholders that Uppy replaces at render time:
+
+- `%{browseFiles}` — replaced with the text of `browseFiles` (typically rendered as a clickable “browse” link).
+- `%{browseFolders}` — replaced with the text of `browseFolders`.
+
+You may use these placeholders in your custom strings, or omit them entirely and supply plain text instead:
+
+```python
+# With placeholders (Uppy default style)
+du.Upload(
+    locale_string={
+        "dropPasteFiles": "Drop files here or %{browseFiles}",
+        "browseFiles": "browse files",
+    }
+)
+
+# Without placeholders (plain text is fine)
+du.Upload(
+    locale_string={
+        "dropPasteFiles": "Drop your files here",
+    }
+)
+```
+
+If you use placeholders, override the corresponding `browseFiles` / `browseFolders` key when you want to control that
+link text; otherwise Uppy keeps its default labels for those keys.
+
+#### Which keys are shown?
+
+The visible drop/paste tagline depends on `file_manager_selection_type`:
+
+| `file_manager_selection_type` | Keys used in the UI                             |
+|-------------------------------|-------------------------------------------------|
+| `"files"` (default)           | `dropPasteFiles`, `browseFiles`                 |
+| `"folders"`                   | `dropPasteFolders`, `browseFolders`             |
+| `"both"`                      | `dropPasteBoth`, `browseFiles`, `browseFolders` |
+
+You only need to override the keys that match your selection mode. Supplying extra keys (e.g. all five) is harmless —
+unused keys simply are not displayed and have no adverse effect.
 
 ## Callback Variables
 
