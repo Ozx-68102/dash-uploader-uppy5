@@ -37,7 +37,10 @@ const DashUploaderUppy5 = (props: Props) => {
       waitForThumbnailsBeforeUpload={props.waitForThumbnailsBeforeUpload}
       showSelectedFiles={props.showSelectedFiles}
       singleFileFullScreen={props.singleFileFullScreen}
-      fileManagerSelectionType={isValidSelectType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined}
+      fileManagerSelectionType={
+        isValidSelectType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined
+      }
+      doneButtonHandler={props.disableDoneButton ? null : undefined}
 
       hideUploadButton={false}
       hideRetryButton={false}

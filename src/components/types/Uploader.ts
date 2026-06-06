@@ -132,6 +132,11 @@ export interface UppyDashboard {
    * It only can be one of the string ('files', 'folders' and 'both').
    */
   fileManagerSelectionType?: string;
+
+  /**
+   * Custom prop that simply determine able or disable "done" button.
+   */
+  disableDoneButton?: boolean;
 }
 
 export interface UppyCallbacks {

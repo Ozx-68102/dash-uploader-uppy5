@@ -18,6 +18,7 @@ def Upload(
         *,
         allow_multiple_upload_batches: bool = True,
         allowed_file_types: list[str] | None = None,
+        disable_done_button: bool = False,
         auto_proceed: bool = False,
         max_file_size: int | None = 1024,
         min_file_size: int | None = None,
@@ -48,6 +49,8 @@ def Upload(
     allowed_file_types : list[str] or None
         Wildcards ["image/*"], or exact mime types ["image/jpeg"], or file extensions [".jpg"].
         Defaults to None.
+    disable_done_button: bool
+        If True, it will not show a "done" button when the upload is done. Defaults to False.
     auto_proceed : bool
         If True, it will upload as soon as files are added. Defaults to False.
     max_file_size : int or None
@@ -101,6 +104,7 @@ def Upload(
         uploadUrl=upload_url,
         allowMultipleUploadBatches=allow_multiple_upload_batches,
         allowedFileTypes=allowed_file_types,
+        disableDoneButton=disable_done_button,
         autoProceed=auto_proceed,
         maxFileSize=max_file_size,
         minFileSize=min_file_size,
