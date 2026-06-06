@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Allow `size.width` and `size.height` to accept CSS length strings (e.g. `"100%"`, `"75px"`, `"50vw"`, `"10rem"`) in
+  addition to pixel integers
 - Make `Upload()` parameters keyword-only (after `id`) (97affed)
 - Refactor `Upload()` to build component props via `UploadConfig.model_dump()` (a386256)
 - Upgrade Node.js to 22.22.0 in `.nvmrc` (bee52a4)

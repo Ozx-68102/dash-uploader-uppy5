@@ -24,7 +24,9 @@ app.layout = html.Div([
         id='uploader',
         upload_id=None,
         disable_done_button=True,
-        max_number_of_files=10
+        max_number_of_files=10,
+        size={"width": "75%"},
+        note="hello!"
     ),
     html.Button("Clear", id="clear-btn"),
     html.Div(id="output-zone")
@@ -58,6 +60,7 @@ def test2(is_uploading: bool):
 @app.callback(
     Output("uploader", "clearTrigger"),
     Input("clear-btn", "n_clicks"),
+    prevent_initial_call=True
 )
 def test3(n_clicks: int):
     print(f"Callback 3 Triggered ! n_clicks: {n_clicks}")

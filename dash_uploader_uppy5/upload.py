@@ -29,7 +29,7 @@ def Upload(
         disabled: bool = False,
         theme: Literal["auto", "light", "dark"] = "auto",
         note: str | None = None,
-        size: dict[str, int] | None = None,
+        size: dict[str, int | str] | None = None,
         hide_progress_details: bool = False,
         disable_thumbnail_generator: bool = True,
         wait_for_thumbnails_before_upload: bool = False,
@@ -75,9 +75,10 @@ def Upload(
         When it is set to `auto`, it will respect the user’s system settings and switch automatically.
     note: str or None
         A string of text to be placed in the Dashboard UI. Defaults to None.
-    size: dict[str, int] or None
-        Size of the Dashboard in pixels. It only accepts "width" and "height". Defaults to None.
-        Example: {"width": 500, "height": 300}
+    size: dict[str, int | str] or None
+        Size of the Dashboard. It only accepts "width" and "height". Defaults to None.
+        Each value may be an int (pixels) or a CSS length string (e.g. "100%", "75px", "50vw", "10rem").
+        Examples: {"width": 500, "height": 300}, {"width": "100%", "height": "75px"}
     hide_progress_details: bool
         Show or hide progress details in the status bar. Defaults to False.
     disable_thumbnail_generator: bool

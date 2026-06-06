@@ -6,8 +6,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, field_serial
 class SizeConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    width: int | None = Field(default=None, description="in Pixels")
-    height: int | None = Field(default=None, description="in Pixels")
+    width: int | str | None = Field(default=None)
+    height: int | str | None = Field(default=None)
 
 
 class UploadConfig(BaseModel):
@@ -64,8 +64,8 @@ class UploadConfig(BaseModel):
     @field_validator("size", mode="before")
     @classmethod
     def parse_size(cls, v: dict | None) -> SizeConfig | None:
-        return v if v is None else SizeConfig(**v)
+        return SizeConfig(**v) if v is not None else None
 
     @field_serializer("size", when_used="json")
-    def serialize_size(self, v: SizeConfig | None) -> dict[str, int] | None:
+    def serialize_size(self, v: SizeConfig | None) -> dict[str, int | str | None] | None:
         return v.model_dump() if v is not None else None

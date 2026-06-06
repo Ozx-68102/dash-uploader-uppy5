@@ -8,14 +8,16 @@ import DashComponentProps from './DashComponent';
 
 interface DashboardSize {
   /**
-   * Width of the Dashboard in pixels.
+   * Width of the Dashboard. Use a number for pixels (e.g. 500),
+   * or a CSS length string (e.g. "100%", "75px", "50vw", "10rem").
    */
-  width?: number;
+  width?: number | string;
 
   /**
-   * Height of the Dashboard in pixels.
+   * Height of the Dashboard. Use a number for pixels (e.g. 300),
+   * or a CSS length string (e.g. "75px", "50vh", "10rem").
    */
-  height?: number;
+  height?: number | string;
 }
 
 interface ResponseInfo {
@@ -116,8 +118,9 @@ export interface UppyDashboard {
   note?: string;
 
   /**
-  * Size of the Dashboard in pixels or percentages.
-  */
+   * Size of the Dashboard. Accepts "width" and "height" keys.
+   * Each value may be a number (pixels) or a CSS length string.
+   */
   size?: DashboardSize;
 
   /**
