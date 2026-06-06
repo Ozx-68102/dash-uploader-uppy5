@@ -54,7 +54,7 @@ class UploadConfig(BaseModel):
     @field_validator("max_number_of_files")
     @classmethod
     def validate_max_files(cls, v: int | None, info: ValidationInfo) -> int | None:
-        min_files: int | None = info.data.get("min_file_size")
+        min_files: int | None = info.data.get("min_number_of_files")
         if v is not None and min_files is not None and v < min_files:
             raise ValueError("`max_number_of_files` must be greater than or equal to `min_number_of_files`.")
 
