@@ -78,6 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix `uploadStatus` timing: emit success immediately when `uploadTrigger` is accepted, instead of waiting for
+  `uppy.upload()` to resolve.
 - Emit `RuntimeWarning` at `Upload()` construction when `auto_clear_on_complete=True` is combined with
   visible Dashboard retry (`hide_retry_button=False`); `retryTrigger` will be unavailable
 - Fix `hide_drag_over_hint` when multiple uploaders share the same page:

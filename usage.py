@@ -103,8 +103,8 @@ def trigger_manual_upload(n_clicks: int):
     Input("uploader", "uploadStatus"),
     prevent_initial_call=True,
 )
-def on_upload_status(upload_status: dict | None):
-    print(f"Upload status: {upload_status}")
+def on_upload_status_trigger(upload_status: dict | None):
+    print(f"Upload status triggered: {upload_status}")
     return no_update
 
 

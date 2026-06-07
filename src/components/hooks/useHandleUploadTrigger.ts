@@ -35,24 +35,14 @@ export const useHandleUploadTrigger = (
     }
 
     try {
-      uppy.upload()
-        .then(() => {
-          // Success here means the upload() call was accepted and started.
-          // It does NOT mean all files succeeded; file results are in uploadedFiles/failedFiles.
-          onUploadStatusRef.current?.({
-            status: "success",
-            errorMessage: null,
-            attempt: uploadTrigger,
-          });
-        })
-        .catch((error) => {
-          const errorMessage = error instanceof Error ? error.message : "Unknown upload error";
-          onUploadStatusRef.current?.({
-            status: "error",
-            errorMessage,
-            attempt: uploadTrigger,
-          });
-        });
+      // Fire-and-forget: initiate the upload but do not wait for completion.
+      // uploadStatus only reports whether the trigger itself was accepted.
+      uppy.upload().then();
+      onUploadStatusRef.current?.({
+        status: "success",
+        errorMessage: null,
+        attempt: uploadTrigger,
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
       onUploadStatusRef.current?.({
