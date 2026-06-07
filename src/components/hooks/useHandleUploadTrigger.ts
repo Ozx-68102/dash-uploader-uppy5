@@ -42,14 +42,22 @@ export const useHandleUploadTrigger = (
     }
 
     try {
-      // Fire-and-forget: initiate the upload but do not wait for completion.
-      // uploadStatus only reports whether the trigger itself was accepted.
-      uppy.upload().then();
-      onUploadStatusRef.current?.({
-        status: "success",
-        errorMessage: null,
-        attempt: uploadTrigger,
-      });
+      uppy.upload()
+        .then(() => {
+          onUploadStatusRef.current?.({
+            status: "success",
+            errorMessage: null,
+            attempt: uploadTrigger,
+          });
+        })
+        .catch((error) => {
+          const errorMessage = error instanceof Error ? error.message : "Unknown Upload Error";
+          onUploadStatusRef.current?.({
+            status: "error",
+            errorMessage,
+            attempt: uploadTrigger,
+          });
+        });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
       onUploadStatusRef.current?.({
