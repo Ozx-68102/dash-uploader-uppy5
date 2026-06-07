@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactor: extract repeated `setProps` callback pattern into a curried `setOperationResult` helper in
+  `DashUploaderUppy5.tsx`
 - Refactor `Upload()` to use sentinel (`_UNSET`) pattern so Pydantic `default`/`default_factory` become the single
   source of truth; function signature is dynamically generated from `UploadConfig.model_fields` to preserve IDE/help()
   experience (c547965)
