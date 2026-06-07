@@ -63,13 +63,13 @@ interface ResponseInfo {
 }
 
 /**
- * Status returned after a trigger prop (e.g. `uploadTrigger`, `clearTrigger`) is processed.
+ * Status object returned by trigger response props (`clearStatus`, `uploadStatus`, etc.).
  *
- * This is a "receipt" for the trigger action itself, NOT the final outcome of the underlying operation.
- * - `status: "success"` means the component received the trigger and executed the corresponding action
- *   (e.g. called `uppy.upload()`, `uppy.clear()`, etc.).
- * - It does NOT indicate whether files were successfully uploaded, cleared, retried, or cancelled.
- *   Those results are reported via `uploadedFiles` / `failedFiles` (from the `complete` event).
+ * Semantics depend on which prop:
+ * - `clearStatus`, `cancelStatus`, `retryStatus`: receipt for whether the trigger was accepted and the
+ *   corresponding Uppy API was invoked.
+ * - `uploadStatus`: result of the `uppy.upload()` promise after `uploadTrigger` is accepted.
+ *   Per-file outcomes are still reported via `uploadedFiles` / `failedFiles` (Uppy `complete` event).
  *
  * The `attempt` field echoes the trigger value so each trigger produces a distinct update,
  * ensuring Dash callbacks always fire even if `status` stays the same.
@@ -77,13 +77,14 @@ interface ResponseInfo {
 export interface TriggerStatus {
   /**
    * One of `"success"` or `"error"`.
-   * `"success"` means the trigger was accepted and the action was initiated.
+   * For `uploadStatus`, reflects whether `uppy.upload()` resolved or rejected.
+   * For other `*Status` props, means the trigger was accepted and the action was invoked.
    */
   status: string;
 
   /**
    * Error details when `status` is `"error"`, otherwise `null`.
-   * Only set when the trigger itself could not be processed (e.g. invalid state).
+   * For `uploadStatus`, may include promise rejection or pre-upload validation errors.
    */
   errorMessage: string | null;
 
@@ -300,8 +301,9 @@ export interface Triggers {
   uploadTrigger?: number;
 
   /**
-   * Status returned after `uploadTrigger` is processed.
-   * See `TriggerStatus` for semantics.
+   * Status returned after `uploadTrigger` is processed and `uppy.upload()` settles.
+   * `success` when the upload promise resolves; `error` on validation failure, promise rejection, or thrown error.
+   * Per-file results are reported separately via `uploadedFiles` / `failedFiles`.
    */
   uploadStatus?: TriggerStatus;
 

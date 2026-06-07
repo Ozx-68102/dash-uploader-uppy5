@@ -42,6 +42,7 @@ export const useHandleUploadTrigger = (
     }
 
     try {
+      // uploadStatus reflects uppy.upload() promise outcome; per-file results use uploadedFiles/failedFiles.
       uppy.upload()
         .then(() => {
           onUploadStatusRef.current?.({
