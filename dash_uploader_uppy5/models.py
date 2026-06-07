@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, field_serializer, ValidationInfo
+from pydantic import BaseModel, ConfigDict, Field, field_validator, field_serializer, model_validator, ValidationInfo
 
 
 class SizeConfig(BaseModel):
@@ -71,14 +71,18 @@ class UploadConfig(BaseModel):
 
         return v
 
-    @field_validator("max_number_of_files")
-    @classmethod
-    def validate_max_files(cls, v: int | None, info: ValidationInfo) -> int | None:
-        min_files: int | None = info.data.get("min_number_of_files")
-        if v is not None and min_files is not None and v < min_files:
-            raise ValueError("`max_number_of_files` must be greater than or equal to `min_number_of_files`.")
+    @model_validator(mode="after")
+    def validate_file_count_range(self) -> Self:
+        if (
+                self.max_number_of_files is not None
+                and self.min_number_of_files is not None
+                and self.max_number_of_files < self.min_number_of_files
+        ):
+            raise ValueError(
+                "`max_number_of_files` must be greater than or equal to `min_number_of_files`."
+            )
 
-        return v
+        return self
 
     @field_validator("size", mode="before")
     @classmethod

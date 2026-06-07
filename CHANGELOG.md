@@ -76,6 +76,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix `max_number_of_files` / `min_number_of_files` cross-field validation in `UploadConfig`:
+  - Invalid pairs such as `max_number_of_files=1` with `min_number_of_files=5` could pass because the `@field_validator`
+    on `max` ran before `min` was validated (Pydantic field order)
+  - Move the `max >= min` check to `@model_validator(mode="after")` so both fields, including defaults, are resolved
+    first
 - Prevent duplicate/accidental uploads when `auto_proceed=True` is combined with `uploadTrigger`:
   - Python `RuntimeWarning` emitted at `Upload()` construction time
   - Runtime rejection in hook (returns `{status:"error", attempt:N}`) (d4c0714)
