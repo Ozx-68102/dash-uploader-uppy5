@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-08
+
 ### Added
 
 - Add `hide_drag_over_hint` (experimental) option to hide the drag-over upward arrow hint animation (the blue dashed box
@@ -50,11 +52,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Clarify `uploadStatus` reflects `uppy.upload()` promise outcome; other `*Status` props remain trigger receipts
+  (2b11380)
+- Restore Dashboard pause/resume controls (`hidePauseResumeButton={false}`) (d0f5b20)
 - Clarify `auto_clear_on_complete`: clears files on the Uppy `complete` event; `uploadedFiles` / `failedFiles`
   are reported to Dash before the UI resets (65dc111)
-- Rename `OperationResult` interface to `TriggerStatus` and update its documentation to clarify it is a receipt
-  for the trigger action itself, not the outcome of the underlying operation (e.g. file upload success/failure)
-  (01809bf)
+- Rename `OperationResult` interface to `TriggerStatus`; document receipt semantics for `clearStatus`,
+  `cancelStatus`, and `retryStatus` (01809bf)
 - Rename Dash props: `clearOperation` → `clearStatus`, `uploadOperation` → `uploadStatus`,
   `retryOperation` → `retryStatus`, `cancelOperation` → `cancelStatus` (01809bf)
 - Rename internal hook parameters and refs from `on*Result` / `on*ResultRef` to `on*Status` / `on*StatusRef`
@@ -80,13 +84,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Align trigger conflict handling to runtime-only rejection (85c135b, 1bf0cf6, 9b824f6, 59eb2e4, d4c0714)
+- Emit `uploadStatus` after `uppy.upload()` settles (`success` on resolve, `error` on reject); per-file outcomes
+  remain on `uploadedFiles` / `failedFiles` (ab76a8f)
+- Prevent trigger hooks from re-firing on Dash re-render when `*Trigger` is unchanged (skip `0`, track last handled
+  value, compare `*Status.attempt`) (d0f5b20)
+- Add missing Pydantic models to `__all__`; handle missing form `uploadId` in upload handler (d0f5b20)
+- Align trigger conflict handling to runtime-only rejection (85c135b, 1bf0cf6, 59eb2e4, d4c0714)
   - Remove construction-time `RuntimeWarning` for `auto_proceed` + `uploadTrigger` and `auto_clear_on_complete` +
     `retryTrigger`
   - Reject `uploadTrigger` when `auto_proceed=True` or no files are queued; reject `retryTrigger` when
     `auto_clear_on_complete=True` (returns `{status:"error"}` via `*Status`)
   - Use Python-facing names (`auto_proceed`, `auto_clear_on_complete`) in trigger error messages
-  - Emit `uploadStatus` success immediately when `uploadTrigger` is accepted, not after `uppy.upload()` resolves
 - Fix `hide_drag_over_hint` when multiple uploaders share the same page (ec72b95)
   - Previously injected one global `<style>`; unmounting or disabling one instance removed the rule for all others
   - Extract style management to `hideDragOverHintStyle.ts`; scope CSS per component `id`
@@ -102,6 +110,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Document `uploadStatus` batch-level promise semantics in README and TypeScript prop docs (2b11380)
 - State that `auto_clear_on_complete` and retry (`retryTrigger` / Dashboard retry) cannot be used together
   (1bf0cf6)
 - Clarify `auto_clear_on_complete` semantics and incompatibility with Dashboard retry / `retryTrigger` in
@@ -187,4 +196,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-This changelog was generated from git history and existing tags (`v0.1.0`, `v0.1.1`, `v0.2.0`, `v0.2.1`).
+This changelog was generated from git history and existing tags (`v0.1.0`, `v0.1.1`, `v0.2.0`, `v0.2.1`, `v0.3.0`).
