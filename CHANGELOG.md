@@ -14,8 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Implemented via `useEffect` that dynamically injects/removes a `<style>` targeting
   `.uppy-Dashboard-dropFilesHereHint`.
   Exposed in both Python `Upload()` and React `DashUploaderUppy5`. Marked EXPERIMENTAL in docs/comments as it is not an
-  official Uppy feature and may break on future Uppy updates.
-- Add `auto_clear_on_complete` option to automatically clear files after a successful upload completes
+  official Uppy feature and may break on future Uppy updates. (5ffcebb)
+- Add `auto_clear_on_complete` option to automatically clear files after a successful upload completes (5ffcebb)
 - Add `disable_status_bar` option to completely disable the status bar (490026c)
 - Add `retryTrigger` / `retryOperation` and `cancelTrigger` / `cancelOperation` (Dash input/response) for custom
   retry/cancel buttons (ef257dd)
@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md.
+- Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md. (5ffcebb)
 - Add changelog link section to README (0826ae1)
 - Document `disable_done_button`, `clearTrigger`, and `clearOperation` in README
 
