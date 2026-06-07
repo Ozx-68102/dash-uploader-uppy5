@@ -102,7 +102,8 @@ export interface UppyCore {
   uploadUrl: string;
 
   /**
-   * If `true`, it will upload as soon as files are added
+   * If `true`, uploads start as soon as files are added.
+   * Incompatible with `uploadTrigger` when `auto_proceed=True` (returns error via `uploadStatus`).
    */
   autoProceed?: boolean;
 
@@ -217,19 +218,21 @@ export interface UppyDashboard {
   localeString?: LocaleStrings;
 
   /**
-   * Show or hide the upload button. Use this if you are providing a custom upload button somewhere.
+   * Show or hide the upload button. Use when providing a custom upload button with `uploadTrigger`.
+   * Only effective when `auto_proceed=False`.
    */
   hideUploadButton?: boolean;
 
   /**
    * Hide the retry button in the status bar and on each individual file.
-   * Use this if you are providing a custom retry button somewhere.
+   * Typically paired with a custom retry button using `retryTrigger` (`retryAll()`).
+   * Hiding the button does not make `retryTrigger` work when `auto_clear_on_complete=True` (rejected at runtime).
    */
   hideRetryButton?: boolean;
 
   /**
    * Hide the cancel button in status bar and on each individual file.
-   * Use this if you are providing a custom retry button somewhere.
+   * Typically paired with a custom cancel button using `cancelTrigger` (`cancelAll()`).
    */
   hideCancelButton?: boolean;
 
@@ -292,8 +295,7 @@ export interface Triggers {
 
   /**
    * Increment or change this value from a Dash callback to manually trigger upload.
-   * Only works when `autoProceed` is `false`. When `autoProceed` is `true`, this trigger is ignored
-   * and an error is returned via `uploadStatus`.
+   * Only works when `auto_proceed=False`. When `auto_proceed=True`, returns error via `uploadStatus`.
    */
   uploadTrigger?: number;
 
@@ -305,7 +307,7 @@ export interface Triggers {
 
   /**
    * Increment or change this value from a Dash callback to cancel all uploads.
-   * Corresponds to `hideCancelButton` in the Dashboard.
+   * Typically paired with `hide_cancel_button` when using a custom cancel button.
    */
   cancelTrigger?: number;
 
@@ -317,8 +319,9 @@ export interface Triggers {
 
   /**
    * Increment or change this value from a Dash callback to retry all failed uploads.
-   * Corresponds to `hideRetryButton` in the Dashboard. Only retries failed files (`retryAll`).
-   * Cannot be used when `autoClearOnComplete` is true; returns error via `retryStatus`.
+   * Typically paired with `hide_retry_button` when using a custom retry button.
+   * Only retries failed files (`retryAll()`).
+   * Cannot be used when `auto_clear_on_complete=True`; returns error via `retryStatus`.
    */
   retryTrigger?: number;
 

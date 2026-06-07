@@ -78,6 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Remove construction-time `RuntimeWarning` for `auto_proceed=True` and `hide_upload_button=True`; `uploadTrigger`
+  rejection is handled at runtime (same pattern as `retryTrigger` / `auto_clear_on_complete`)
 - Use Python-facing names (`auto_clear_on_complete`, `auto_proceed`) in trigger error messages instead of React prop
   names
 - Reject `retryTrigger` at runtime when `auto_clear_on_complete=True` (returns `{status:"error"}` via `retryStatus`);
@@ -110,6 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md. (5ffcebb)
 - Add changelog link section to README (0826ae1)
 - Document `disable_done_button`, `clearTrigger`, and `clearOperation` in README
+- Cross-reference `auto_proceed` / `uploadTrigger` and `auto_clear_on_complete` / `retryTrigger` in README,
+  `Upload()` docstring, and TypeScript prop docs; clarify `hide_*_button` as UI pairing (not a trigger prerequisite)
 
 ## [0.2.1] - 2026-05-04
 

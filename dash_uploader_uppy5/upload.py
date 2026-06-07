@@ -1,4 +1,3 @@
-import warnings
 from inspect import Parameter, Signature
 from typing import Literal
 from uuid import uuid4
@@ -132,7 +131,8 @@ def Upload(
     disable_status_bar: bool
         Disable the status bar completely. Defaults to False.
     auto_proceed : bool
-        If True, it will upload as soon as files are added. Defaults to False.
+        If True, uploads start as soon as files are added. Defaults to False.
+        Cannot be used with ``uploadTrigger`` (returns error via ``uploadStatus``).
     max_file_size : int or None
         Maximum file size in Megabytes for each individual file. Defaults to 1024.
     min_file_size : int or None
@@ -180,17 +180,17 @@ def Upload(
     file_manager_selection_type: Literal["files", "folders", "both"],
         Configure the type of selections allowed when browsing your file system via the file manager selection window. Defaults to "files".
     hide_upload_button: bool
-        Show or hide the upload button. Use this if you are providing a custom upload button somewhere
-        and are using ``uploadTrigger`` to manually trigger uploads. Only effective when `auto_proceed=False`.
-        Defaults to False.
+        Show or hide the upload button. Typically paired with a custom upload button using
+        ``uploadTrigger``. Only effective when ``auto_proceed=False``. Defaults to False.
     hide_retry_button: bool
         Hide the retry button in the status bar and on each individual file.
-        Use this if you are providing a custom retry button somewhere and using ``retryTrigger``
-        with the `retryAll()` API. Defaults to False.
+        Typically paired with a custom retry button using ``retryTrigger`` (``retryAll()`` API).
+        Hiding the button does not make ``retryTrigger`` work when ``auto_clear_on_complete=True``
+        (that combination is rejected at runtime). Defaults to False.
     hide_cancel_button: bool
         Hide the cancel button in the status bar and on each individual file.
-        Use this if you are providing a custom cancel button somewhere and using ``cancelTrigger``
-        with the `cancelAll()` API. Defaults to False.
+        Typically paired with a custom cancel button using ``cancelTrigger`` (``cancelAll()`` API).
+        Defaults to False.
     auto_clear_on_complete: bool
         Automatically clear all files when an upload batch completes (Uppy ``complete`` event).
         ``uploadedFiles`` / ``failedFiles`` are reported to Dash before the UI resets.
@@ -237,18 +237,6 @@ def Upload(
         "hide_drag_over_hint": hide_drag_over_hint,
     }
     overrides = {k: v for k, v in overrides.items() if v is not _UNSET}
-
-    # Runtime warning: hide_upload_button + auto_proceed=True is a conflicting combination
-    # because uploadTrigger only works when auto_proceed=False
-    auto_proceed = overrides.get("auto_proceed", False)
-    hide_upload_button = overrides.get("hide_upload_button", False)
-    if auto_proceed and hide_upload_button:
-        warnings.warn(
-            "Incompatible options: `auto_proceed=True` and `hide_upload_button=True`. "
-            "`uploadTrigger` will be unavailable.",
-            RuntimeWarning,
-            stacklevel=2,
-        )
 
     # upload_id: business logic (None -> uuid4), not a model default
     upload_id = overrides.pop("upload_id", None) or str(uuid4())
