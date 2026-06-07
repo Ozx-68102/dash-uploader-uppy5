@@ -240,8 +240,8 @@ export interface UppyDashboard {
 
   /**
    * Automatically clear all files when an upload batch completes (Uppy `complete` event).
-   * Useful for minimal drop-zone setups. Incompatible with Dashboard retry / `retryTrigger`
-   * unless `hideRetryButton` is true.
+   * Useful for minimal drop-zone setups. `uploadedFiles` / `failedFiles` are reported before the UI resets.
+   * Cannot be used with Dashboard retry or `retryTrigger`.
    */
   autoClearOnComplete?: boolean;
 
@@ -318,6 +318,7 @@ export interface Triggers {
   /**
    * Increment or change this value from a Dash callback to retry all failed uploads.
    * Corresponds to `hideRetryButton` in the Dashboard. Only retries failed files (`retryAll`).
+   * Cannot be used when `autoClearOnComplete` is true; returns error via `retryStatus`.
    */
   retryTrigger?: number;
 

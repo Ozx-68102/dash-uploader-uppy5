@@ -104,7 +104,7 @@ if __name__ == '__main__':
 | `hide_retry_button`                 | bool                                | False                                 | Hide the retry button in the status bar and on each individual file. Use this if you are providing a custom retry button somewhere and using `retryTrigger` with the `retryAll()` API.                                                                                                                                |
 | `hide_cancel_button`                | bool                                | False                                 | Hide the cancel button in the status bar and on each individual file. Use this if you are providing a custom cancel button somewhere and using `cancelTrigger` with the `cancelAll()` API.                                                                                                                            |
 | `hide_drag_over_hint`               | bool                                | False                                 | **EXPERIMENTAL**: Hide the drag-over upward arrow hint animation (the blue dashed box with ↑ icon). Not an official Uppy feature and may break on future Uppy updates. Implemented by dynamically injecting a `<style>` rule via `useEffect`.                                                                         |
-| `auto_clear_on_complete`            | bool                                | False                                 | Automatically clear all files when an upload batch completes (Uppy `complete` event). `uploadedFiles` / `failedFiles` are reported before the UI resets. Incompatible with Dashboard retry / `retryTrigger` unless `hide_retry_button=True`.                                                                          |
+| `auto_clear_on_complete`            | bool                                | False                                 | Automatically clear all files when an upload batch completes (Uppy `complete` event). `uploadedFiles` / `failedFiles` are reported before the UI resets. Cannot be used with Dashboard retry or `retryTrigger`.                                                                                                       |
 
 ### About `locale_string`
 
@@ -308,7 +308,7 @@ Status returned after `cancelTrigger` is processed. This is a receipt for the tr
 ### `retryTrigger`
 
 Write to this property from a Dash callback to retry all failed uploads. Corresponds to `hideRetryButton`. Only retries
-failed files (`retryAll()`).
+failed files (`retryAll()`). Cannot be used when `auto_clear_on_complete=True` (returns error via `retryStatus`).
 
 **Type:** `int`
 

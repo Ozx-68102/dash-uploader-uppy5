@@ -5,6 +5,7 @@ import {TriggerStatus} from "../types/Uploader";
 export const useHandleRetryTrigger = (
   uppy: Uppy,
   retryTrigger?: number,
+  autoClearOnComplete?: boolean,
   onRetryStatus?: (status: TriggerStatus) => void
 ) => {
   const onRetryStatusRef = useRef(onRetryStatus);
@@ -12,6 +13,15 @@ export const useHandleRetryTrigger = (
 
   useEffect(() => {
     if (retryTrigger === undefined || retryTrigger === null) return;
+
+    if (autoClearOnComplete) {
+      onRetryStatusRef.current?.({
+        status: "error",
+        errorMessage: "Cannot use retryTrigger when auto_clear_on_complete is True. Failed files are cleared on complete.",
+        attempt: retryTrigger,
+      });
+      return;
+    }
 
     try {
       uppy.retryAll()
@@ -38,5 +48,5 @@ export const useHandleRetryTrigger = (
         attempt: retryTrigger,
       });
     }
-  }, [retryTrigger, uppy]);
+  }, [retryTrigger, uppy, autoClearOnComplete]);
 };

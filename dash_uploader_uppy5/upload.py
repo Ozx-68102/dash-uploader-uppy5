@@ -193,6 +193,8 @@ def Upload(
         with the `cancelAll()` API. Defaults to False.
     auto_clear_on_complete: bool
         Automatically clear all files when an upload batch completes (Uppy ``complete`` event).
+        ``uploadedFiles`` / ``failedFiles`` are reported to Dash before the UI resets.
+        Cannot be used with Dashboard retry or ``retryTrigger`` (failed files are cleared).
         Defaults to False.
     hide_drag_over_hint: bool
         **[EXPERIMENTAL]** Hide the drag-over upward arrow animation hint.
@@ -244,18 +246,6 @@ def Upload(
         warnings.warn(
             "Incompatible options: `auto_proceed=True` and `hide_upload_button=True`. "
             "`uploadTrigger` will be unavailable.",
-            RuntimeWarning,
-            stacklevel=2,
-        )
-
-    # Runtime warning: auto_clear_on_complete + visible retry is a conflicting combination
-    # because retryAll() requires failed files to remain in Uppy after the complete event
-    auto_clear_on_complete = overrides.get("auto_clear_on_complete", False)
-    hide_retry_button = overrides.get("hide_retry_button", False)
-    if auto_clear_on_complete and not hide_retry_button:
-        warnings.warn(
-            "Incompatible options: `auto_clear_on_complete=True` and visible Dashboard retry. "
-            "`retryTrigger` will be unavailable.",
             RuntimeWarning,
             stacklevel=2,
         )

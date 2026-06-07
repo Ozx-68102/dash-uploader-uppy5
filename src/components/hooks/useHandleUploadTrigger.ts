@@ -18,7 +18,7 @@ export const useHandleUploadTrigger = (
     if (autoProceed) {
       onUploadStatusRef.current?.({
         status: "error",
-        errorMessage: "Cannot use uploadTrigger when autoProceed is true. Uploads start automatically when files are added.",
+        errorMessage: "Cannot use uploadTrigger when auto_proceed is True. Uploads start automatically when files are added.",
         attempt: uploadTrigger,
       });
       return;

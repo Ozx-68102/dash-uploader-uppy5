@@ -36,7 +36,7 @@ const DashUploaderUppy5 = (props: Props) => {
 
   useHandleClearTrigger(uppy, props.clearTrigger, setTriggerStatus("clearStatus"));
   useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, setTriggerStatus("uploadStatus"));
-  useHandleRetryTrigger(uppy, props.retryTrigger, setTriggerStatus("retryStatus"));
+  useHandleRetryTrigger(uppy, props.retryTrigger, props.autoClearOnComplete, setTriggerStatus("retryStatus"));
   useHandleCancelTrigger(uppy, props.cancelTrigger, setTriggerStatus("cancelStatus"));
 
   useEffect(() => {

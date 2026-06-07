@@ -78,6 +78,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Use Python-facing names (`auto_clear_on_complete`, `auto_proceed`) in trigger error messages instead of React prop
+  names
+- Reject `retryTrigger` at runtime when `auto_clear_on_complete=True` (returns `{status:"error"}` via `retryStatus`);
+  remove construction-time warning tied to `hide_retry_button`
 - Fix `uploadStatus` timing: emit success immediately when `uploadTrigger` is accepted, instead of waiting for
   `uppy.upload()` to resolve.
 - Emit `RuntimeWarning` at `Upload()` construction when `auto_clear_on_complete=True` is combined with
@@ -100,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- State that `auto_clear_on_complete` and retry (`retryTrigger` / Dashboard retry) cannot be used together
 - Clarify `auto_clear_on_complete` semantics and incompatibility with Dashboard retry / `retryTrigger` in
   README, `Upload()` docstring, and TypeScript prop docs
 - Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md. (5ffcebb)
