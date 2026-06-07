@@ -49,6 +49,8 @@ class UploadConfig(BaseModel):
         default="files", alias="fileManagerSelectionType"
     )
     hide_upload_button: bool = Field(default=False, alias="hideUploadButton")
+    hide_retry_button: bool = Field(default=False, alias="hideRetryButton")
+    hide_cancel_button: bool = Field(default=False, alias="hideCancelButton")
 
     @field_validator("max_file_size", "min_file_size", "max_total_file_size", mode="before")
     @classmethod

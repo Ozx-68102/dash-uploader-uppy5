@@ -207,8 +207,16 @@ export interface UppyDashboard {
    */
   hideUploadButton?: boolean;
 
+  /**
+   * Hide the retry button in the status bar and on each individual file.
+   * Use this if you are providing a custom retry button somewhere.
+   */
   hideRetryButton?: boolean;
 
+  /**
+   * Hide the cancel button in status bar and on each individual file.
+   * Use this if you are providing a custom retry button somewhere.
+   */
   hideCancelButton?: boolean;
 
   disableStatusBar?: boolean;
@@ -238,7 +246,9 @@ export interface UppyCallbacks {
    * True when starting upload, False when completed (regardless of success or failure)
    */
   isUploading?: boolean;
+}
 
+export interface Triggers {
   /**
    * Increment or change this value from a Dash callback to clear all files in the uploader.
    */
@@ -260,10 +270,32 @@ export interface UppyCallbacks {
    * Result of the last upload trigger operation. Emitted by the component after `uploadTrigger` changes.
    */
   uploadOperation?: OperationResult;
+
+  /**
+   * Increment or change this value from a Dash callback to cancel all uploads.
+   * Corresponds to `hideCancelButton` in the Dashboard.
+   */
+  cancelTrigger?: number;
+
+  /**
+   * Result of the last cancel operation. Emitted by the component after `cancelTrigger` changes.
+   */
+  cancelOperation?: OperationResult;
+
+  /**
+   * Increment or change this value from a Dash callback to retry all failed uploads.
+   * Corresponds to `hideRetryButton` in the Dashboard. Only retries failed files (`retryAll`).
+   */
+  retryTrigger?: number;
+
+  /**
+   * Result of the last retry operation. Emitted by the component after `retryTrigger` changes.
+   */
+  retryOperation?: OperationResult;
 }
 
 
-type Props = UppyCore & UppyDashboard & UppyCallbacks & DashComponentProps;
+type Props = UppyCore & UppyDashboard & UppyCallbacks & DashComponentProps & Triggers;
 
 
 export default Props;

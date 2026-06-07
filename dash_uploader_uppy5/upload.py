@@ -37,6 +37,8 @@ _UPLOAD_API_FIELDS = [
     "locale_string",
     "file_manager_selection_type",
     "hide_upload_button",
+    "hide_retry_button",
+    "hide_cancel_button",
 ]
 
 # Fields that require MB-to-bytes conversion (model stores bytes, API uses MB)
@@ -104,6 +106,8 @@ def Upload(
         locale_string: dict[str, str] | None | object = _UNSET,
         file_manager_selection_type: Literal["files", "folders", "both"] | object = _UNSET,
         hide_upload_button: bool | object = _UNSET,
+        hide_retry_button: bool | object = _UNSET,
+        hide_cancel_button: bool | object = _UNSET,
 ) -> DashUploaderUppy5:
     """
     A dash-uploader-uppy5 component.
@@ -171,6 +175,14 @@ def Upload(
         Show or hide the upload button. Use this if you are providing a custom upload button somewhere
         and are using `uploadTrigger` to manually trigger uploads. Only effective when `auto_proceed=False`.
         Defaults to False.
+    hide_retry_button: bool
+        Hide the retry button in the status bar and on each individual file.
+        Use this if you are providing a custom retry button somewhere and using `retryTrigger`
+        with the `retryAll()` API. Defaults to False.
+    hide_cancel_button: bool
+        Hide the cancel button in the status bar and on each individual file.
+        Use this if you are providing a custom cancel button somewhere and using `cancelTrigger`
+        with the `cancelAll()` API. Defaults to False.
 
     Returns
     -------
@@ -202,6 +214,8 @@ def Upload(
         "locale_string": locale_string,
         "file_manager_selection_type": file_manager_selection_type,
         "hide_upload_button": hide_upload_button,
+        "hide_retry_button": hide_retry_button,
+        "hide_cancel_button": hide_cancel_button,
     }
     overrides = {k: v for k, v in overrides.items() if v is not _UNSET}
 

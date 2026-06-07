@@ -5,6 +5,8 @@ import Props from "./types/Uploader";
 import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
 import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
 import {useHandleUploadTrigger} from "./hooks/useHandleUploadTrigger";
+import {useHandleRetryTrigger} from "./hooks/useHandleRetryTrigger";
+import {useHandleCancelTrigger} from "./hooks/useHandleCancelTrigger";
 import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 import buildLocaleString from "./utils/buildLocaleString";
@@ -30,6 +32,16 @@ const DashUploaderUppy5 = (props: Props) => {
   useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, (result) => {
     if (props.setProps) {
       props.setProps({uploadOperation: result});
+    }
+  });
+  useHandleRetryTrigger(uppy, props.retryTrigger, (result) => {
+    if (props.setProps) {
+      props.setProps({retryOperation: result});
+    }
+  });
+  useHandleCancelTrigger(uppy, props.cancelTrigger, (result) => {
+    if (props.setProps) {
+      props.setProps({cancelOperation: result});
     }
   });
 
@@ -58,8 +70,8 @@ const DashUploaderUppy5 = (props: Props) => {
       doneButtonHandler={props.disableDoneButton ? null : undefined}
 
       hideUploadButton={props.hideUploadButton}
-      hideRetryButton={false}
-      hideCancelButton={false}
+      hideRetryButton={props.hideRetryButton}
+      hideCancelButton={props.hideCancelButton}
       disableStatusBar={false}
       hidePauseResumeButton={true}
       proudlyDisplayPoweredByUppy={false}

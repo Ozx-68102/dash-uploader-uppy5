@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add `retryTrigger` / `retryOperation` and `cancelTrigger` / `cancelOperation` (Dash input/response) for custom
+  retry/cancel buttons
+  - Add `useHandleRetryTrigger` hook (uses `uppy.retryAll()`) and `useHandleCancelTrigger` hook (uses
+    `uppy.cancelAll()`)
+  - Add `hide_retry_button` and `hide_cancel_button` parameters in `Upload()` to hide Dashboard's built-in retry/cancel
+    buttons
+    when supplying custom controls (pairs with the new triggers)
+  - Refactor: move all Trigger/Operation fields (`*Trigger`, `*Operation`) from `UppyCallbacks` interface to a dedicated
+    `Triggers` interface for clearer separation of passive callbacks vs. active control triggers
 - Add `uploadTrigger` (Dash input) and `uploadOperation` (component response) for manual upload triggering via
   `uppy.upload()` when `auto_proceed=False`
   - Add `useHandleUploadTrigger` hook with defense: ignores trigger and returns error when `autoProceed=True` (59eb2e4)
@@ -56,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Prevent duplicate/accidental uploads when `auto_proceed=True` is combined with `uploadTrigger`:
-  - Python `UserWarning` emitted at `Upload()` construction time
+  - Python `RuntimeWarning` emitted at `Upload()` construction time
   - Runtime rejection in hook (returns `{status:"error", attempt:N}`)
 - Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
 - Correct field name in `max_number_of_files` validator (`min_file_size` → `min_number_of_files`) (ed7ebbf)

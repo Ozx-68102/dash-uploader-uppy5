@@ -26,12 +26,16 @@ app.layout = html.Div([
             upload_id=None,
             disable_done_button=False,
             hide_upload_button=True,
+            hide_retry_button=True,
+            hide_cancel_button=True,
             max_number_of_files=10,
             note="hello!",
             locale_string={"dropPasteFiles": "Drop your files here"},
         ),
         html.Button("Clear", id="clear-btn"),
         html.Button("Manual Upload", id="upload-btn"),
+        html.Button("Retry", id="retry-btn"),
+        html.Button("Cancel", id="cancel-btn"),
     ], style={"width": 300, "height": 200}),
 
     html.Div(id="output-zone")
@@ -45,11 +49,11 @@ app.layout = html.Div([
     ],
     prevent_initial_call=True
 )
-def test1(
+def on_file_upload_complete(
         uploaded_files: list[dict[str, str | int | dict[str, str | int]]],
         failed_files: list[dict[str, str]]
 ):
-    print(f"Callback 1 Triggered ! Success: {uploaded_files}, Failed: {failed_files}")
+    print(f"File upload complete triggered ! Success: {uploaded_files}, Failed: {failed_files}")
     return no_update
 
 @app.callback(
@@ -57,8 +61,8 @@ def test1(
     Input("uploader", "isUploading"),
     prevent_initial_call=True
 )
-def test2(is_uploading: bool):
-    print(f"Callback 2 Triggered ! isUploading: {is_uploading}")
+def on_uploading_state_change(is_uploading: bool):
+    print(f"Uploading state change triggered ! isUploading: {is_uploading}")
     return no_update
 
 
@@ -67,8 +71,8 @@ def test2(is_uploading: bool):
     Input("clear-btn", "n_clicks"),
     prevent_initial_call=True
 )
-def test3(n_clicks: int):
-    print(f"Callback 3 Triggered ! n_clicks: {n_clicks}")
+def trigger_clear_upload(n_clicks: int):
+    print(f"Clear upload triggered ! n_clicks: {n_clicks}")
     return n_clicks
 
 
@@ -77,7 +81,7 @@ def test3(n_clicks: int):
     Input("uploader", "clearOperation"),
     prevent_initial_call=True,
 )
-def test4(clear_operation: dict | None):
+def on_clear_operation_complete(clear_operation: dict | None):
     print(f"Clear result: {clear_operation}")
     return no_update
 
@@ -87,8 +91,8 @@ def test4(clear_operation: dict | None):
     Input("upload-btn", "n_clicks"),
     prevent_initial_call=True,
 )
-def test5(n_clicks: int):
-    print(f"Callback 5 Triggered ! Manual upload requested: {n_clicks}")
+def trigger_manual_upload(n_clicks: int):
+    print(f"Manual upload triggered ! Manual upload requested: {n_clicks}")
     return n_clicks
 
 
@@ -97,9 +101,50 @@ def test5(n_clicks: int):
     Input("uploader", "uploadOperation"),
     prevent_initial_call=True,
 )
-def test6(upload_operation: dict | None):
+def on_manual_upload_operation(upload_operation: dict | None):
     print(f"Upload trigger result: {upload_operation}")
     return no_update
+
+
+@app.callback(
+    Output("uploader", "retryTrigger"),
+    Input("retry-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def trigger_retry_failed(n_clicks: int):
+    print(f"Retry failed triggered ! Retry requested: {n_clicks}")
+    return n_clicks
+
+
+@app.callback(
+    Output("output-zone", "children", allow_duplicate=True),
+    Input("uploader", "retryOperation"),
+    prevent_initial_call=True,
+)
+def on_retry_operation_complete(retry_operation: dict | None):
+    print(f"Retry result: {retry_operation}")
+    return no_update
+
+
+@app.callback(
+    Output("uploader", "cancelTrigger"),
+    Input("cancel-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def trigger_cancel_upload(n_clicks: int):
+    print(f"Cancel upload triggered ! Cancel requested: {n_clicks}")
+    return n_clicks
+
+
+@app.callback(
+    Output("output-zone", "children", allow_duplicate=True),
+    Input("uploader", "cancelOperation"),
+    prevent_initial_call=True,
+)
+def on_cancel_operation_complete(cancel_operation: dict | None):
+    print(f"Cancel result: {cancel_operation}")
+    return no_update
+
 
 if __name__ == '__main__':
     app.run(debug=True)
