@@ -239,8 +239,9 @@ export interface UppyDashboard {
   disableStatusBar?: boolean;
 
   /**
-   * Automatically clear all files after a successful upload completes.
-   * When true, files are removed from the UI immediately after the `complete` event.
+   * Automatically clear all files when an upload batch completes (Uppy `complete` event).
+   * Useful for minimal drop-zone setups. Incompatible with Dashboard retry / `retryTrigger`
+   * unless `hideRetryButton` is true.
    */
   autoClearOnComplete?: boolean;
 

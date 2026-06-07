@@ -146,13 +146,13 @@ def Upload(
         Minimum number of files that must be selected before the upload. Defaults to None.
     upload_id : str or None
         Custom upload session identifier (defaults to UUID if None). Used for subfolder
-        creation when `use_upload_id=True` in `du.configurator()`.
+        creation when ``use_upload_id=True`` in ``du.configurator()``.
         Defaults to None.
     disabled: bool
         Enabling this option makes the Dashboard grayed-out and non-interactive. Defaults to False.
     theme: Literal["auto", "light", "dark"]
         Light or dark theme for the Dashboard. Defaults to "auto".
-        When it is set to `auto`, it will respect the user’s system settings and switch automatically.
+        When it is set to ``auto``, it will respect the user’s system settings and switch automatically.
     note: str or None
         A string of text to be placed in the Dashboard UI. Defaults to None.
     size: dict[str, int | str] or None
@@ -181,18 +181,18 @@ def Upload(
         Configure the type of selections allowed when browsing your file system via the file manager selection window. Defaults to "files".
     hide_upload_button: bool
         Show or hide the upload button. Use this if you are providing a custom upload button somewhere
-        and are using `uploadTrigger` to manually trigger uploads. Only effective when `auto_proceed=False`.
+        and are using ``uploadTrigger`` to manually trigger uploads. Only effective when `auto_proceed=False`.
         Defaults to False.
     hide_retry_button: bool
         Hide the retry button in the status bar and on each individual file.
-        Use this if you are providing a custom retry button somewhere and using `retryTrigger`
+        Use this if you are providing a custom retry button somewhere and using ``retryTrigger``
         with the `retryAll()` API. Defaults to False.
     hide_cancel_button: bool
         Hide the cancel button in the status bar and on each individual file.
-        Use this if you are providing a custom cancel button somewhere and using `cancelTrigger`
+        Use this if you are providing a custom cancel button somewhere and using ``cancelTrigger``
         with the `cancelAll()` API. Defaults to False.
     auto_clear_on_complete: bool
-        Automatically clear all files from the Dashboard after a successful upload completes.
+        Automatically clear all files when an upload batch completes (Uppy ``complete`` event).
         Defaults to False.
     hide_drag_over_hint: bool
         **[EXPERIMENTAL]** Hide the drag-over upward arrow animation hint.
@@ -242,9 +242,20 @@ def Upload(
     hide_upload_button = overrides.get("hide_upload_button", False)
     if auto_proceed and hide_upload_button:
         warnings.warn(
-            "`uploadTrigger` will not work because `auto_proceed=True`. "
-            "When `auto_proceed=True`, uploads start automatically when files are added. "
-            "Either set `auto_proceed=False` or do not use `hide_upload_button + uploadTrigger`.",
+            "Incompatible options: `auto_proceed=True` and `hide_upload_button=True`. "
+            "`uploadTrigger` will be unavailable.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+
+    # Runtime warning: auto_clear_on_complete + visible retry is a conflicting combination
+    # because retryAll() requires failed files to remain in Uppy after the complete event
+    auto_clear_on_complete = overrides.get("auto_clear_on_complete", False)
+    hide_retry_button = overrides.get("hide_retry_button", False)
+    if auto_clear_on_complete and not hide_retry_button:
+        warnings.warn(
+            "Incompatible options: `auto_clear_on_complete=True` and visible Dashboard retry. "
+            "`retryTrigger` will be unavailable.",
             RuntimeWarning,
             stacklevel=2,
         )

@@ -49,6 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Clarify `auto_clear_on_complete`: clears files on the Uppy `complete` event; `uploadedFiles` / `failedFiles`
+  are reported to Dash before the UI resets
 - Rename `OperationResult` interface to `TriggerStatus` and update its documentation to clarify it is a receipt
   for the trigger action itself, not the outcome of the underlying operation (e.g. file upload success/failure).
 - Rename Dash props: `clearOperation` → `clearStatus`, `uploadOperation` → `uploadStatus`,
@@ -76,6 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Emit `RuntimeWarning` at `Upload()` construction when `auto_clear_on_complete=True` is combined with
+  visible Dashboard retry (`hide_retry_button=False`); `retryTrigger` will be unavailable
 - Fix `hide_drag_over_hint` when multiple uploaders share the same page:
   - Previously injected one global `<style>`; unmounting or disabling one instance removed the rule for all others
   - Extract style management to `hideDragOverHintStyle.ts`; scope CSS per component `id`
@@ -94,6 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Clarify `auto_clear_on_complete` semantics and incompatibility with Dashboard retry / `retryTrigger` in
+  README, `Upload()` docstring, and TypeScript prop docs
 - Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md. (5ffcebb)
 - Add changelog link section to README (0826ae1)
 - Document `disable_done_button`, `clearTrigger`, and `clearOperation` in README

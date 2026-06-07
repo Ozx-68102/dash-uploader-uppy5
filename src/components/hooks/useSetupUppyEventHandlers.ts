@@ -40,7 +40,8 @@ export const useSetupUppyEventHandlers = (
       isUploading: false,
     });
 
-    // Auto-clear files after successful upload if enabled
-    if (props.autoClearOnComplete && result.successful && result.successful.length > 0) uppy.clear();
+    // Auto-clear when the upload batch completes (Uppy `complete` event).
+    // uploadedFiles / failedFiles are set above before clearing.
+    if (props.autoClearOnComplete) uppy.clear();
   });
 };
