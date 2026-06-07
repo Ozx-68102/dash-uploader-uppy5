@@ -94,10 +94,17 @@ if __name__ == '__main__':
 | `hide_progress_details`             | bool                                | False                                 | Show or hide progress details in the status bar.                                                                                                                                                                                                                                                                      |
 | `disable_thumbnail_generator`       | bool                                | True                                  | Disable the thumbnail generator completely.                                                                                                                                                                                                                                                                           |
 | `disable_done_button`               | bool                                | False                                 | Disable the Dashboard Done button.                                                                                                                                                                                                                                                                                    |
+| `disable_status_bar`                | bool                                | False                                 | Disable the status bar completely.                                                                                                                                                                                                                                                                                    |
 | `wait_for_thumbnails_before_upload` | bool                                | False                                 | Show the list of added files with a preview and file information.                                                                                                                                                                                                                                                     |
+| `show_selected_files`               | bool                                | True                                  | Show the list of added files with a preview and file information.                                                                                                                                                                                                                                                     |
 | `single_file_full_screen`           | bool                                | False                                 | When only one file is selected, its preview and meta information will be centered and enlarged.                                                                                                                                                                                                                       |
 | `locale_string`                     | dict[str, str]                      | None                                  | Partial Dashboard locale strings. Only provided keys override Uppy defaults; omitted keys keep built-in text. Keys use camelCase (e.g. `"dropPasteFiles"`, `"browseFiles"`). Example: `{"dropPasteFiles": "Drop your files here"}`.                                                                                   |
 | `file_manager_selection_type`       | Literal["files", "folders", "both"] | "files"                               | Configure the type of selections allowed when browsing your file system via the file manager selection window.                                                                                                                                                                                                        |
+| `hide_upload_button`                | bool                                | False                                 | Show or hide the upload button. Use this if you are providing a custom upload button somewhere and are using `uploadTrigger` to manually trigger uploads. Only effective when `auto_proceed=False`.                                                                                                                   |
+| `hide_retry_button`                 | bool                                | False                                 | Hide the retry button in the status bar and on each individual file. Use this if you are providing a custom retry button somewhere and using `retryTrigger` with the `retryAll()` API.                                                                                                                                |
+| `hide_cancel_button`                | bool                                | False                                 | Hide the cancel button in the status bar and on each individual file. Use this if you are providing a custom cancel button somewhere and using `cancelTrigger` with the `cancelAll()` API.                                                                                                                            |
+| `hide_drag_over_hint`               | bool                                | False                                 | **EXPERIMENTAL**: Hide the drag-over upward arrow hint animation (the blue dashed box with ↑ icon). Not an official Uppy feature and may break on future Uppy updates. Implemented by dynamically injecting a `<style>` rule via `useEffect`.                                                                         |
+| `auto_clear_on_complete`            | bool                                | False                                 | Automatically clear all files from the Dashboard after a successful upload completes.                                                                                                                                                                                                                                 |
 
 ### About `locale_string`
 
@@ -246,12 +253,72 @@ clear success or failure.
 ```json
 {
   "status": "success",
-  "errorMessage": null
+  "errorMessage": null,
+  "attempt": 1
 }
 ```
 
 - **status:** `"success"` or `"error"`.
 - **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
+- **attempt:** The trigger value that caused this result (ensures each trigger produces a distinct object, forcing Dash
+  to update even if `status` is unchanged).
+
+### `uploadTrigger`
+
+Write to this property from a Dash callback to manually start an upload. Only works when `auto_proceed=False`. Increment
+or change the value on each trigger request.
+
+**Type:** `int`
+
+**Usage:**
+
+```python
+@app.callback(
+    Output("uploader", "uploadTrigger"),
+    Input("upload-btn", "n_clicks"),
+)
+def trigger_manual_upload(n_clicks):
+    return n_clicks
+```
+
+### `uploadOperation`
+
+Result of the last upload trigger operation. Updated by the component after `uploadTrigger` changes. Use as `Input` to
+react to manual upload success or failure.
+
+**Type:** `dict[str, str | int | None]`
+
+**Structure:** Same as `clearOperation`.
+
+### `cancelTrigger`
+
+Write to this property from a Dash callback to cancel all uploads. Corresponds to `hideCancelButton`. Increment or
+change the value on each cancel request.
+
+**Type:** `int`
+
+**Usage:** Same as `uploadTrigger`.
+
+### `cancelOperation`
+
+Result of the last cancel operation. Updated after `cancelTrigger` changes.
+
+**Type:** `dict[str, str | int | None]`
+
+### `retryTrigger`
+
+Write to this property from a Dash callback to retry all failed uploads. Corresponds to `hideRetryButton`. Only retries
+failed files (`retryAll()`).
+
+**Type:** `int`
+
+**Usage:** Same as `uploadTrigger`.
+
+### `retryOperation`
+
+Result of the last retry operation. Updated after `retryTrigger` changes.
+
+**Type:** `dict[str, str | int | None]`
 
 ## Changelog
 

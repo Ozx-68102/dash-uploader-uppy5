@@ -223,6 +223,18 @@ export interface UppyDashboard {
    * Disable the status bar completely.
    */
   disableStatusBar?: boolean;
+
+  /**
+   * Automatically clear all files after a successful upload completes.
+   * When true, files are removed from the UI immediately after the `complete` event.
+   */
+  autoClearOnComplete?: boolean;
+
+  /**
+   * **[EXPERIMENTAL]** Hide the drag-over upward arrow hint animation (the blue dashed box with ↑ icon).
+   * This is not an official Uppy prop and may break in future Uppy versions.
+   */
+  hideDragOverHint?: boolean;
 }
 
 export interface UppyCallbacks {

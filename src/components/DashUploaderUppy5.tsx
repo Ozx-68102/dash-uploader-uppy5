@@ -1,6 +1,6 @@
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/react/dashboard";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Props, {OperationResult} from "./types/Uploader";
 import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
 import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
@@ -23,7 +23,11 @@ const isValidSelectType = CreateStringUnionGuard(["files", "folders", "both"] as
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
 
-  useSetupUppyEventHandlers(uppy, props);
+  useSetupUppyEventHandlers(uppy, {
+    uploadId: props.uploadId,
+    setProps: props.setProps,
+    autoClearOnComplete: props.autoClearOnComplete,
+  });
 
   const setOperationResult = (key: string) => (result: OperationResult) => {
     if (props.setProps) props.setProps({[key]: result});
@@ -33,6 +37,30 @@ const DashUploaderUppy5 = (props: Props) => {
   useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, setOperationResult("uploadOperation"));
   useHandleRetryTrigger(uppy, props.retryTrigger, setOperationResult("retryOperation"));
   useHandleCancelTrigger(uppy, props.cancelTrigger, setOperationResult("cancelOperation"));
+
+  useEffect(() => {
+    if (!props.hideDragOverHint) return;
+
+    const styleId = "uppy-hide-dragover-hint";
+    let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = `
+      .uppy-Dashboard-dropFilesHereHint {
+        background-image: none !important;
+        padding: 0 !important;
+      }
+    `;
+
+    return () => {
+      if (styleEl && styleEl.parentNode) {
+        styleEl.parentNode.removeChild(styleEl);
+      }
+    };
+  }, [props.hideDragOverHint]);
 
   return (
     <Dashboard

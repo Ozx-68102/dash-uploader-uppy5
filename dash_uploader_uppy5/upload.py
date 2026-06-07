@@ -40,6 +40,8 @@ _UPLOAD_API_FIELDS = [
     "hide_upload_button",
     "hide_retry_button",
     "hide_cancel_button",
+    "auto_clear_on_complete",
+    "hide_drag_over_hint",
 ]
 
 # Fields that require MB-to-bytes conversion (model stores bytes, API uses MB)
@@ -110,6 +112,8 @@ def Upload(
         hide_upload_button: bool | object = _UNSET,
         hide_retry_button: bool | object = _UNSET,
         hide_cancel_button: bool | object = _UNSET,
+        auto_clear_on_complete: bool | object = _UNSET,
+        hide_drag_over_hint: bool | object = _UNSET,
 ) -> DashUploaderUppy5:
     """
     A dash-uploader-uppy5 component.
@@ -187,6 +191,12 @@ def Upload(
         Hide the cancel button in the status bar and on each individual file.
         Use this if you are providing a custom cancel button somewhere and using `cancelTrigger`
         with the `cancelAll()` API. Defaults to False.
+    auto_clear_on_complete: bool
+        Automatically clear all files from the Dashboard after a successful upload completes.
+        Defaults to False.
+    hide_drag_over_hint: bool
+        **[EXPERIMENTAL]** Hide the drag-over upward arrow animation hint.
+        Not an official Uppy feature; implementation may change.
 
     Returns
     -------
@@ -221,6 +231,8 @@ def Upload(
         "hide_upload_button": hide_upload_button,
         "hide_retry_button": hide_retry_button,
         "hide_cancel_button": hide_cancel_button,
+        "auto_clear_on_complete": auto_clear_on_complete,
+        "hide_drag_over_hint": hide_drag_over_hint,
     }
     overrides = {k: v for k, v in overrides.items() if v is not _UNSET}
 

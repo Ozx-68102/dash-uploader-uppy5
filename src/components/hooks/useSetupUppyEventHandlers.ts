@@ -6,6 +6,7 @@ export const useSetupUppyEventHandlers = (
   props: {
     uploadId?: string;
     setProps?: (props: Record<string, any>) => void;
+    autoClearOnComplete?: boolean;
   }
 ) => {
   useUppyEvent(uppy, 'upload', () => {
@@ -38,5 +39,8 @@ export const useSetupUppyEventHandlers = (
       failedFiles,
       isUploading: false,
     });
+
+    // Auto-clear files after successful upload if enabled
+    if (props.autoClearOnComplete && result.successful && result.successful.length > 0) uppy.clear();
   });
 };

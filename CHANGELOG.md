@@ -9,73 +9,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add `hide_drag_over_hint` (experimental) option to hide the drag-over upward arrow hint animation (the blue dashed box
+  with ↑ icon).
+  Implemented via `useEffect` that dynamically injects/removes a `<style>` targeting
+  `.uppy-Dashboard-dropFilesHereHint`.
+  Exposed in both Python `Upload()` and React `DashUploaderUppy5`. Marked EXPERIMENTAL in docs/comments as it is not an
+  official Uppy feature and may break on future Uppy updates.
+- Add `auto_clear_on_complete` option to automatically clear files after a successful upload completes
+- Add `disable_status_bar` option to completely disable the status bar (490026c)
 - Add `retryTrigger` / `retryOperation` and `cancelTrigger` / `cancelOperation` (Dash input/response) for custom
-  retry/cancel buttons
+  retry/cancel buttons (ef257dd)
   - Add `useHandleRetryTrigger` hook (uses `uppy.retryAll()`) and `useHandleCancelTrigger` hook (uses
     `uppy.cancelAll()`)
   - Add `hide_retry_button` and `hide_cancel_button` parameters in `Upload()` to hide Dashboard's built-in retry/cancel
-    buttons
-    when supplying custom controls (pairs with the new triggers)
+    buttons when supplying custom controls (pairs with the new triggers)
   - Refactor: move all Trigger/Operation fields (`*Trigger`, `*Operation`) from `UppyCallbacks` interface to a dedicated
     `Triggers` interface for clearer separation of passive callbacks vs. active control triggers
 - Add `uploadTrigger` (Dash input) and `uploadOperation` (component response) for manual upload triggering via
-  `uppy.upload()` when `auto_proceed=False`
-  - Add `useHandleUploadTrigger` hook with defense: ignores trigger and returns error when `autoProceed=True` (59eb2e4)
+  `uppy.upload()` when `auto_proceed=False` (59eb2e4)
+  - Add `useHandleUploadTrigger` hook with defense: ignores trigger and returns error when `autoProceed=True`
   - Also returns error when no files are queued
   - Add `OperationResult` TypeScript interface (renamed from `ClearOperation`); includes `attempt` field so each trigger
     yields a distinct result and Dash callbacks always fire
-- Expose `hide_upload_button` parameter in `Upload()` to hide the built-in upload button when supplying a custom one (
-  pairs with `uploadTrigger`)
-- Add `disable_done_button` option to hide the Dashboard "Done" button after upload completes (12060ee)
-- Add `disable_status_bar` option to completely disable the status bar
+  - Expose `hide_upload_button` parameter in `Upload()` to hide the built-in upload button when supplying a custom one
+    (pairs with `uploadTrigger`)
 - Add `locale_string` option to override partial Dashboard locale strings (drop/paste hints and browse labels) (da1f7bd)
   - Add `LocaleStringConfig` Pydantic model; export from package `__init__.py`
   - Add `buildLocaleString` utility to merge only provided keys without overwriting Uppy defaults with `undefined`
+- Add `disable_done_button` option to hide the Dashboard "Done" button after upload completes (12060ee)
+- Split clear API into `clearTrigger` (Dash input) and `clearOperation` (component response) for programmatic file
+  clearing (8be2443)
+  - Add `useHandleClearTrigger` hook and `ClearOperation` TypeScript interface
 - Add Pydantic models (`UploadConfig`, `SizeConfig`) for type validation and conversion of `Upload()` parameters (
   a386256)
   - Export `UploadConfig` and `SizeConfig` from package `__init__.py`
   - Add `pydantic>=2.13.4` as a runtime dependency
 - Extract Uppy event handlers into `useSetupUppyEventHandlers` custom hook (c6a102c)
-- Split clear API into `clearTrigger` (Dash input) and `clearOperation` (component response) for programmatic file
-  clearing (8be2443)
-  - Add `useHandleClearTrigger` hook and `ClearOperation` TypeScript interface
 - Add `CHANGELOG.md` (00e8ad2)
 
 ### Changed
 
 - Refactor: extract repeated `setProps` callback pattern into a curried `setOperationResult` helper in
-  `DashUploaderUppy5.tsx`
+  `DashUploaderUppy5.tsx` (a47d2f8)
 - Refactor `Upload()` to use sentinel (`_UNSET`) pattern so Pydantic `default`/`default_factory` become the single
   source of truth; function signature is dynamically generated from `UploadConfig.model_fields` to preserve IDE/help()
   experience (c547965)
 - Default Dashboard `size` to `{"width": "100%", "height": "100%"}` instead of Uppy's built-in 650×500px, so the
-  uploader fits its parent container when `size` is omitted (68ff925)
-- Allow `size.width` and `size.height` to accept CSS length strings (e.g. `"100%"`, `"75px"`, `"50vw"`, `"10rem"`) in
-  addition to pixel integers (68ff925)
-- Make `Upload()` parameters keyword-only (after `id`) (97affed)
+  uploader fits its parent container when `size` is omitted; allow `size.width` and `size.height` to accept CSS length
+  strings (e.g. `"100%"`, `"75px"`, `"50vw"`, `"10rem"`) in addition to pixel integers (68ff925)
 - Refactor `Upload()` to build component props via `UploadConfig.model_dump()` (a386256)
 - Upgrade Node.js to 22.22.0 in `.nvmrc` (bee52a4)
 - Upgrade dash dependency to `>=3.4.0`, constrain dev dependency to `<4.0.0` (2c4dcfc, ef535dd)
-- Update project dependencies and lock file (a0501dc, ef535dd)
+- Update project dependencies and lock file (a0501dc)
   - setuptools, cookiecutter, wheel, build, and related dev tools
 - Revert component generator command to `dash-generate-components` (ff47cf4)
+- Make `Upload()` parameters keyword-only (after `id`) (97affed)
 - Refine `upload_id` documentation and examples in README and `Upload()` docstring (cef5bf4)
-
-### Changed
-
 - Rename `ClearOperation` → `OperationResult` for reuse across `clearOperation` and `uploadOperation`
 
 ### Fixed
 
 - Prevent duplicate/accidental uploads when `auto_proceed=True` is combined with `uploadTrigger`:
   - Python `RuntimeWarning` emitted at `Upload()` construction time
-  - Runtime rejection in hook (returns `{status:"error", attempt:N}`)
-- Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
+  - Runtime rejection in hook (returns `{status:"error", attempt:N}`) (d4c0714)
 - Correct field name in `max_number_of_files` validator (`min_file_size` → `min_number_of_files`) (ed7ebbf)
+- Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
 
 ### Documentation
 
-- Add changelog link section to README
+- Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md.
+- Add changelog link section to README (0826ae1)
 - Document `disable_done_button`, `clearTrigger`, and `clearOperation` in README
 
 ## [0.2.1] - 2026-05-04

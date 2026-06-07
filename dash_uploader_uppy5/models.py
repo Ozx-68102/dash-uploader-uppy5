@@ -52,6 +52,10 @@ class UploadConfig(BaseModel):
     hide_upload_button: bool = Field(default=False, alias="hideUploadButton")
     hide_retry_button: bool = Field(default=False, alias="hideRetryButton")
     hide_cancel_button: bool = Field(default=False, alias="hideCancelButton")
+    auto_clear_on_complete: bool = Field(default=False, alias="autoClearOnComplete")
+    hide_drag_over_hint: bool = Field(
+        default=False, alias="hideDragOverHint", description="EXPERIMENTAL"
+    )
 
     @field_validator("max_file_size", "min_file_size", "max_total_file_size", mode="before")
     @classmethod
