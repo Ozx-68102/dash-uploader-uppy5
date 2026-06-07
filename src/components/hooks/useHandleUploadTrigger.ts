@@ -1,22 +1,22 @@
 import {useEffect, useRef} from "react";
 import Uppy from "@uppy/core";
-import {OperationResult} from "../types/Uploader";
+import {TriggerStatus} from "../types/Uploader";
 
 export const useHandleUploadTrigger = (
   uppy: Uppy,
   uploadTrigger?: number,
   autoProceed?: boolean,
-  onUploadResult?: (result: OperationResult) => void
+  onUploadStatus?: (status: TriggerStatus) => void
 ) => {
-  const onUploadResultRef = useRef(onUploadResult);
-  onUploadResultRef.current = onUploadResult;
+  const onUploadStatusRef = useRef(onUploadStatus);
+  onUploadStatusRef.current = onUploadStatus;
 
   useEffect(() => {
     if (uploadTrigger === undefined || uploadTrigger === null) return;
 
     // Defense: only allow manual trigger when autoProceed is false
     if (autoProceed) {
-      onUploadResultRef.current?.({
+      onUploadStatusRef.current?.({
         status: "error",
         errorMessage: "Cannot use uploadTrigger when autoProceed is true. Uploads start automatically when files are added.",
         attempt: uploadTrigger,
@@ -26,7 +26,7 @@ export const useHandleUploadTrigger = (
 
     // Defense: require at least one file before triggering upload
     if (uppy.getFiles().length === 0) {
-      onUploadResultRef.current?.({
+      onUploadStatusRef.current?.({
         status: "error",
         errorMessage: "No files to upload.",
         attempt: uploadTrigger,
@@ -37,7 +37,9 @@ export const useHandleUploadTrigger = (
     try {
       uppy.upload()
         .then(() => {
-          onUploadResultRef.current?.({
+          // Success here means the upload() call was accepted and started.
+          // It does NOT mean all files succeeded; file results are in uploadedFiles/failedFiles.
+          onUploadStatusRef.current?.({
             status: "success",
             errorMessage: null,
             attempt: uploadTrigger,
@@ -45,7 +47,7 @@ export const useHandleUploadTrigger = (
         })
         .catch((error) => {
           const errorMessage = error instanceof Error ? error.message : "Unknown upload error";
-          onUploadResultRef.current?.({
+          onUploadStatusRef.current?.({
             status: "error",
             errorMessage,
             attempt: uploadTrigger,
@@ -53,7 +55,7 @@ export const useHandleUploadTrigger = (
         });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
-      onUploadResultRef.current?.({
+      onUploadStatusRef.current?.({
         status: "error",
         errorMessage,
         attempt: uploadTrigger,

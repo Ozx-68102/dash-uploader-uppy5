@@ -1,14 +1,14 @@
 import {useEffect, useRef} from "react";
 import Uppy from "@uppy/core";
-import {OperationResult} from "../types/Uploader";
+import {TriggerStatus} from "../types/Uploader";
 
 export const useHandleRetryTrigger = (
   uppy: Uppy,
   retryTrigger?: number,
-  onRetryResult?: (result: OperationResult) => void
+  onRetryStatus?: (status: TriggerStatus) => void
 ) => {
-  const onRetryResultRef = useRef(onRetryResult);
-  onRetryResultRef.current = onRetryResult;
+  const onRetryStatusRef = useRef(onRetryStatus);
+  onRetryStatusRef.current = onRetryStatus;
 
   useEffect(() => {
     if (retryTrigger === undefined || retryTrigger === null) return;
@@ -16,7 +16,7 @@ export const useHandleRetryTrigger = (
     try {
       uppy.retryAll()
         .then(() => {
-          onRetryResultRef.current?.({
+          onRetryStatusRef.current?.({
             status: "success",
             errorMessage: null,
             attempt: retryTrigger,
@@ -24,7 +24,7 @@ export const useHandleRetryTrigger = (
         })
         .catch((error) => {
           const errorMessage = error instanceof Error ? error.message : "Unknown Retry Error";
-          onRetryResultRef.current?.({
+          onRetryStatusRef.current?.({
             status: "error",
             errorMessage,
             attempt: retryTrigger,
@@ -32,7 +32,7 @@ export const useHandleRetryTrigger = (
         });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
-      onRetryResultRef.current?.({
+      onRetryStatusRef.current?.({
         status: "error",
         errorMessage,
         attempt: retryTrigger,

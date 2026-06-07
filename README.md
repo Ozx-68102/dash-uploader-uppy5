@@ -241,10 +241,10 @@ def clear_uploader(n_clicks):
     return n_clicks
 ```
 
-### `clearOperation`
+### `clearStatus`
 
-Result of the last clear operation. Updated by the component after `clearTrigger` changes. Use as `Input` to react to
-clear success or failure.
+Status returned after `clearTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
+the underlying clear operation. Use as `Input` to react to whether the trigger was accepted.
 
 **Type:** `dict[str, str | int | None]`
 
@@ -260,7 +260,7 @@ clear success or failure.
 
 - **status:** `"success"` or `"error"`.
 - **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
-- **attempt:** The trigger value that caused this result (ensures each trigger produces a distinct object, forcing Dash
+- **attempt:** The trigger value that caused this status (ensures each trigger produces a distinct object, forcing Dash
   to update even if `status` is unchanged).
 
 ### `uploadTrigger`
@@ -281,14 +281,14 @@ def trigger_manual_upload(n_clicks):
     return n_clicks
 ```
 
-### `uploadOperation`
+### `uploadStatus`
 
-Result of the last upload trigger operation. Updated by the component after `uploadTrigger` changes. Use as `Input` to
-react to manual upload success or failure.
+Status returned after `uploadTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
+the underlying upload. Use as `Input` to react to whether the trigger was accepted.
 
 **Type:** `dict[str, str | int | None]`
 
-**Structure:** Same as `clearOperation`.
+**Structure:** Same as `clearStatus`.
 
 ### `cancelTrigger`
 
@@ -299,9 +299,9 @@ change the value on each cancel request.
 
 **Usage:** Same as `uploadTrigger`.
 
-### `cancelOperation`
+### `cancelStatus`
 
-Result of the last cancel operation. Updated after `cancelTrigger` changes.
+Status returned after `cancelTrigger` is processed. This is a receipt for the trigger action itself.
 
 **Type:** `dict[str, str | int | None]`
 
@@ -314,9 +314,9 @@ failed files (`retryAll()`).
 
 **Usage:** Same as `uploadTrigger`.
 
-### `retryOperation`
+### `retryStatus`
 
-Result of the last retry operation. Updated after `retryTrigger` changes.
+Status returned after `retryTrigger` is processed. This is a receipt for the trigger action itself.
 
 **Type:** `dict[str, str | int | None]`
 

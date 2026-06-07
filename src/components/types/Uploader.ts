@@ -62,20 +62,34 @@ interface ResponseInfo {
   status: number;
 }
 
-export interface OperationResult {
+/**
+ * Status returned after a trigger prop (e.g. `uploadTrigger`, `clearTrigger`) is processed.
+ *
+ * This is a "receipt" for the trigger action itself, NOT the final outcome of the underlying operation.
+ * - `status: "success"` means the component received the trigger and executed the corresponding action
+ *   (e.g. called `uppy.upload()`, `uppy.clear()`, etc.).
+ * - It does NOT indicate whether files were successfully uploaded, cleared, retried, or cancelled.
+ *   Those results are reported via `uploadedFiles` / `failedFiles` (from the `complete` event).
+ *
+ * The `attempt` field echoes the trigger value so each trigger produces a distinct update,
+ * ensuring Dash callbacks always fire even if `status` stays the same.
+ */
+export interface TriggerStatus {
   /**
-   * Only is one of `"success"` and `"error"`.
+   * One of `"success"` or `"error"`.
+   * `"success"` means the trigger was accepted and the action was initiated.
    */
   status: string;
 
   /**
    * Error details when `status` is `"error"`, otherwise `null`.
+   * Only set when the trigger itself could not be processed (e.g. invalid state).
    */
   errorMessage: string | null;
 
   /**
-   * The trigger value that caused this operation result.
-   * This ensures each trigger produces a distinct result object,
+   * The trigger value that caused this status.
+   * This ensures each trigger produces a distinct object,
    * forcing Dash to update the prop even when the status is the same.
    */
   attempt?: number;
@@ -270,21 +284,23 @@ export interface Triggers {
   clearTrigger?: number;
 
   /**
-   * Result of the last clear operation. Emitted by the component after `clearTrigger` changes.
+   * Status returned after `clearTrigger` is processed.
+   * See `TriggerStatus` for semantics.
    */
-  clearOperation?: OperationResult;
+  clearStatus?: TriggerStatus;
 
   /**
    * Increment or change this value from a Dash callback to manually trigger upload.
    * Only works when `autoProceed` is `false`. When `autoProceed` is `true`, this trigger is ignored
-   * and an error is returned via `uploadOperation`.
+   * and an error is returned via `uploadStatus`.
    */
   uploadTrigger?: number;
 
   /**
-   * Result of the last upload trigger operation. Emitted by the component after `uploadTrigger` changes.
+   * Status returned after `uploadTrigger` is processed.
+   * See `TriggerStatus` for semantics.
    */
-  uploadOperation?: OperationResult;
+  uploadStatus?: TriggerStatus;
 
   /**
    * Increment or change this value from a Dash callback to cancel all uploads.
@@ -293,9 +309,10 @@ export interface Triggers {
   cancelTrigger?: number;
 
   /**
-   * Result of the last cancel operation. Emitted by the component after `cancelTrigger` changes.
+   * Status returned after `cancelTrigger` is processed.
+   * See `TriggerStatus` for semantics.
    */
-  cancelOperation?: OperationResult;
+  cancelStatus?: TriggerStatus;
 
   /**
    * Increment or change this value from a Dash callback to retry all failed uploads.
@@ -304,9 +321,10 @@ export interface Triggers {
   retryTrigger?: number;
 
   /**
-   * Result of the last retry operation. Emitted by the component after `retryTrigger` changes.
+   * Status returned after `retryTrigger` is processed.
+   * See `TriggerStatus` for semantics.
    */
-  retryOperation?: OperationResult;
+  retryStatus?: TriggerStatus;
 }
 
 

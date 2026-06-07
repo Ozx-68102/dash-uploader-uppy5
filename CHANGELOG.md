@@ -49,6 +49,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Rename `OperationResult` interface to `TriggerStatus` and update its documentation to clarify it is a receipt
+  for the trigger action itself, not the outcome of the underlying operation (e.g. file upload success/failure).
+- Rename Dash props: `clearOperation` → `clearStatus`, `uploadOperation` → `uploadStatus`,
+  `retryOperation` → `retryStatus`, `cancelOperation` → `cancelStatus`.
+- Rename internal hook parameters and refs from `on*Result` / `on*ResultRef` to `on*Status` / `on*StatusRef`
+  for naming consistency.
+- Update README.md Callback Variables section and `usage.py` examples to reflect the new field names.
 - Refactor: extract repeated `setProps` callback pattern into a curried `setOperationResult` helper in
   `DashUploaderUppy5.tsx` (a47d2f8)
 - Refactor `Upload()` to use sentinel (`_UNSET`) pattern so Pydantic `default`/`default_factory` become the single

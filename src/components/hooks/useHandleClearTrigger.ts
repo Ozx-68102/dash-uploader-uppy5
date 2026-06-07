@@ -1,28 +1,28 @@
 import {useEffect, useRef} from "react";
 import Uppy from "@uppy/core";
-import {OperationResult} from "../types/Uploader";
+import {TriggerStatus} from "../types/Uploader";
 
 export const useHandleClearTrigger = (
   uppy: Uppy,
   clearTrigger?: number,
-  onClearResult?: (result: OperationResult) => void
+  onClearStatus?: (status: TriggerStatus) => void
 ) => {
-  const onClearResultRef = useRef(onClearResult);
-  onClearResultRef.current = onClearResult;
+  const onClearStatusRef = useRef(onClearStatus);
+  onClearStatusRef.current = onClearStatus;
 
   useEffect(() => {
     if (clearTrigger === undefined || clearTrigger === null) return;
 
     try {
       uppy.clear();
-      onClearResultRef.current?.({
+      onClearStatusRef.current?.({
         status: "success",
         errorMessage: null,
         attempt: clearTrigger,
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
-      onClearResultRef.current?.({
+      onClearStatusRef.current?.({
         status: "error",
         errorMessage,
         attempt: clearTrigger,

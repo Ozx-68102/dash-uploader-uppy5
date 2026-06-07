@@ -80,11 +80,11 @@ def trigger_clear_upload(n_clicks: int):
 
 @app.callback(
     Output("output-zone", "children", allow_duplicate=True),
-    Input("uploader", "clearOperation"),
+    Input("uploader", "clearStatus"),
     prevent_initial_call=True,
 )
-def on_clear_operation_complete(clear_operation: dict | None):
-    print(f"Clear result: {clear_operation}")
+def on_clear_status(clear_status: dict | None):
+    print(f"Clear status: {clear_status}")
     return no_update
 
 
@@ -100,11 +100,11 @@ def trigger_manual_upload(n_clicks: int):
 
 @app.callback(
     Output("output-zone", "children", allow_duplicate=True),
-    Input("uploader", "uploadOperation"),
+    Input("uploader", "uploadStatus"),
     prevent_initial_call=True,
 )
-def on_manual_upload_operation(upload_operation: dict | None):
-    print(f"Upload trigger result: {upload_operation}")
+def on_upload_status(upload_status: dict | None):
+    print(f"Upload status: {upload_status}")
     return no_update
 
 
@@ -120,11 +120,11 @@ def trigger_retry_failed(n_clicks: int):
 
 @app.callback(
     Output("output-zone", "children", allow_duplicate=True),
-    Input("uploader", "retryOperation"),
+    Input("uploader", "retryStatus"),
     prevent_initial_call=True,
 )
-def on_retry_operation_complete(retry_operation: dict | None):
-    print(f"Retry result: {retry_operation}")
+def on_retry_status(retry_status: dict | None):
+    print(f"Retry status: {retry_status}")
     return no_update
 
 
@@ -140,11 +140,11 @@ def trigger_cancel_upload(n_clicks: int):
 
 @app.callback(
     Output("output-zone", "children", allow_duplicate=True),
-    Input("uploader", "cancelOperation"),
+    Input("uploader", "cancelStatus"),
     prevent_initial_call=True,
 )
-def on_cancel_operation_complete(cancel_operation: dict | None):
-    print(f"Cancel result: {cancel_operation}")
+def on_cancel_status(cancel_status: dict | None):
+    print(f"Cancel status: {cancel_status}")
     return no_update
 
 

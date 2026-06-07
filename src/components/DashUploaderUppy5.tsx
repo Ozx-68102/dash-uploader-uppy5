@@ -1,7 +1,7 @@
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/react/dashboard";
 import React, {useEffect, useState} from "react";
-import Props, {OperationResult} from "./types/Uploader";
+import Props, {TriggerStatus} from "./types/Uploader";
 import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
 import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
 import {useHandleUploadTrigger} from "./hooks/useHandleUploadTrigger";
@@ -29,14 +29,14 @@ const DashUploaderUppy5 = (props: Props) => {
     autoClearOnComplete: props.autoClearOnComplete,
   });
 
-  const setOperationResult = (key: string) => (result: OperationResult) => {
-    if (props.setProps) props.setProps({[key]: result});
+  const setTriggerStatus = (key: string) => (status: TriggerStatus) => {
+    if (props.setProps) props.setProps({[key]: status});
   };
 
-  useHandleClearTrigger(uppy, props.clearTrigger, setOperationResult("clearOperation"));
-  useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, setOperationResult("uploadOperation"));
-  useHandleRetryTrigger(uppy, props.retryTrigger, setOperationResult("retryOperation"));
-  useHandleCancelTrigger(uppy, props.cancelTrigger, setOperationResult("cancelOperation"));
+  useHandleClearTrigger(uppy, props.clearTrigger, setTriggerStatus("clearStatus"));
+  useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, setTriggerStatus("uploadStatus"));
+  useHandleRetryTrigger(uppy, props.retryTrigger, setTriggerStatus("retryStatus"));
+  useHandleCancelTrigger(uppy, props.cancelTrigger, setTriggerStatus("cancelStatus"));
 
   useEffect(() => {
     if (!props.hideDragOverHint) return;

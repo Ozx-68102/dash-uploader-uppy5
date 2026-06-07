@@ -1,28 +1,28 @@
 import {useEffect, useRef} from "react";
 import Uppy from "@uppy/core";
-import {OperationResult} from "../types/Uploader";
+import {TriggerStatus} from "../types/Uploader";
 
 export const useHandleCancelTrigger = (
   uppy: Uppy,
   cancelTrigger?: number,
-  onCancelResult?: (result: OperationResult) => void
+  onCancelStatus?: (status: TriggerStatus) => void
 ) => {
-  const onCancelResultRef = useRef(onCancelResult);
-  onCancelResultRef.current = onCancelResult;
+  const onCancelStatusRef = useRef(onCancelStatus);
+  onCancelStatusRef.current = onCancelStatus;
 
   useEffect(() => {
     if (cancelTrigger === undefined || cancelTrigger === null) return;
 
     try {
       uppy.cancelAll();
-      onCancelResultRef.current?.({
+      onCancelStatusRef.current?.({
         status: "success",
         errorMessage: null,
         attempt: cancelTrigger,
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
-      onCancelResultRef.current?.({
+      onCancelStatusRef.current?.({
         status: "error",
         errorMessage,
         attempt: cancelTrigger,
