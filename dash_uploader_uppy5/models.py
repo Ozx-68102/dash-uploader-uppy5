@@ -6,8 +6,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, field_serial
 class SizeConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    width: int | str | None = Field(default=None)
-    height: int | str | None = Field(default=None)
+    width: int | str = Field(default="100%")
+    height: int | str = Field(default="100%")
 
 
 class LocaleStringConfig(BaseModel):
@@ -21,7 +21,7 @@ class LocaleStringConfig(BaseModel):
 
 
 class UploadConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
     id: str = Field(default="uppy5-uploader")
     upload_url: str = Field(alias="uploadUrl")
@@ -38,7 +38,7 @@ class UploadConfig(BaseModel):
     disabled: bool = Field(default=False)
     theme: Literal["auto", "light", "dark"] = Field(default="auto")
     note: str | None = Field(default=None)
-    size: SizeConfig | None = Field(default=None)
+    size: SizeConfig = Field(default_factory=SizeConfig)
     hide_progress_details: bool = Field(default=False, alias="hideProgressDetails")
     disable_thumbnail_generator: bool = Field(default=True, alias="disableThumbnailGenerator")
     wait_for_thumbnails_before_upload: bool = Field(default=False, alias="waitForThumbnailsBeforeUpload")
@@ -74,8 +74,8 @@ class UploadConfig(BaseModel):
 
     @field_validator("size", mode="before")
     @classmethod
-    def parse_size(cls, v: dict | None) -> SizeConfig | None:
-        return SizeConfig(**v) if v is not None else None
+    def parse_size(cls, v: dict | None) -> SizeConfig:
+        return SizeConfig(**v) if v is not None else SizeConfig()
 
     @field_validator("locale_string", mode="before")
     @classmethod
@@ -83,8 +83,8 @@ class UploadConfig(BaseModel):
         return LocaleStringConfig(**v) if v is not None else None
 
     @field_serializer("size", when_used="json")
-    def serialize_size(self, v: SizeConfig | None) -> dict[str, int | str | None] | None:
-        return v.model_dump() if v is not None else None
+    def serialize_size(self, v: SizeConfig) -> dict[str, int | str]:
+        return v.model_dump()
 
     @field_serializer("locale_string", when_used="json")
     def serialize_locale_string(self, v: LocaleStringConfig | None) -> dict[str, str] | None:

@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactor `Upload()` to use sentinel (`_UNSET`) pattern so Pydantic `default`/`default_factory` become the single
+  source of truth; function signature is dynamically generated from `UploadConfig.model_fields` to preserve IDE/help()
+  experience
+- Default Dashboard `size` to `{"width": "100%", "height": "100%"}` instead of Uppy's built-in 650×500px, so the
+  uploader fits its parent container when `size` is omitted
 - Allow `size.width` and `size.height` to accept CSS length strings (e.g. `"100%"`, `"75px"`, `"50vw"`, `"10rem"`) in
   addition to pixel integers
 - Make `Upload()` parameters keyword-only (after `id`) (97affed)

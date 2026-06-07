@@ -20,16 +20,19 @@ du.configurator(app, UPLOAD_FOLDER)
 
 app.layout = html.Div([
     html.H1('Dash Uploader Uppy5 Demo'),
-    du.Upload(
-        id='uploader',
-        upload_id=None,
-        disable_done_button=True,
-        max_number_of_files=10,
-        size={"width": "10%", "height": "10%"},
-        note="hello!",
-        locale_string={"dropPasteFiles": "Drop your files here"},
-    ),
-    html.Button("Clear", id="clear-btn"),
+    html.Div([
+        du.Upload(
+            id='uploader',
+            auto_proceed=True,
+            upload_id=None,
+            disable_done_button=False,
+            max_number_of_files=10,
+            note="hello!",
+            locale_string={"dropPasteFiles": "Drop your files here"},
+        ),
+        html.Button("Clear", id="clear-btn"),
+    ], style={"width": 300, "height": 200}),
+
     html.Div(id="output-zone")
 ])
 

@@ -1,42 +1,106 @@
+from inspect import Parameter, Signature
 from typing import Literal
 from uuid import uuid4
+
+from pydantic_core import PydanticUndefined
 
 import dash_uploader_uppy5.settings as settings
 from dash_uploader_uppy5.build.DashUploaderUppy5 import DashUploaderUppy5
 from dash_uploader_uppy5.models import UploadConfig
+from dash_uploader_uppy5.utils import update_upload_uri
+
+_UNSET = object()
+
+# Public API fields (upload_url is generated internally by Upload())
+_UPLOAD_API_FIELDS = [
+    "id",
+    "allow_multiple_upload_batches",
+    "allowed_file_types",
+    "disable_done_button",
+    "auto_proceed",
+    "max_file_size",
+    "min_file_size",
+    "max_total_file_size",
+    "max_number_of_files",
+    "min_number_of_files",
+    "upload_id",
+    "disabled",
+    "theme",
+    "note",
+    "size",
+    "hide_progress_details",
+    "disable_thumbnail_generator",
+    "wait_for_thumbnails_before_upload",
+    "show_selected_files",
+    "single_file_full_screen",
+    "locale_string",
+    "file_manager_selection_type",
+]
+
+# Fields that require MB-to-bytes conversion (model stores bytes, API uses MB)
+_SIZE_FIELDS_MB = {"max_file_size", "min_file_size", "max_total_file_size"}
 
 
-def update_upload_uri(pathname_prefix: str, upload_api: str) -> str:
-    if pathname_prefix == "/":
-        return upload_api
+def _get_public_default(field_name: str, field_info):
+    if field_name in _SIZE_FIELDS_MB:
+        # These fields are stored as bytes in the model, but shown as MB in the public API
+        if field_info.default is not PydanticUndefined:
+            return field_info.default // (1024 * 1024) if field_info.default else None
+        return None
+    if field_name == "size":
+        # SizeConfig default serialized to dict for the signature
+        if field_info.default_factory is not None:
+            return field_info.default_factory().model_dump()
+        return None
+    if field_info.default is not PydanticUndefined:
+        return field_info.default
+    if field_info.default_factory is not None:
+        return field_info.default_factory()
+    return _UNSET
 
-    return "/".join([pathname_prefix.rstrip("/"), upload_api.lstrip("/")])
+
+def _build_upload_signature() -> Signature:
+    # Dynamically build Upload() signature from UploadConfig.model_fields
+    params = []
+    for i, name in enumerate(_UPLOAD_API_FIELDS):
+        f = UploadConfig.model_fields[name]
+        # First param (id) is positional-or-keyword; the rest are keyword-only
+        kind = Parameter.POSITIONAL_OR_KEYWORD if i == 0 else Parameter.KEYWORD_ONLY
+        params.append(
+            Parameter(
+                name,
+                kind,
+                default=_get_public_default(name, f),
+                annotation=f.annotation,
+            )
+        )
+    return Signature(params)
 
 
 def Upload(
-        id: str = "uppy5-uploader",
+        id: str | object = _UNSET,
         *,
-        allow_multiple_upload_batches: bool = True,
-        allowed_file_types: list[str] | None = None,
-        disable_done_button: bool = False,
-        auto_proceed: bool = False,
-        max_file_size: int | None = 1024,
-        min_file_size: int | None = None,
-        max_total_file_size: int | None = None,
-        max_number_of_files: int | None = 1,
-        min_number_of_files: int | None = None,
-        upload_id: str | None = None,
-        disabled: bool = False,
-        theme: Literal["auto", "light", "dark"] = "auto",
-        note: str | None = None,
-        size: dict[str, int | str] | None = None,
-        hide_progress_details: bool = False,
-        disable_thumbnail_generator: bool = True,
-        wait_for_thumbnails_before_upload: bool = False,
-        show_selected_files: bool = True,
-        single_file_full_screen: bool = False,
-        locale_string: dict[str, str] | None = None,
-        file_manager_selection_type: Literal["files", "folders", "both"] = "files",
+        allow_multiple_upload_batches: bool | object = _UNSET,
+        allowed_file_types: list[str] | None | object = _UNSET,
+        disable_done_button: bool | object = _UNSET,
+        auto_proceed: bool | object = _UNSET,
+        max_file_size: int | None | object = _UNSET,
+        min_file_size: int | None | object = _UNSET,
+        max_total_file_size: int | None | object = _UNSET,
+        max_number_of_files: int | None | object = _UNSET,
+        min_number_of_files: int | None | object = _UNSET,
+        upload_id: str | None | object = _UNSET,
+        disabled: bool | object = _UNSET,
+        theme: Literal["auto", "light", "dark"] | object = _UNSET,
+        note: str | None | object = _UNSET,
+        size: dict[str, int | str] | None | object = _UNSET,
+        hide_progress_details: bool | object = _UNSET,
+        disable_thumbnail_generator: bool | object = _UNSET,
+        wait_for_thumbnails_before_upload: bool | object = _UNSET,
+        show_selected_files: bool | object = _UNSET,
+        single_file_full_screen: bool | object = _UNSET,
+        locale_string: dict[str, str] | None | object = _UNSET,
+        file_manager_selection_type: Literal["files", "folders", "both"] | object = _UNSET,
 ) -> DashUploaderUppy5:
     """
     A dash-uploader-uppy5 component.
@@ -77,7 +141,9 @@ def Upload(
     note: str or None
         A string of text to be placed in the Dashboard UI. Defaults to None.
     size: dict[str, int | str] or None
-        Size of the Dashboard. It only accepts "width" and "height". Defaults to None.
+        Size of the Dashboard. It only accepts "width" and "height".
+        Defaults to {"width": "100%", "height": "100%"} so the uploader fills its parent container
+        instead of Uppy's built-in 650×500px.
         Each value may be an int (pixels) or a CSS length string (e.g. "100%", "75px", "50vw", "10rem").
         Examples: {"width": 500, "height": 300}, {"width": "100%", "height": "75px"}
     hide_progress_details: bool
@@ -104,33 +170,44 @@ def Upload(
     DashUploaderUppy5
         Initialize this Dash component for app.layout.
     """
-    upload_id = upload_id if upload_id else str(uuid4())
-    upload_url = update_upload_uri(pathname_prefix=settings.requests_pathname_prefix, upload_api=settings.upload_api)
+    # Collect only parameters the user explicitly passed (exclude _UNSET)
+    overrides = {
+        "id": id,
+        "allow_multiple_upload_batches": allow_multiple_upload_batches,
+        "allowed_file_types": allowed_file_types,
+        "disable_done_button": disable_done_button,
+        "auto_proceed": auto_proceed,
+        "max_file_size": max_file_size,
+        "min_file_size": min_file_size,
+        "max_total_file_size": max_total_file_size,
+        "max_number_of_files": max_number_of_files,
+        "min_number_of_files": min_number_of_files,
+        "upload_id": upload_id,
+        "disabled": disabled,
+        "theme": theme,
+        "note": note,
+        "size": size,
+        "hide_progress_details": hide_progress_details,
+        "disable_thumbnail_generator": disable_thumbnail_generator,
+        "wait_for_thumbnails_before_upload": wait_for_thumbnails_before_upload,
+        "show_selected_files": show_selected_files,
+        "single_file_full_screen": single_file_full_screen,
+        "locale_string": locale_string,
+        "file_manager_selection_type": file_manager_selection_type,
+    }
+    overrides = {k: v for k, v in overrides.items() if v is not _UNSET}
 
-    config = UploadConfig(
-        id=id,
-        uploadUrl=upload_url,
-        allowMultipleUploadBatches=allow_multiple_upload_batches,
-        allowedFileTypes=allowed_file_types,
-        disableDoneButton=disable_done_button,
-        autoProceed=auto_proceed,
-        maxFileSize=max_file_size,
-        minFileSize=min_file_size,
-        maxTotalFileSize=max_total_file_size,
-        maxNumberOfFiles=max_number_of_files,
-        minNumberOfFiles=min_number_of_files,
-        uploadId=upload_id,
-        disabled=disabled,
-        theme=theme,  # type: ignore
-        note=note,
-        size=size,  # type: ignore
-        hideProgressDetails=hide_progress_details,
-        disableThumbnailGenerator=disable_thumbnail_generator,
-        waitForThumbnailsBeforeUpload=wait_for_thumbnails_before_upload,
-        showSelectedFiles=show_selected_files,
-        singleFileFullScreen=single_file_full_screen,
-        localeString=locale_string,  # type: ignore
-        fileManagerSelectionType=file_manager_selection_type  # type: ignore
+    # upload_id: business logic (None -> uuid4), not a model default
+    upload_id = overrides.pop("upload_id", None) or str(uuid4())
+
+    # upload_url: generated at runtime from settings
+    upload_url = update_upload_uri(
+        pathname_prefix=settings.requests_pathname_prefix, upload_api=settings.upload_api
     )
 
+    config = UploadConfig(uploadUrl=upload_url, uploadId=upload_id, **overrides)
     return DashUploaderUppy5(**config.model_dump(by_alias=True))
+
+
+# Attach the dynamically generated signature so IDEs and help() show Pydantic defaults
+Upload.__signature__ = _build_upload_signature()
