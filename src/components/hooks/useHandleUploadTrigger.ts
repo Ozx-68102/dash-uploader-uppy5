@@ -42,6 +42,16 @@ export const useHandleUploadTrigger = (
       return;
     }
 
+    // Defense: require at least one file before triggering upload
+    if (uppy.getFiles().length === 0) {
+      onUploadResultRef.current?.({
+        status: "error",
+        errorMessage: "No files to upload.",
+        attempt: uploadTrigger,
+      });
+      return;
+    }
+
     try {
       uppy.upload()
         .then(() => {
