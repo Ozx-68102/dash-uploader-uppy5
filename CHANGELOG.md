@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expose `hide_upload_button` parameter in `Upload()` to hide the built-in upload button when supplying a custom one (
   pairs with `uploadTrigger`)
 - Add `disable_done_button` option to hide the Dashboard "Done" button after upload completes (12060ee)
+- Add `disable_status_bar` option to completely disable the status bar
 - Add `locale_string` option to override partial Dashboard locale strings (drop/paste hints and browse labels) (da1f7bd)
   - Add `LocaleStringConfig` Pydantic model; export from package `__init__.py`
   - Add `buildLocaleString` utility to merge only provided keys without overwriting Uppy defaults with `undefined`

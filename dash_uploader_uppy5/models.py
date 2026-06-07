@@ -28,6 +28,7 @@ class UploadConfig(BaseModel):
     allow_multiple_upload_batches: bool = Field(default=True, alias="allowMultipleUploadBatches")
     allowed_file_types: list[str] | None = Field(default=None, alias="allowedFileTypes")
     disable_done_button: bool = Field(default=False, alias="disableDoneButton")
+    disable_status_bar: bool = Field(default=False, alias="disableStatusBar")
     auto_proceed: bool = Field(default=False, alias="autoProceed")
     max_file_size: int | None = Field(default=1024 ** 3, alias="maxFileSize", description="in Bytes")
     min_file_size: int | None = Field(default=None, alias="minFileSize", description="in Bytes")

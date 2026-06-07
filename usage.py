@@ -28,6 +28,7 @@ app.layout = html.Div([
             hide_upload_button=True,
             hide_retry_button=True,
             hide_cancel_button=True,
+            disable_status_bar=True,
             max_number_of_files=10,
             note="hello!",
             locale_string={"dropPasteFiles": "Drop your files here"},

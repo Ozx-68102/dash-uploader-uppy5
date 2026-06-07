@@ -219,6 +219,9 @@ export interface UppyDashboard {
    */
   hideCancelButton?: boolean;
 
+  /**
+   * Disable the status bar completely.
+   */
   disableStatusBar?: boolean;
 }
 

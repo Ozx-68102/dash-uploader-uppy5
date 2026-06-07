@@ -18,6 +18,7 @@ _UPLOAD_API_FIELDS = [
     "allow_multiple_upload_batches",
     "allowed_file_types",
     "disable_done_button",
+    "disable_status_bar",
     "auto_proceed",
     "max_file_size",
     "min_file_size",
@@ -87,6 +88,7 @@ def Upload(
         allow_multiple_upload_batches: bool | object = _UNSET,
         allowed_file_types: list[str] | None | object = _UNSET,
         disable_done_button: bool | object = _UNSET,
+        disable_status_bar: bool | object = _UNSET,
         auto_proceed: bool | object = _UNSET,
         max_file_size: int | None | object = _UNSET,
         min_file_size: int | None | object = _UNSET,
@@ -123,6 +125,8 @@ def Upload(
         Defaults to None.
     disable_done_button: bool
         If True, it will not show a "done" button when the upload is done. Defaults to False.
+    disable_status_bar: bool
+        Disable the status bar completely. Defaults to False.
     auto_proceed : bool
         If True, it will upload as soon as files are added. Defaults to False.
     max_file_size : int or None
@@ -195,6 +199,7 @@ def Upload(
         "allow_multiple_upload_batches": allow_multiple_upload_batches,
         "allowed_file_types": allowed_file_types,
         "disable_done_button": disable_done_button,
+        "disable_status_bar": disable_status_bar,
         "auto_proceed": auto_proceed,
         "max_file_size": max_file_size,
         "min_file_size": min_file_size,

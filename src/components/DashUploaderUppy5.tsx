@@ -61,7 +61,7 @@ const DashUploaderUppy5 = (props: Props) => {
       hideUploadButton={props.hideUploadButton}
       hideRetryButton={props.hideRetryButton}
       hideCancelButton={props.hideCancelButton}
-      disableStatusBar={false}
+      disableStatusBar={props.disableStatusBar}
       hidePauseResumeButton={true}
       proudlyDisplayPoweredByUppy={false}
     />
