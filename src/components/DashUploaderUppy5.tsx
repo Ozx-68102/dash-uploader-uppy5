@@ -1,13 +1,19 @@
-import Uppy from '@uppy/core';
-import {useUppyEvent} from "@uppy/react";
-import Dashboard from '@uppy/react/dashboard';
-import React, {useState} from 'react';
-import Props from './types/Uploader';
-import CreateUppyInstance from './utils/createUppy';
+import Uppy from "@uppy/core";
+import Dashboard from "@uppy/react/dashboard";
+import React, {useEffect, useState} from "react";
+import Props, {TriggerStatus} from "./types/Uploader";
+import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
+import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
+import {useHandleUploadTrigger} from "./hooks/useHandleUploadTrigger";
+import {useHandleRetryTrigger} from "./hooks/useHandleRetryTrigger";
+import {useHandleCancelTrigger} from "./hooks/useHandleCancelTrigger";
+import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
+import buildLocaleString from "./utils/buildLocaleString";
+import {acquireHideDragOverHintStyle, releaseHideDragOverHintStyle} from "./utils/hideDragOverHintStyle";
 
-import '@uppy/core/css/style.min.css';
-import '@uppy/dashboard/css/style.min.css';
+import "@uppy/core/css/style.min.css";
+import "@uppy/dashboard/css/style.min.css";
 
 const isValidTheme = CreateStringUnionGuard(["auto", "dark", "light"] as const);
 const isValidSelectType = CreateStringUnionGuard(["files", "folders", "both"] as const);
@@ -18,37 +24,31 @@ const isValidSelectType = CreateStringUnionGuard(["files", "folders", "both"] as
 const DashUploaderUppy5 = (props: Props) => {
   const [uppy] = useState<Uppy>(() => CreateUppyInstance(props));
 
-  useUppyEvent(uppy, 'upload', () => {
-    if (!props.setProps) return;
-
-    props.setProps({ isUploading: true });
+  useSetupUppyEventHandlers(uppy, {
+    uploadId: props.uploadId,
+    setProps: props.setProps,
+    autoClearOnComplete: props.autoClearOnComplete,
   });
 
-  useUppyEvent(uppy, 'complete', (result) => {
-    if (!props.setProps) return;
+  const setTriggerStatus = (key: string) => (status: TriggerStatus) => {
+    if (props.setProps) props.setProps({[key]: status});
+  };
 
-    const uploadedFiles = result.successful?.map(f => ({
-      name: f.name,
-      size: f.size,
-      type: f.type,
-      upload_id: props.uploadId || '',
-      response: {
-        status: f.response?.status || 200,
-        filename: f.response?.body?.filename || f.name
-      }
-    }));
+  useHandleClearTrigger(uppy, props.clearTrigger, props.clearStatus, setTriggerStatus("clearStatus"));
+  useHandleUploadTrigger(uppy, props.uploadTrigger, props.uploadStatus, props.autoProceed, setTriggerStatus("uploadStatus"));
+  useHandleRetryTrigger(uppy, props.retryTrigger, props.retryStatus, props.autoClearOnComplete, setTriggerStatus("retryStatus"));
+  useHandleCancelTrigger(uppy, props.cancelTrigger, props.cancelStatus, setTriggerStatus("cancelStatus"));
 
-    const failedFiles = result.failed?.map(f => ({
-      name: f.name,
-      error: f.error || 'Unknown error'
-    }));
+  useEffect(() => {
+    const uploaderId = props.id;
+    if (!props.hideDragOverHint || !uploaderId) return;
 
-    props.setProps({
-      uploadedFiles,
-      failedFiles,
-      isUploading: false,
-    });
-  });
+    acquireHideDragOverHintStyle(uploaderId);
+
+    return () => {
+      releaseHideDragOverHintStyle(uploaderId);
+    };
+  }, [props.hideDragOverHint, props.id]);
 
   return (
     <Dashboard
@@ -62,16 +62,22 @@ const DashUploaderUppy5 = (props: Props) => {
       width={props.size?.width}
       height={props.size?.height}
 
+      locale={buildLocaleString(props.localeString)}
+
       hideProgressDetails={props.hideProgressDetails}
       disableThumbnailGenerator={props.disableThumbnailGenerator}
       waitForThumbnailsBeforeUpload={props.waitForThumbnailsBeforeUpload}
       showSelectedFiles={props.showSelectedFiles}
       singleFileFullScreen={props.singleFileFullScreen}
-      fileManagerSelectionType={isValidSelectType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined}
+      fileManagerSelectionType={
+        isValidSelectType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined
+      }
+      doneButtonHandler={props.disableDoneButton ? null : undefined}
 
-      hideUploadButton={false}
-      hideRetryButton={false}
-      hideCancelButton={false}
+      hideUploadButton={props.hideUploadButton}
+      hideRetryButton={props.hideRetryButton}
+      hideCancelButton={props.hideCancelButton}
+      disableStatusBar={props.disableStatusBar}
       hidePauseResumeButton={false}
       proudlyDisplayPoweredByUppy={false}
     />

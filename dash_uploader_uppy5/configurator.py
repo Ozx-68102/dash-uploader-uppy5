@@ -1,9 +1,10 @@
 import logging
 
-import dash_uploader_uppy5.settings as settings
-from dash_uploader_uppy5.upload import update_upload_uri
-from dash_uploader_uppy5.uploadhandler import UploadHandler
 from dash import Dash
+
+import dash_uploader_uppy5.settings as settings
+from dash_uploader_uppy5.uploadhandler import UploadHandler
+from dash_uploader_uppy5.utils import update_upload_uri
 
 logger = logging.getLogger("dash_uploader_uppy5")
 

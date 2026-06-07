@@ -21,7 +21,7 @@ pip install dash-uploader-uppy5
 
 ## Usage
 
-See [usage.py](https://github.com/Ozx-68102/dash-uploader-uppy5/blob/main/usage.py) or example below.
+See [usage.py](usage.py) or example below.
 
 ```python
 import dash
@@ -73,28 +73,96 @@ if __name__ == '__main__':
 ```
 
 ## API Parameters
-| Prop                                | Type in Python                      | Default           | Description                                                                                                                           |
-|-------------------------------------|-------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `id`                                | str                                 | "uppy5-uploader"  | The id of this component.                                                                                                             |
-| `upload_url`                        | str                                 | (Auto)            | The API endpoint (configured by `du.configurator`)                                                                                    |
-| `allow_multiple_upload_batches`     | bool                                | True              | Whether to allow several upload batches. Defaults to True.                                                                            |
-| `allowed_file_types`                | list[str]                           | None              | Wildcards ["image/*"], or exact MIME types ["image/jpeg"], or file extensions [".jpg"].                                               |
-| `auto_proceed`                      | bool                                | False             | If True, it will upload as soon as files are added.                                                                                   |
-| `max_file_size`                     | int                                 | 1024              | Maximum file size in **Megabytes** for each individual file.                                                                          |
-| `min_file_size`                     | int                                 | None              | Minimum file size in **Megabytes** for each individual file.                                                                          |
-| `max_total_file_size`               | int                                 | None              | Maximum file size in **Megabytes** for all the files that can be selected for upload.                                                 |
-| `max_number_of_files`               | int                                 | 1                 | Total number of files that can be selected.                                                                                           |
-| `min_number_of_files`               | int                                 | None              | Minimum number of files that must be selected before the upload.                                                                      |
-| `upload_id`                         | str                                 | str(uuid.uuid4()) | Custom upload session identifier (UUID by default). Affects subfolder creation via `use_upload_id` in `du.configurator()`.            |
-| `disabled`                          | bool                                | False             | Enabling this option makes the Dashboard grayed-out and non-interactive.                                                              |
-| `theme`                             | Literal["auto", "light", "dark"]    | "auto"            | Light or dark theme for the Dashboard. When it is set to `auto`, it will respect the user’s system settings and switch automatically. |
-| `note`                              | str                                 | None              | A string of text to be placed in the Dashboard UI.                                                                                    |
-| `size`                              | dict[str, int]                      | None              | Size of the Dashboard in pixels. It only accepts "width" and "height". Example: `{"width": 500, "height": 300}`.                      |
-| `hide_progress_details`             | bool                                | False             | Show or hide progress details in the status bar.                                                                                      |
-| `disable_thumbnail_generator`       | bool                                | True              | Disable the thumbnail generator completely.                                                                                           |
-| `wait_for_thumbnails_before_upload` | bool                                | False             | Show the list of added files with a preview and file information.                                                                     |
-| `single_file_full_screen`           | bool                                | False             | When only one file is selected, its preview and meta information will be centered and enlarged.                                       |
-| `file_manager_selection_type`       | Literal["files", "folders", "both"] | "files"           | Configure the type of selections allowed when browsing your file system via the file manager selection window.                        |
+
+| Prop                                | Type in Python                      | Default                               | Description                                                                                                                                                                                                                                                                                                           |
+|-------------------------------------|-------------------------------------|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`                                | str                                 | "uppy5-uploader"                      | The id of this component.                                                                                                                                                                                                                                                                                             |
+| `upload_url`                        | str                                 | (Auto)                                | The API endpoint (configured by `du.configurator`)                                                                                                                                                                                                                                                                    |
+| `allow_multiple_upload_batches`     | bool                                | True                                  | Whether to allow several upload batches. Defaults to True.                                                                                                                                                                                                                                                            |
+| `allowed_file_types`                | list[str]                           | None                                  | Wildcards ["image/*"], or exact MIME types ["image/jpeg"], or file extensions [".jpg"].                                                                                                                                                                                                                               |
+| `auto_proceed`                      | bool                                | False                                 | If True, uploads start as soon as files are added. Incompatible with `uploadTrigger` (returns error via `uploadStatus`).                                                                                                                                                                                              |
+| `max_file_size`                     | int                                 | 1024                                  | Maximum file size in **Megabytes** for each individual file.                                                                                                                                                                                                                                                          |
+| `min_file_size`                     | int                                 | None                                  | Minimum file size in **Megabytes** for each individual file.                                                                                                                                                                                                                                                          |
+| `max_total_file_size`               | int                                 | None                                  | Maximum file size in **Megabytes** for all the files that can be selected for upload.                                                                                                                                                                                                                                 |
+| `max_number_of_files`               | int                                 | 1                                     | Total number of files that can be selected.                                                                                                                                                                                                                                                                           |
+| `min_number_of_files`               | int                                 | None                                  | Minimum number of files that must be selected before the upload.                                                                                                                                                                                                                                                      |
+| `upload_id`                         | str                                 | str(uuid.uuid4())                     | Custom upload session identifier (UUID by default). Affects subfolder creation via `use_upload_id` in `du.configurator()`.                                                                                                                                                                                            |
+| `disabled`                          | bool                                | False                                 | Enabling this option makes the Dashboard grayed-out and non-interactive.                                                                                                                                                                                                                                              |
+| `theme`                             | Literal["auto", "light", "dark"]    | "auto"                                | Light or dark theme for the Dashboard. When it is set to `auto`, it will respect the user’s system settings and switch automatically.                                                                                                                                                                                 |
+| `note`                              | str                                 | None                                  | A string of text to be placed in the Dashboard UI.                                                                                                                                                                                                                                                                    |
+| `size`                              | dict[str, int \| str]               | `{"width": "100%", "height": "100%"}` | Size of the Dashboard. Accepts `"width"` and `"height"`. Defaults to filling the parent container instead of Uppy's built-in 650×500px. Use int for pixels, or a CSS length string (`"100%"`, `"75px"`, `"50vw"`, `"10rem"`, etc.). Examples: `{"width": 500, "height": 300}`, `{"width": "100%", "height": "75px"}`. |
+| `hide_progress_details`             | bool                                | False                                 | Show or hide progress details in the status bar.                                                                                                                                                                                                                                                                      |
+| `disable_thumbnail_generator`       | bool                                | True                                  | Disable the thumbnail generator completely.                                                                                                                                                                                                                                                                           |
+| `disable_done_button`               | bool                                | False                                 | Disable the Dashboard Done button.                                                                                                                                                                                                                                                                                    |
+| `disable_status_bar`                | bool                                | False                                 | Disable the status bar completely.                                                                                                                                                                                                                                                                                    |
+| `wait_for_thumbnails_before_upload` | bool                                | False                                 | Show the list of added files with a preview and file information.                                                                                                                                                                                                                                                     |
+| `show_selected_files`               | bool                                | True                                  | Show the list of added files with a preview and file information.                                                                                                                                                                                                                                                     |
+| `single_file_full_screen`           | bool                                | False                                 | When only one file is selected, its preview and meta information will be centered and enlarged.                                                                                                                                                                                                                       |
+| `locale_string`                     | dict[str, str]                      | None                                  | Partial Dashboard locale strings. Only provided keys override Uppy defaults; omitted keys keep built-in text. Keys use camelCase (e.g. `"dropPasteFiles"`, `"browseFiles"`). Example: `{"dropPasteFiles": "Drop your files here"}`.                                                                                   |
+| `file_manager_selection_type`       | Literal["files", "folders", "both"] | "files"                               | Configure the type of selections allowed when browsing your file system via the file manager selection window.                                                                                                                                                                                                        |
+| `hide_upload_button`                | bool                                | False                                 | Show or hide the upload button. Typically paired with a custom upload button using `uploadTrigger`. Only effective when `auto_proceed=False`.                                                                                                                                                                         |
+| `hide_retry_button`                 | bool                                | False                                 | Hide the retry button in the status bar and on each individual file. Typically paired with a custom retry button using `retryTrigger` (`retryAll()`). Hiding the button does not make `retryTrigger` work when `auto_clear_on_complete=True` (that combination returns error).                                        |
+| `hide_cancel_button`                | bool                                | False                                 | Hide the cancel button in the status bar and on each individual file. Typically paired with a custom cancel button using `cancelTrigger` (`cancelAll()`).                                                                                                                                                             |
+| `hide_drag_over_hint`               | bool                                | False                                 | **EXPERIMENTAL**: Hide the drag-over upward arrow hint animation (the blue dashed box with ↑ icon). Not an official Uppy feature and may break on future Uppy updates. Implemented by dynamically injecting a `<style>` rule via `useEffect`.                                                                         |
+| `auto_clear_on_complete`            | bool                                | False                                 | Automatically clear all files when an upload batch completes (Uppy `complete` event). `uploadedFiles` / `failedFiles` are reported before the UI resets. Cannot be used with Dashboard retry or `retryTrigger`.                                                                                                       |
+
+### About `locale_string`
+
+`locale_string` lets you override a **subset** of Uppy Dashboard drop/paste and browse labels from Python. Keys you omit
+keep Uppy’s built-in English defaults; only the keys you pass are replaced.
+
+This component exposes five string keys (camelCase,
+matching [Uppy Dashboard locale](https://uppy.io/docs/dashboard/#locale)):
+
+| Key                | Uppy default                                          |
+|--------------------|-------------------------------------------------------|
+| `dropPasteFiles`   | `Drop files here or %{browseFiles}`                   |
+| `dropPasteFolders` | `Drop files here or %{browseFolders}`                 |
+| `dropPasteBoth`    | `Drop files here, %{browseFiles} or %{browseFolders}` |
+| `browseFiles`      | `browse files`                                        |
+| `browseFolders`    | `browse folders`                                      |
+
+#### Placeholders
+
+Some default strings embed placeholders that Uppy replaces at render time:
+
+- `%{browseFiles}` — replaced with the text of `browseFiles` (typically rendered as a clickable “browse” link).
+- `%{browseFolders}` — replaced with the text of `browseFolders`.
+
+You may use these placeholders in your custom strings, or omit them entirely and supply plain text instead:
+
+```python
+# With placeholders (Uppy default style)
+du.Upload(
+    locale_string={
+        "dropPasteFiles": "Drop files here or %{browseFiles}",
+        "browseFiles": "browse files",
+    }
+)
+
+# Without placeholders (plain text is fine)
+du.Upload(
+    locale_string={
+        "dropPasteFiles": "Drop your files here",
+    }
+)
+```
+
+If you use placeholders, override the corresponding `browseFiles` / `browseFolders` key when you want to control that
+link text; otherwise Uppy keeps its default labels for those keys.
+
+#### Which keys are shown?
+
+The visible drop/paste tagline depends on `file_manager_selection_type`:
+
+| `file_manager_selection_type` | Keys used in the UI                             |
+|-------------------------------|-------------------------------------------------|
+| `"files"` (default)           | `dropPasteFiles`, `browseFiles`                 |
+| `"folders"`                   | `dropPasteFolders`, `browseFolders`             |
+| `"both"`                      | `dropPasteBoth`, `browseFiles`, `browseFolders` |
+
+You only need to override the keys that match your selection mode. Supplying extra keys (e.g. all five) is harmless —
+unused keys simply are not displayed and have no adverse effect.
 
 ## Callback Variables
 
@@ -154,6 +222,108 @@ A list of dictionaries representing files that failed to upload.
 
 - **name:** Original filename on user's disk.
 - **error:** Error message from Uppy or Server.
+
+### `clearTrigger`
+
+Write to this property from a Dash callback to clear all files in the uploader. Increment or change the value on each
+clear request (for example, use a button's `n_clicks`).
+
+**Type:** `int`
+
+**Usage:**
+
+```python
+@app.callback(
+    Output("uploader", "clearTrigger"),
+    Input("clear-btn", "n_clicks"),
+)
+def clear_uploader(n_clicks):
+    return n_clicks
+```
+
+### `clearStatus`
+
+Status returned after `clearTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
+the underlying clear operation. Use as `Input` to react to whether the trigger was accepted.
+
+**Type:** `dict[str, str | int | None]`
+
+**Structure:**
+
+```json
+{
+  "status": "success",
+  "errorMessage": null,
+  "attempt": 1
+}
+```
+
+- **status:** `"success"` or `"error"`.
+- **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
+- **attempt:** The trigger value that caused this status (ensures each trigger produces a distinct object, forcing Dash
+  to update even if `status` is unchanged).
+
+### `uploadTrigger`
+
+Write to this property from a Dash callback to manually start an upload. Only works when `auto_proceed=False`. Increment
+or change the value on each trigger request.
+
+**Type:** `int`
+
+**Usage:**
+
+```python
+@app.callback(
+    Output("uploader", "uploadTrigger"),
+    Input("upload-btn", "n_clicks"),
+)
+def trigger_manual_upload(n_clicks):
+    return n_clicks
+```
+
+### `uploadStatus`
+
+Status returned after `uploadTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
+the underlying upload. Use as `Input` to react to whether the trigger was accepted.
+
+**Type:** `dict[str, str | int | None]`
+
+**Structure:** Same as `clearStatus`.
+
+### `cancelTrigger`
+
+Write to this property from a Dash callback to cancel all uploads. Typically paired with `hide_cancel_button` when
+using a custom cancel button. Increment or change the value on each cancel request.
+
+**Type:** `int`
+
+**Usage:** Same as `uploadTrigger`.
+
+### `cancelStatus`
+
+Status returned after `cancelTrigger` is processed. This is a receipt for the trigger action itself.
+
+**Type:** `dict[str, str | int | None]`
+
+### `retryTrigger`
+
+Write to this property from a Dash callback to retry all failed uploads. Typically paired with `hide_retry_button` when
+using a custom retry button. Only retries failed files (`retryAll()`). Cannot be used when `auto_clear_on_complete=True`
+(returns error via `retryStatus`).
+
+**Type:** `int`
+
+**Usage:** Same as `uploadTrigger`.
+
+### `retryStatus`
+
+Status returned after `retryTrigger` is processed. This is a receipt for the trigger action itself.
+
+**Type:** `dict[str, str | int | None]`
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for the full changelog.
 
 ## Credits & Inspiration
 

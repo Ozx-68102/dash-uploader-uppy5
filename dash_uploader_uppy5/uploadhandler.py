@@ -15,11 +15,13 @@ class UploadHandler:
         self.folder = folder
         self.use_upload_id = use_upload_id
 
-    def get_secure_filename(self, filename: str) -> str:
+    def get_secure_filename(self, filename: str | None) -> str:
+        random_name = f"invalid_filename_{uuid4().hex[:10]}"
+        if filename is None: return random_name
+
         name = os.path.basename(filename)
         name = re.sub(r'[\\/:*?"<>|]', "_", name).strip().strip('.')
-
-        return f"invalid_filename_{uuid4().hex[:10]}" if not name else name
+        return name if name else random_name
 
     def resolve_upload_path(self, upload_id: str) -> str:
         if self.use_upload_id and upload_id:
@@ -41,7 +43,8 @@ class UploadHandler:
         if file.filename == '':
             return abort(400, 'No selected file')
 
-        upload_id = self.get_secure_filename(request.form.get('uploadId'))
+        raw_upload_id = request.form.get('uploadId')
+        upload_id = self.get_secure_filename(raw_upload_id) if raw_upload_id else ""
         target = self.resolve_upload_path(upload_id=upload_id)
         os.makedirs(target, exist_ok=True)
 
