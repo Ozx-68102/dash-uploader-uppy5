@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add `uploadTrigger` (Dash input) and `uploadOperation` (component response) for manual upload triggering via
+  `uppy.upload()` when `auto_proceed=False`
+  - Add `useHandleUploadTrigger` hook with defense: ignores trigger and returns error when `autoProceed=True`
+  - Add `OperationResult` TypeScript interface (renamed from `ClearOperation`); includes `attempt` field so each trigger
+    yields a distinct result and Dash callbacks always fire
+- Expose `hide_upload_button` parameter in `Upload()` to hide the built-in upload button when supplying a custom one (
+  pairs with `uploadTrigger`)
 - Add `disable_done_button` option to hide the Dashboard "Done" button after upload completes (12060ee)
 - Add `locale_string` option to override partial Dashboard locale strings (drop/paste hints and browse labels)
   - Add `LocaleStringConfig` Pydantic model; export from package `__init__.py`
@@ -41,8 +48,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Revert component generator command to `dash-generate-components` (ff47cf4)
 - Refine `upload_id` documentation and examples in README and `Upload()` docstring (cef5bf4)
 
+### Changed
+
+- Rename `ClearOperation` → `OperationResult` for reuse across `clearOperation` and `uploadOperation`
+
 ### Fixed
 
+- Prevent duplicate/accidental uploads when `auto_proceed=True` is combined with `uploadTrigger`:
+  - Python `UserWarning` emitted at `Upload()` construction time
+  - React `console.warn` + runtime rejection in hook (returns `{status:"error", attempt:N}`)
 - Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
 - Correct field name in `max_number_of_files` validator (`min_file_size` → `min_number_of_files`) (ed7ebbf)
 

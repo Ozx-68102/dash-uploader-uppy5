@@ -62,7 +62,7 @@ interface ResponseInfo {
   status: number;
 }
 
-export interface ClearOperation {
+export interface OperationResult {
   /**
    * Only is one of `"success"` and `"error"`.
    */
@@ -72,6 +72,13 @@ export interface ClearOperation {
    * Error details when `status` is `"error"`, otherwise `null`.
    */
   errorMessage: string | null;
+
+  /**
+   * The trigger value that caused this operation result.
+   * This ensures each trigger produces a distinct result object,
+   * forcing Dash to update the prop even when the status is the same.
+   */
+  attempt?: number;
 }
 
 export interface UppyCore {
@@ -194,6 +201,17 @@ export interface UppyDashboard {
    * omitted keys keep the built-in English text.
    */
   localeString?: LocaleStrings;
+
+  /**
+   * Show or hide the upload button. Use this if you are providing a custom upload button somewhere.
+   */
+  hideUploadButton?: boolean;
+
+  hideRetryButton?: boolean;
+
+  hideCancelButton?: boolean;
+
+  disableStatusBar?: boolean;
 }
 
 export interface UppyCallbacks {
@@ -229,7 +247,19 @@ export interface UppyCallbacks {
   /**
    * Result of the last clear operation. Emitted by the component after `clearTrigger` changes.
    */
-  clearOperation?: ClearOperation;
+  clearOperation?: OperationResult;
+
+  /**
+   * Increment or change this value from a Dash callback to manually trigger upload.
+   * Only works when `autoProceed` is `false`. When `autoProceed` is `true`, this trigger is ignored
+   * and an error is returned via `uploadOperation`.
+   */
+  uploadTrigger?: number;
+
+  /**
+   * Result of the last upload trigger operation. Emitted by the component after `uploadTrigger` changes.
+   */
+  uploadOperation?: OperationResult;
 }
 
 

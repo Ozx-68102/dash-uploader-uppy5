@@ -1,11 +1,11 @@
 import {useEffect, useRef} from "react";
 import Uppy from "@uppy/core";
-import {ClearOperation} from "../types/Uploader";
+import {OperationResult} from "../types/Uploader";
 
 export const useHandleClearTrigger = (
   uppy: Uppy,
   clearTrigger?: number,
-  onClearResult?: (result: ClearOperation) => void
+  onClearResult?: (result: OperationResult) => void
 ) => {
   const onClearResultRef = useRef(onClearResult);
   onClearResultRef.current = onClearResult;
@@ -18,12 +18,14 @@ export const useHandleClearTrigger = (
       onClearResultRef.current?.({
         status: "success",
         errorMessage: null,
+        attempt: clearTrigger,
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
       onClearResultRef.current?.({
         status: "error",
         errorMessage,
+        attempt: clearTrigger,
       });
     }
   }, [clearTrigger, uppy]);

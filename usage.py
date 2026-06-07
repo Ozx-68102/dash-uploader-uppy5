@@ -23,14 +23,15 @@ app.layout = html.Div([
     html.Div([
         du.Upload(
             id='uploader',
-            auto_proceed=True,
             upload_id=None,
             disable_done_button=False,
+            hide_upload_button=True,
             max_number_of_files=10,
             note="hello!",
             locale_string={"dropPasteFiles": "Drop your files here"},
         ),
         html.Button("Clear", id="clear-btn"),
+        html.Button("Manual Upload", id="upload-btn"),
     ], style={"width": 300, "height": 200}),
 
     html.Div(id="output-zone")
@@ -78,6 +79,26 @@ def test3(n_clicks: int):
 )
 def test4(clear_operation: dict | None):
     print(f"Clear result: {clear_operation}")
+    return no_update
+
+
+@app.callback(
+    Output("uploader", "uploadTrigger"),
+    Input("upload-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def test5(n_clicks: int):
+    print(f"Callback 5 Triggered ! Manual upload requested: {n_clicks}")
+    return n_clicks
+
+
+@app.callback(
+    Output("output-zone", "children", allow_duplicate=True),
+    Input("uploader", "uploadOperation"),
+    prevent_initial_call=True,
+)
+def test6(upload_operation: dict | None):
+    print(f"Upload trigger result: {upload_operation}")
     return no_update
 
 if __name__ == '__main__':

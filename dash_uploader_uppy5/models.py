@@ -48,6 +48,7 @@ class UploadConfig(BaseModel):
     file_manager_selection_type: Literal["files", "folders", "both"] = Field(
         default="files", alias="fileManagerSelectionType"
     )
+    hide_upload_button: bool = Field(default=False, alias="hideUploadButton")
 
     @field_validator("max_file_size", "min_file_size", "max_total_file_size", mode="before")
     @classmethod

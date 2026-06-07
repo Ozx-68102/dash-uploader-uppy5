@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import Props from "./types/Uploader";
 import {useSetupUppyEventHandlers} from "./hooks/useSetupUppyEventHandlers";
 import {useHandleClearTrigger} from "./hooks/useHandleClearTrigger";
+import {useHandleUploadTrigger} from "./hooks/useHandleUploadTrigger";
 import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 import buildLocaleString from "./utils/buildLocaleString";
@@ -24,6 +25,11 @@ const DashUploaderUppy5 = (props: Props) => {
   useHandleClearTrigger(uppy, props.clearTrigger, (result) => {
     if (props.setProps) {
       props.setProps({clearOperation: result});
+    }
+  });
+  useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, (result) => {
+    if (props.setProps) {
+      props.setProps({uploadOperation: result});
     }
   });
 
@@ -51,10 +57,11 @@ const DashUploaderUppy5 = (props: Props) => {
       }
       doneButtonHandler={props.disableDoneButton ? null : undefined}
 
-      hideUploadButton={false}
+      hideUploadButton={props.hideUploadButton}
       hideRetryButton={false}
       hideCancelButton={false}
-      hidePauseResumeButton={false}
+      disableStatusBar={false}
+      hidePauseResumeButton={true}
       proudlyDisplayPoweredByUppy={false}
     />
   );

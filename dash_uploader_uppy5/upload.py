@@ -1,3 +1,4 @@
+import warnings
 from inspect import Parameter, Signature
 from typing import Literal
 from uuid import uuid4
@@ -35,6 +36,7 @@ _UPLOAD_API_FIELDS = [
     "single_file_full_screen",
     "locale_string",
     "file_manager_selection_type",
+    "hide_upload_button",
 ]
 
 # Fields that require MB-to-bytes conversion (model stores bytes, API uses MB)
@@ -101,6 +103,7 @@ def Upload(
         single_file_full_screen: bool | object = _UNSET,
         locale_string: dict[str, str] | None | object = _UNSET,
         file_manager_selection_type: Literal["files", "folders", "both"] | object = _UNSET,
+        hide_upload_button: bool | object = _UNSET,
 ) -> DashUploaderUppy5:
     """
     A dash-uploader-uppy5 component.
@@ -164,6 +167,10 @@ def Upload(
         Examples: {"dropPasteFiles": "Drop your files here"}
     file_manager_selection_type: Literal["files", "folders", "both"],
         Configure the type of selections allowed when browsing your file system via the file manager selection window. Defaults to "files".
+    hide_upload_button: bool
+        Show or hide the upload button. Use this if you are providing a custom upload button somewhere
+        and are using `uploadTrigger` to manually trigger uploads. Only effective when `auto_proceed=False`.
+        Defaults to False.
 
     Returns
     -------
@@ -194,8 +201,22 @@ def Upload(
         "single_file_full_screen": single_file_full_screen,
         "locale_string": locale_string,
         "file_manager_selection_type": file_manager_selection_type,
+        "hide_upload_button": hide_upload_button,
     }
     overrides = {k: v for k, v in overrides.items() if v is not _UNSET}
+
+    # Runtime warning: hide_upload_button + auto_proceed=True is a conflicting combination
+    # because uploadTrigger only works when auto_proceed=False
+    auto_proceed = overrides.get("auto_proceed", False)
+    hide_upload_button = overrides.get("hide_upload_button", False)
+    if auto_proceed and hide_upload_button:
+        warnings.warn(
+            "`uploadTrigger` will not work because `auto_proceed=True`. "
+            "When `auto_proceed=True`, uploads start automatically when files are added. "
+            "Either set `auto_proceed=False` or do not use `hide_upload_button + uploadTrigger`.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
 
     # upload_id: business logic (None -> uuid4), not a model default
     upload_id = overrides.pop("upload_id", None) or str(uuid4())
