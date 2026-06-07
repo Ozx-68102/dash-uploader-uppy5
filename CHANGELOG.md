@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `.uppy-Dashboard-dropFilesHereHint`.
   Exposed in both Python `Upload()` and React `DashUploaderUppy5`. Marked EXPERIMENTAL in docs/comments as it is not an
   official Uppy feature and may break on future Uppy updates. (5ffcebb)
-- Add `auto_clear_on_complete` option to automatically clear files after a successful upload completes (5ffcebb)
+- Add `auto_clear_on_complete` option to automatically clear files when an upload batch completes (Uppy `complete`
+  event) (5ffcebb)
 - Add `disable_status_bar` option to completely disable the status bar (490026c)
 - Add `retryTrigger` / `retryOperation` and `cancelTrigger` / `cancelOperation` (Dash input/response) for custom
   retry/cancel buttons (ef257dd)
@@ -27,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `Triggers` interface for clearer separation of passive callbacks vs. active control triggers
 - Add `uploadTrigger` (Dash input) and `uploadOperation` (component response) for manual upload triggering via
   `uppy.upload()` when `auto_proceed=False` (59eb2e4)
-  - Add `useHandleUploadTrigger` hook with defense: ignores trigger and returns error when `autoProceed=True`
+  - Add `useHandleUploadTrigger` hook with defense: ignores trigger and returns error when `auto_proceed=True`
   - Also returns error when no files are queued
   - Add `OperationResult` TypeScript interface (renamed from `ClearOperation`); includes `attempt` field so each trigger
     yields a distinct result and Dash callbacks always fire
@@ -50,14 +51,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Clarify `auto_clear_on_complete`: clears files on the Uppy `complete` event; `uploadedFiles` / `failedFiles`
-  are reported to Dash before the UI resets
+  are reported to Dash before the UI resets (65dc111)
 - Rename `OperationResult` interface to `TriggerStatus` and update its documentation to clarify it is a receipt
-  for the trigger action itself, not the outcome of the underlying operation (e.g. file upload success/failure).
+  for the trigger action itself, not the outcome of the underlying operation (e.g. file upload success/failure)
+  (01809bf)
 - Rename Dash props: `clearOperation` → `clearStatus`, `uploadOperation` → `uploadStatus`,
-  `retryOperation` → `retryStatus`, `cancelOperation` → `cancelStatus`.
+  `retryOperation` → `retryStatus`, `cancelOperation` → `cancelStatus` (01809bf)
 - Rename internal hook parameters and refs from `on*Result` / `on*ResultRef` to `on*Status` / `on*StatusRef`
-  for naming consistency.
-- Update README.md Callback Variables section and `usage.py` examples to reflect the new field names.
+  for naming consistency (01809bf)
+- Update README.md Callback Variables section and `usage.py` examples to reflect the new field names (01809bf)
 - Refactor: extract repeated `setProps` callback pattern into a curried `setOperationResult` helper in
   `DashUploaderUppy5.tsx` (a47d2f8)
 - Refactor `Upload()` to use sentinel (`_UNSET`) pattern so Pydantic `default`/`default_factory` become the single
@@ -78,42 +80,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Remove construction-time `RuntimeWarning` for `auto_proceed=True` and `hide_upload_button=True`; `uploadTrigger`
-  rejection is handled at runtime (same pattern as `retryTrigger` / `auto_clear_on_complete`)
-- Use Python-facing names (`auto_clear_on_complete`, `auto_proceed`) in trigger error messages instead of React prop
-  names
-- Reject `retryTrigger` at runtime when `auto_clear_on_complete=True` (returns `{status:"error"}` via `retryStatus`);
-  remove construction-time warning tied to `hide_retry_button`
-- Fix `uploadStatus` timing: emit success immediately when `uploadTrigger` is accepted, instead of waiting for
-  `uppy.upload()` to resolve.
-- Emit `RuntimeWarning` at `Upload()` construction when `auto_clear_on_complete=True` is combined with
-  visible Dashboard retry (`hide_retry_button=False`); `retryTrigger` will be unavailable
-- Fix `hide_drag_over_hint` when multiple uploaders share the same page:
+- Align trigger conflict handling to runtime-only rejection (85c135b, 1bf0cf6, 9b824f6, 59eb2e4, d4c0714)
+  - Remove construction-time `RuntimeWarning` for `auto_proceed` + `uploadTrigger` and `auto_clear_on_complete` +
+    `retryTrigger`
+  - Reject `uploadTrigger` when `auto_proceed=True` or no files are queued; reject `retryTrigger` when
+    `auto_clear_on_complete=True` (returns `{status:"error"}` via `*Status`)
+  - Use Python-facing names (`auto_proceed`, `auto_clear_on_complete`) in trigger error messages
+  - Emit `uploadStatus` success immediately when `uploadTrigger` is accepted, not after `uppy.upload()` resolves
+- Fix `hide_drag_over_hint` when multiple uploaders share the same page (ec72b95)
   - Previously injected one global `<style>`; unmounting or disabling one instance removed the rule for all others
   - Extract style management to `hideDragOverHintStyle.ts`; scope CSS per component `id`
     (`#<id> .uppy-Dashboard-dropFilesHereHint`) so each uploader owns its style tag and mixed hide/show setups work
     independently
-- Fix `max_number_of_files` / `min_number_of_files` cross-field validation in `UploadConfig`:
+- Fix `max_number_of_files` / `min_number_of_files` cross-field validation in `UploadConfig` (f010fce)
   - Invalid pairs such as `max_number_of_files=1` with `min_number_of_files=5` could pass because the `@field_validator`
     on `max` ran before `min` was validated (Pydantic field order)
   - Move the `max >= min` check to `@model_validator(mode="after")` so both fields, including defaults, are resolved
     first
-- Prevent duplicate/accidental uploads when `auto_proceed=True` is combined with `uploadTrigger`:
-  - Python `RuntimeWarning` emitted at `Upload()` construction time
-  - Runtime rejection in hook (returns `{status:"error", attempt:N}`) (d4c0714)
 - Correct field name in `max_number_of_files` validator (`min_file_size` → `min_number_of_files`) (ed7ebbf)
 - Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
 
 ### Documentation
 
 - State that `auto_clear_on_complete` and retry (`retryTrigger` / Dashboard retry) cannot be used together
+  (1bf0cf6)
 - Clarify `auto_clear_on_complete` semantics and incompatibility with Dashboard retry / `retryTrigger` in
-  README, `Upload()` docstring, and TypeScript prop docs
+  README, `Upload()` docstring, and TypeScript prop docs (65dc111, 1bf0cf6)
 - Document the experimental `hide_drag_over_hint` prop in the API Parameters table of README.md. (5ffcebb)
 - Add changelog link section to README (0826ae1)
-- Document `disable_done_button`, `clearTrigger`, and `clearOperation` in README
+- Document `disable_done_button`, `clearTrigger`, and `clearStatus` in README
 - Cross-reference `auto_proceed` / `uploadTrigger` and `auto_clear_on_complete` / `retryTrigger` in README,
   `Upload()` docstring, and TypeScript prop docs; clarify `hide_*_button` as UI pairing (not a trigger prerequisite)
+  (85c135b)
 
 ## [0.2.1] - 2026-05-04
 
