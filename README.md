@@ -21,7 +21,7 @@ pip install dash-uploader-uppy5
 
 ## Usage
 
-See [usage.py](https://github.com/Ozx-68102/dash-uploader-uppy5/blob/main/usage.py) or example below.
+See [usage.py](usage.py) or example below.
 
 ```python
 import dash
@@ -252,6 +252,10 @@ clear success or failure.
 
 - **status:** `"success"` or `"error"`.
 - **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for the full changelog.
 
 ## Credits & Inspiration
 

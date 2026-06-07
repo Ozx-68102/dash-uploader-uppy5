@@ -23,7 +23,6 @@ classifiers = [
 dependencies = [
     "dash>=3.4.0",
     "pydantic>=2.13.4",
-    "pyrefly>=0.60.0",
 ]
 
 [project.urls]
