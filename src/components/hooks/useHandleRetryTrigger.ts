@@ -5,14 +5,21 @@ import {TriggerStatus} from "../types/Uploader";
 export const useHandleRetryTrigger = (
   uppy: Uppy,
   retryTrigger?: number,
+  retryStatus?: TriggerStatus,
   autoClearOnComplete?: boolean,
   onRetryStatus?: (status: TriggerStatus) => void
 ) => {
   const onRetryStatusRef = useRef(onRetryStatus);
   onRetryStatusRef.current = onRetryStatus;
+  const lastHandledTriggerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (retryTrigger === undefined || retryTrigger === null) return;
+    if (retryTrigger === undefined || retryTrigger === null || retryTrigger === 0) return;
+    if (lastHandledTriggerRef.current === retryTrigger || retryStatus?.attempt === retryTrigger) {
+      lastHandledTriggerRef.current = retryTrigger;
+      return;
+    }
+    lastHandledTriggerRef.current = retryTrigger;
 
     if (autoClearOnComplete) {
       onRetryStatusRef.current?.({
@@ -48,5 +55,5 @@ export const useHandleRetryTrigger = (
         attempt: retryTrigger,
       });
     }
-  }, [retryTrigger, uppy, autoClearOnComplete]);
+  }, [retryTrigger, retryStatus?.attempt, uppy, autoClearOnComplete]);
 };

@@ -34,10 +34,10 @@ const DashUploaderUppy5 = (props: Props) => {
     if (props.setProps) props.setProps({[key]: status});
   };
 
-  useHandleClearTrigger(uppy, props.clearTrigger, setTriggerStatus("clearStatus"));
-  useHandleUploadTrigger(uppy, props.uploadTrigger, props.autoProceed, setTriggerStatus("uploadStatus"));
-  useHandleRetryTrigger(uppy, props.retryTrigger, props.autoClearOnComplete, setTriggerStatus("retryStatus"));
-  useHandleCancelTrigger(uppy, props.cancelTrigger, setTriggerStatus("cancelStatus"));
+  useHandleClearTrigger(uppy, props.clearTrigger, props.clearStatus, setTriggerStatus("clearStatus"));
+  useHandleUploadTrigger(uppy, props.uploadTrigger, props.uploadStatus, props.autoProceed, setTriggerStatus("uploadStatus"));
+  useHandleRetryTrigger(uppy, props.retryTrigger, props.retryStatus, props.autoClearOnComplete, setTriggerStatus("retryStatus"));
+  useHandleCancelTrigger(uppy, props.cancelTrigger, props.cancelStatus, setTriggerStatus("cancelStatus"));
 
   useEffect(() => {
     const uploaderId = props.id;
@@ -78,7 +78,7 @@ const DashUploaderUppy5 = (props: Props) => {
       hideRetryButton={props.hideRetryButton}
       hideCancelButton={props.hideCancelButton}
       disableStatusBar={props.disableStatusBar}
-      hidePauseResumeButton={true}
+      hidePauseResumeButton={false}
       proudlyDisplayPoweredByUppy={false}
     />
   );

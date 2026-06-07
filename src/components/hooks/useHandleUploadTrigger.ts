@@ -5,14 +5,21 @@ import {TriggerStatus} from "../types/Uploader";
 export const useHandleUploadTrigger = (
   uppy: Uppy,
   uploadTrigger?: number,
+  uploadStatus?: TriggerStatus,
   autoProceed?: boolean,
   onUploadStatus?: (status: TriggerStatus) => void
 ) => {
   const onUploadStatusRef = useRef(onUploadStatus);
   onUploadStatusRef.current = onUploadStatus;
+  const lastHandledTriggerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (uploadTrigger === undefined || uploadTrigger === null) return;
+    if (uploadTrigger === undefined || uploadTrigger === null || uploadTrigger === 0) return;
+    if (lastHandledTriggerRef.current === uploadTrigger || uploadStatus?.attempt === uploadTrigger) {
+      lastHandledTriggerRef.current = uploadTrigger;
+      return;
+    }
+    lastHandledTriggerRef.current = uploadTrigger;
 
     // Defense: only allow manual trigger when autoProceed is false
     if (autoProceed) {
@@ -51,5 +58,5 @@ export const useHandleUploadTrigger = (
         attempt: uploadTrigger,
       });
     }
-  }, [uploadTrigger, uppy, autoProceed]);
+  }, [uploadTrigger, uploadStatus?.attempt, uppy, autoProceed]);
 };

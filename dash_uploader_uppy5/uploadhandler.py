@@ -43,7 +43,8 @@ class UploadHandler:
         if file.filename == '':
             return abort(400, 'No selected file')
 
-        upload_id = self.get_secure_filename(request.form.get('uploadId'))
+        raw_upload_id = request.form.get('uploadId')
+        upload_id = self.get_secure_filename(raw_upload_id) if raw_upload_id else ""
         target = self.resolve_upload_path(upload_id=upload_id)
         os.makedirs(target, exist_ok=True)
 

@@ -5,13 +5,20 @@ import {TriggerStatus} from "../types/Uploader";
 export const useHandleClearTrigger = (
   uppy: Uppy,
   clearTrigger?: number,
+  clearStatus?: TriggerStatus,
   onClearStatus?: (status: TriggerStatus) => void
 ) => {
   const onClearStatusRef = useRef(onClearStatus);
   onClearStatusRef.current = onClearStatus;
+  const lastHandledTriggerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (clearTrigger === undefined || clearTrigger === null) return;
+    if (clearTrigger === undefined || clearTrigger === null || clearTrigger === 0) return;
+    if (lastHandledTriggerRef.current === clearTrigger || clearStatus?.attempt === clearTrigger) {
+      lastHandledTriggerRef.current = clearTrigger;
+      return;
+    }
+    lastHandledTriggerRef.current = clearTrigger;
 
     try {
       uppy.clear();
@@ -28,5 +35,5 @@ export const useHandleClearTrigger = (
         attempt: clearTrigger,
       });
     }
-  }, [clearTrigger, uppy]);
+  }, [clearTrigger, clearStatus?.attempt, uppy]);
 };

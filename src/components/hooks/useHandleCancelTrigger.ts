@@ -5,13 +5,20 @@ import {TriggerStatus} from "../types/Uploader";
 export const useHandleCancelTrigger = (
   uppy: Uppy,
   cancelTrigger?: number,
+  cancelStatus?: TriggerStatus,
   onCancelStatus?: (status: TriggerStatus) => void
 ) => {
   const onCancelStatusRef = useRef(onCancelStatus);
   onCancelStatusRef.current = onCancelStatus;
+  const lastHandledTriggerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (cancelTrigger === undefined || cancelTrigger === null) return;
+    if (cancelTrigger === undefined || cancelTrigger === null || cancelTrigger === 0) return;
+    if (lastHandledTriggerRef.current === cancelTrigger || cancelStatus?.attempt === cancelTrigger) {
+      lastHandledTriggerRef.current = cancelTrigger;
+      return;
+    }
+    lastHandledTriggerRef.current = cancelTrigger;
 
     try {
       uppy.cancelAll();
@@ -28,5 +35,5 @@ export const useHandleCancelTrigger = (
         attempt: cancelTrigger,
       });
     }
-  }, [cancelTrigger, uppy]);
+  }, [cancelTrigger, cancelStatus?.attempt, uppy]);
 };

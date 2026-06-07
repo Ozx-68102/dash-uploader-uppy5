@@ -15,6 +15,9 @@ from .build._imports_ import __all__ as build_all
 # Defines all exposed APIs of this package.
 __all__ = [
     "configurator",
+    "UploadConfig",
+    "LocaleStringConfig",
+    "SizeConfig",
     "UploadHandler",
     "Upload",
 ]
