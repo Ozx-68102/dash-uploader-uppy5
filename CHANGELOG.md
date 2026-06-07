@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Prevent duplicate/accidental uploads when `auto_proceed=True` is combined with `uploadTrigger`:
   - Python `UserWarning` emitted at `Upload()` construction time
-  - React `console.warn` + runtime rejection in hook (returns `{status:"error", attempt:N}`)
+  - Runtime rejection in hook (returns `{status:"error", attempt:N}`)
 - Handle `None` filename in `UploadHandler.get_secure_filename` (2f38c6b)
 - Correct field name in `max_number_of_files` validator (`min_file_size` → `min_number_of_files`) (ed7ebbf)
 

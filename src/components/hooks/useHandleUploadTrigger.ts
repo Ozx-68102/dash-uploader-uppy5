@@ -11,24 +11,6 @@ export const useHandleUploadTrigger = (
   const onUploadResultRef = useRef(onUploadResult);
   onUploadResultRef.current = onUploadResult;
 
-  // Warn once when the component is used with autoProceed + uploadTrigger combination
-  const hasWarnedRef = useRef<boolean>(false);
-  useEffect(() => {
-    if (
-      autoProceed &&
-      uploadTrigger !== undefined &&
-      uploadTrigger !== null &&
-      !hasWarnedRef.current
-    ) {
-      console.warn(
-        "[DashUppy] uploadTrigger will not work because autoProceed is true. " +
-        "Uploads start automatically when files are added. " +
-        "Either set autoProceed=false or remove the uploadTrigger callback."
-      );
-      hasWarnedRef.current = true;
-    }
-  }, [autoProceed, uploadTrigger]);
-
   useEffect(() => {
     if (uploadTrigger === undefined || uploadTrigger === null) return;
 
