@@ -10,6 +10,7 @@ import {useHandleCancelTrigger} from "./hooks/useHandleCancelTrigger";
 import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 import buildLocaleString from "./utils/buildLocaleString";
+import {acquireHideDragOverHintStyle, releaseHideDragOverHintStyle} from "./utils/hideDragOverHintStyle";
 
 import "@uppy/core/css/style.min.css";
 import "@uppy/dashboard/css/style.min.css";
@@ -39,28 +40,15 @@ const DashUploaderUppy5 = (props: Props) => {
   useHandleCancelTrigger(uppy, props.cancelTrigger, setTriggerStatus("cancelStatus"));
 
   useEffect(() => {
-    if (!props.hideDragOverHint) return;
+    const uploaderId = props.id;
+    if (!props.hideDragOverHint || !uploaderId) return;
 
-    const styleId = "uppy-hide-dragover-hint";
-    let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;
-    if (!styleEl) {
-      styleEl = document.createElement("style");
-      styleEl.id = styleId;
-      document.head.appendChild(styleEl);
-    }
-    styleEl.textContent = `
-      .uppy-Dashboard-dropFilesHereHint {
-        background-image: none !important;
-        padding: 0 !important;
-      }
-    `;
+    acquireHideDragOverHintStyle(uploaderId);
 
     return () => {
-      if (styleEl && styleEl.parentNode) {
-        styleEl.parentNode.removeChild(styleEl);
-      }
+      releaseHideDragOverHintStyle(uploaderId);
     };
-  }, [props.hideDragOverHint]);
+  }, [props.hideDragOverHint, props.id]);
 
   return (
     <Dashboard

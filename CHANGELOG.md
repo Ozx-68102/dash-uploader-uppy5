@@ -76,6 +76,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix `hide_drag_over_hint` when multiple uploaders share the same page:
+  - Previously injected one global `<style>`; unmounting or disabling one instance removed the rule for all others
+  - Extract style management to `hideDragOverHintStyle.ts`; scope CSS per component `id`
+    (`#<id> .uppy-Dashboard-dropFilesHereHint`) so each uploader owns its style tag and mixed hide/show setups work
+    independently
 - Fix `max_number_of_files` / `min_number_of_files` cross-field validation in `UploadConfig`:
   - Invalid pairs such as `max_number_of_files=1` with `min_number_of_files=5` could pass because the `@field_validator`
     on `max` ran before `min` was validated (Pydantic field order)
