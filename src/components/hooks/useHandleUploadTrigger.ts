@@ -42,23 +42,15 @@ export const useHandleUploadTrigger = (
     }
 
     try {
-      // uploadStatus reflects uppy.upload() promise outcome; per-file results use uploadedFiles/failedFiles.
-      uppy.upload()
-        .then(() => {
-          onUploadStatusRef.current?.({
-            status: "success",
-            errorMessage: null,
-            attempt: uploadTrigger,
-          });
-        })
-        .catch((error) => {
-          const errorMessage = error instanceof Error ? error.message : "Unknown Upload Error";
-          onUploadStatusRef.current?.({
-            status: "error",
-            errorMessage,
-            attempt: uploadTrigger,
-          });
-        });
+      // Fire-and-forget: void = don't await; `.catch` (not `.then`) only guards against unhandled rejection.
+      // Upload outcomes are reported via uploadedFiles/failedFiles on the complete event.
+      void uppy.upload().catch(() => {
+      });
+      onUploadStatusRef.current?.({
+        status: "success",
+        errorMessage: null,
+        attempt: uploadTrigger,
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
       onUploadStatusRef.current?.({

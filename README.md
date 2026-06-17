@@ -283,12 +283,11 @@ def trigger_manual_upload(n_clicks):
 
 ### `uploadStatus`
 
-Status returned after `uploadTrigger` is processed and `uppy.upload()` settles (promise resolved or rejected).
-`success` means the upload batch promise resolved; `error` means the trigger was rejected (e.g. `auto_proceed=True`,
-no files queued), `uppy.upload()` rejected, or the call threw.
+Status returned after `uploadTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
+the upload. Use as `Input` to react to whether the trigger was accepted (e.g. `auto_proceed=True` or no files queued
+returns `error`).
 
-Per-file upload outcomes are still reported via `uploadedFiles` / `failedFiles` on the Uppy `complete` event. Use
-`uploadStatus` when you need batch-level feedback on the triggered `uppy.upload()` call itself.
+Per-file upload outcomes are reported via `uploadedFiles` / `failedFiles` on the Uppy `complete` event.
 
 **Type:** `dict[str, str | int | None]`
 

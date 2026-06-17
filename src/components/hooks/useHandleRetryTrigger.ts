@@ -31,22 +31,15 @@ export const useHandleRetryTrigger = (
     }
 
     try {
-      uppy.retryAll()
-        .then(() => {
-          onRetryStatusRef.current?.({
-            status: "success",
-            errorMessage: null,
-            attempt: retryTrigger,
-          });
-        })
-        .catch((error) => {
-          const errorMessage = error instanceof Error ? error.message : "Unknown Retry Error";
-          onRetryStatusRef.current?.({
-            status: "error",
-            errorMessage,
-            attempt: retryTrigger,
-          });
-        });
+      // Fire-and-forget: void = don't await; `.catch` (not `.then`) only guards against unhandled rejection.
+      // Retry outcomes are reported via uploadedFiles/failedFiles on the complete event.
+      void uppy.retryAll().catch(() => {
+      });
+      onRetryStatusRef.current?.({
+        status: "success",
+        errorMessage: null,
+        attempt: retryTrigger,
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown Error";
       onRetryStatusRef.current?.({

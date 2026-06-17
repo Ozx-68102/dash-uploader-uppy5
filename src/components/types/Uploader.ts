@@ -65,11 +65,9 @@ interface ResponseInfo {
 /**
  * Status object returned by trigger response props (`clearStatus`, `uploadStatus`, etc.).
  *
- * Semantics depend on which prop:
- * - `clearStatus`, `cancelStatus`, `retryStatus`: receipt for whether the trigger was accepted and the
- *   corresponding Uppy API was invoked.
- * - `uploadStatus`: result of the `uppy.upload()` promise after `uploadTrigger` is accepted.
- *   Per-file outcomes are still reported via `uploadedFiles` / `failedFiles` (Uppy `complete` event).
+ * Receipt for whether the trigger was accepted and the corresponding Uppy API was invoked.
+ * Upload/retry outcomes are reported separately via `uploadedFiles` / `failedFiles`
+ * (Uppy `complete` event).
  *
  * The `attempt` field echoes the trigger value so each trigger produces a distinct update,
  * ensuring Dash callbacks always fire even if `status` stays the same.
@@ -77,14 +75,13 @@ interface ResponseInfo {
 export interface TriggerStatus {
   /**
    * One of `"success"` or `"error"`.
-   * For `uploadStatus`, reflects whether `uppy.upload()` resolved or rejected.
-   * For other `*Status` props, means the trigger was accepted and the action was invoked.
+   * `success` means the trigger was accepted and the action was invoked.
    */
   status: string;
 
   /**
    * Error details when `status` is `"error"`, otherwise `null`.
-   * For `uploadStatus`, may include promise rejection or pre-upload validation errors.
+   * Includes pre-action validation errors (e.g. `auto_proceed=True`, no files queued).
    */
   errorMessage: string | null;
 
@@ -301,9 +298,8 @@ export interface Triggers {
   uploadTrigger?: number;
 
   /**
-   * Status returned after `uploadTrigger` is processed and `uppy.upload()` settles.
-   * `success` when the upload promise resolves; `error` on validation failure, promise rejection, or thrown error.
-   * Per-file results are reported separately via `uploadedFiles` / `failedFiles`.
+   * Status returned after `uploadTrigger` is processed.
+   * See `TriggerStatus` for semantics.
    */
   uploadStatus?: TriggerStatus;
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Align `uploadStatus` and `retryStatus` with other `*Status` props: receipt for whether the trigger was accepted and
+  the corresponding Uppy API was invoked, not the async upload/retry outcome (reported via `uploadedFiles` /
+  `failedFiles`)
+
 ## [0.3.0] - 2026-06-08
 
 ### Added
