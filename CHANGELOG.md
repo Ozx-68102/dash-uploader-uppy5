@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the corresponding Uppy API was invoked, not the async upload/retry outcome (reported via `uploadedFiles` /
   `failedFiles`) (9d16437a)
 
+### Documentation
+
+- Expand README Trigger Properties docs for Dash callback integration: split from Callback Variables; document
+  `*Trigger`/`*Status` Output/Input pairing, shared status receipt structure, `du.Upload()` setup per trigger, error
+  conditions, and callback examples (`prevent_initial_call`, `allow_duplicate`)
+- Rephrase trigger-related API parameter and `failedFiles` wording for Dash users (remove internal API names)
+
 ## [0.3.0] - 2026-06-08
 
 ### Added

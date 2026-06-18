@@ -21,7 +21,7 @@ pip install dash-uploader-uppy5
 
 ## Usage
 
-See [usage.py](usage.py) or example below.
+See [usage.py](https://github.com/Ozx-68102/dash-uploader-uppy5/blob/main/usage.py) or example below.
 
 ```python
 import dash
@@ -101,10 +101,10 @@ if __name__ == '__main__':
 | `locale_string`                     | dict[str, str]                      | None                                  | Partial Dashboard locale strings. Only provided keys override Uppy defaults; omitted keys keep built-in text. Keys use camelCase (e.g. `"dropPasteFiles"`, `"browseFiles"`). Example: `{"dropPasteFiles": "Drop your files here"}`.                                                                                   |
 | `file_manager_selection_type`       | Literal["files", "folders", "both"] | "files"                               | Configure the type of selections allowed when browsing your file system via the file manager selection window.                                                                                                                                                                                                        |
 | `hide_upload_button`                | bool                                | False                                 | Show or hide the upload button. Typically paired with a custom upload button using `uploadTrigger`. Only effective when `auto_proceed=False`.                                                                                                                                                                         |
-| `hide_retry_button`                 | bool                                | False                                 | Hide the retry button in the status bar and on each individual file. Typically paired with a custom retry button using `retryTrigger` (`retryAll()`). Hiding the button does not make `retryTrigger` work when `auto_clear_on_complete=True` (that combination returns error).                                        |
-| `hide_cancel_button`                | bool                                | False                                 | Hide the cancel button in the status bar and on each individual file. Typically paired with a custom cancel button using `cancelTrigger` (`cancelAll()`).                                                                                                                                                             |
+| `hide_retry_button`                 | bool                                | False                                 | Hide the retry button in the status bar and on each individual file. Typically paired with a custom retry button using `retryTrigger`. Hiding the button does not make `retryTrigger` work when `auto_clear_on_complete=True` (that combination returns error).                                                       |
+| `hide_cancel_button`                | bool                                | False                                 | Hide the cancel button in the status bar and on each individual file. Typically paired with a custom cancel button using `cancelTrigger`.                                                                                                                                                                             |
 | `hide_drag_over_hint`               | bool                                | False                                 | **EXPERIMENTAL**: Hide the drag-over upward arrow hint animation (the blue dashed box with ↑ icon). Not an official Uppy feature and may break on future Uppy updates. Implemented by dynamically injecting a `<style>` rule via `useEffect`.                                                                         |
-| `auto_clear_on_complete`            | bool                                | False                                 | Automatically clear all files when an upload batch completes (Uppy `complete` event). `uploadedFiles` / `failedFiles` are reported before the UI resets. Cannot be used with Dashboard retry or `retryTrigger`.                                                                                                       |
+| `auto_clear_on_complete`            | bool                                | False                                 | Automatically clear all files when an upload batch completes. `uploadedFiles` / `failedFiles` are reported before the UI resets. Cannot be used with Dashboard retry or `retryTrigger`.                                                                                                                               |
 
 ### About `locale_string`
 
@@ -166,8 +166,7 @@ unused keys simply are not displayed and have no adverse effect.
 
 ## Callback Variables
 
-These properties are read-only and updated by the components upon upload events. Use them in `Input` to trigger Dash callbacks.
-
+Read-only properties updated by the component when upload state changes. Use them as `Input` in Dash callbacks.
 
 ### `isUploading`
 
@@ -221,7 +220,64 @@ A list of dictionaries representing files that failed to upload.
 ```
 
 - **name:** Original filename on user's disk.
-- **error:** Error message from Uppy or Server.
+- **error:** Error message from the component or upload server.
+
+## Trigger Properties
+
+Use these properties to drive uploader actions from your own buttons or other Dash callbacks.
+
+| Role              | Dash direction                   | Properties                                                       |
+|-------------------|----------------------------------|------------------------------------------------------------------|
+| Send a command    | `Output("uploader", "*Trigger")` | `clearTrigger`, `uploadTrigger`, `cancelTrigger`, `retryTrigger` |
+| Receive a receipt | `Input("uploader", "*Status")`   | `clearStatus`, `uploadStatus`, `cancelStatus`, `retryStatus`     |
+
+Increment or change the trigger value on each request (a button's `n_clicks` works well). The value `0` does not
+trigger an action. Add `prevent_initial_call=True` on trigger callbacks so the initial `n_clicks=None` does not fire on
+page load.
+
+**Component setup** — pair `du.Upload()` options with the trigger you use:
+
+```python
+# Manual upload button (uploadTrigger)
+du.Upload(id="uploader", auto_proceed=False, hide_upload_button=True)
+
+# Custom cancel button (cancelTrigger)
+du.Upload(id="uploader", hide_cancel_button=True)
+
+# Custom retry button (retryTrigger) — requires auto_clear_on_complete=False
+du.Upload(id="uploader", hide_retry_button=True, auto_clear_on_complete=False)
+```
+
+`clearTrigger` works with default `du.Upload()` settings; no extra options required.
+
+**Status error conditions** — when `status` is `"error"`, check `errorMessage`:
+
+| Status prop                   | Cause                                                              |
+|-------------------------------|--------------------------------------------------------------------|
+| `uploadStatus`                | `auto_proceed=True` on the uploader, or no files queued for upload |
+| `retryStatus`                 | `auto_clear_on_complete=True` on the uploader                      |
+| `clearStatus`, `cancelStatus` | Unexpected failure only (no validation rules)                      |
+
+**Status receipt structure** (all `*Status` properties share this shape):
+
+```json
+{
+  "status": "success",
+  "errorMessage": null,
+  "attempt": 1
+}
+```
+
+- **status:** `"success"` or `"error"`.
+- **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
+- **attempt:** The trigger value that produced this receipt. Echoes your `*Trigger` value so Dash fires the status
+  callback even when `status` is unchanged.
+
+A `*Status` receipt confirms whether the command was accepted, not the final upload or retry outcome. For per-file
+results, use `uploadedFiles` / `failedFiles`. For in-progress state, use `isUploading`.
+
+If several callbacks write to the same `Output` (e.g. multiple `*Status` handlers updating one `html.Div`), add
+`allow_duplicate=True` on that `Output`, as in the examples below.
 
 ### `clearTrigger`
 
@@ -236,6 +292,7 @@ clear request (for example, use a button's `n_clicks`).
 @app.callback(
     Output("uploader", "clearTrigger"),
     Input("clear-btn", "n_clicks"),
+  prevent_initial_call=True,
 )
 def clear_uploader(n_clicks):
     return n_clicks
@@ -243,30 +300,29 @@ def clear_uploader(n_clicks):
 
 ### `clearStatus`
 
-Status returned after `clearTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
-the underlying clear operation. Use as `Input` to react to whether the trigger was accepted.
+Receipt returned after `clearTrigger` is processed. Use as `Input` to react when a clear command is handled.
+`status: "success"` means the uploader was cleared.
 
 **Type:** `dict[str, str | int | None]`
 
-**Structure:**
+**Structure:** See [Status receipt structure](#trigger-properties) above.
 
-```json
-{
-  "status": "success",
-  "errorMessage": null,
-  "attempt": 1
-}
+**Usage:**
+
+```python
+@app.callback(
+  Output("output-zone", "children", allow_duplicate=True),
+  Input("uploader", "clearStatus"),
+  prevent_initial_call=True,
+)
+def on_clear_status(clear_status: dict | None):
+  return clear_status["errorMessage"] if clear_status and clear_status["status"] == "error" else no_update
 ```
-
-- **status:** `"success"` or `"error"`.
-- **errorMessage:** Error details when `status` is `"error"`, otherwise `null`.
-- **attempt:** The trigger value that caused this status (ensures each trigger produces a distinct object, forcing Dash
-  to update even if `status` is unchanged).
 
 ### `uploadTrigger`
 
-Write to this property from a Dash callback to manually start an upload. Only works when `auto_proceed=False`. Increment
-or change the value on each trigger request.
+Write to this property from a Dash callback to manually start an upload. Only works when `auto_proceed=False` (see
+[Component setup](#trigger-properties) above). Increment or change the value on each trigger request.
 
 **Type:** `int`
 
@@ -276,6 +332,7 @@ or change the value on each trigger request.
 @app.callback(
     Output("uploader", "uploadTrigger"),
     Input("upload-btn", "n_clicks"),
+  prevent_initial_call=True,
 )
 def trigger_manual_upload(n_clicks):
     return n_clicks
@@ -283,50 +340,118 @@ def trigger_manual_upload(n_clicks):
 
 ### `uploadStatus`
 
-Status returned after `uploadTrigger` is processed. This is a receipt for the trigger action itself, not the outcome of
-the upload. Use as `Input` to react to whether the trigger was accepted (e.g. `auto_proceed=True` or no files queued
-returns `error`).
+Receipt returned after `uploadTrigger` is processed. Use as `Input` to react to whether the upload command was accepted
+(e.g. `auto_proceed=True` or no files queued returns `error`). A `success` receipt means the upload was started, not
+that it finished.
 
-Per-file upload outcomes are reported via `uploadedFiles` / `failedFiles` on the Uppy `complete` event.
+Per-file upload outcomes are reported via `uploadedFiles` / `failedFiles` when the upload batch completes. Use
+`isUploading` to track progress.
 
 **Type:** `dict[str, str | int | None]`
 
-**Structure:** Same as `clearStatus`.
+**Structure:** See [Status receipt structure](#trigger-properties) above.
+
+**Usage:**
+
+```python
+@app.callback(
+  Output("output-zone", "children", allow_duplicate=True),
+  Input("uploader", "uploadStatus"),
+  prevent_initial_call=True,
+)
+def on_upload_status(upload_status: dict | None):
+  return upload_status["errorMessage"] if upload_status and upload_status["status"] == "error" else no_update
+```
 
 ### `cancelTrigger`
 
 Write to this property from a Dash callback to cancel all uploads. Typically paired with `hide_cancel_button` when
-using a custom cancel button. Increment or change the value on each cancel request.
+using a custom cancel button (see [Component setup](#trigger-properties) above). Increment or change the value on each
+cancel request.
 
 **Type:** `int`
 
-**Usage:** Same as `uploadTrigger`.
+**Usage:**
+
+```python
+@app.callback(
+  Output("uploader", "cancelTrigger"),
+  Input("cancel-btn", "n_clicks"),
+  prevent_initial_call=True,
+)
+def trigger_cancel(n_clicks):
+  return n_clicks
+```
 
 ### `cancelStatus`
 
-Status returned after `cancelTrigger` is processed. This is a receipt for the trigger action itself.
+Receipt returned after `cancelTrigger` is processed. Use as `Input` to react when a cancel command is handled.
 
 **Type:** `dict[str, str | int | None]`
+
+**Structure:** See [Status receipt structure](#trigger-properties) above.
+
+**Usage:**
+
+```python
+@app.callback(
+  Output("output-zone", "children", allow_duplicate=True),
+  Input("uploader", "cancelStatus"),
+  prevent_initial_call=True,
+)
+def on_cancel_status(cancel_status: dict | None):
+  return cancel_status["errorMessage"] if cancel_status and cancel_status["status"] == "error" else no_update
+```
 
 ### `retryTrigger`
 
 Write to this property from a Dash callback to retry all failed uploads. Typically paired with `hide_retry_button` when
-using a custom retry button. Only retries failed files (`retryAll()`). Cannot be used when `auto_clear_on_complete=True`
-(returns error via `retryStatus`).
+using a custom retry button (see [Component setup](#trigger-properties) above). Only retries files that failed in the
+previous batch. Cannot be used when `auto_clear_on_complete=True` (returns error via `retryStatus`; see
+[Status error conditions](#trigger-properties) above).
 
 **Type:** `int`
 
-**Usage:** Same as `uploadTrigger`.
+**Usage:**
+
+```python
+@app.callback(
+  Output("uploader", "retryTrigger"),
+  Input("retry-btn", "n_clicks"),
+  prevent_initial_call=True,
+)
+def trigger_retry(n_clicks):
+  return n_clicks
+```
 
 ### `retryStatus`
 
-Status returned after `retryTrigger` is processed. This is a receipt for the trigger action itself.
+Receipt returned after `retryTrigger` is processed. Use as `Input` to react to whether the retry command was accepted
+(e.g. `auto_clear_on_complete=True` returns `error`). A `success` receipt means the retry was started, not that it
+finished.
+
+Per-file retry outcomes are reported via `uploadedFiles` / `failedFiles` when the upload batch completes. Use
+`isUploading` to track progress.
 
 **Type:** `dict[str, str | int | None]`
 
+**Structure:** See [Status receipt structure](#trigger-properties) above.
+
+**Usage:**
+
+```python
+@app.callback(
+  Output("output-zone", "children", allow_duplicate=True),
+  Input("uploader", "retryStatus"),
+  prevent_initial_call=True,
+)
+def on_retry_status(retry_status: dict | None):
+  return retry_status["errorMessage"] if retry_status and retry_status["status"] == "error" else no_update
+```
+
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for the full changelog.
+See [CHANGELOG.md](https://github.com/Ozx-68102/dash-uploader-uppy5/blob/main/CHANGELOG.md) for the full changelog.
 
 ## Credits & Inspiration
 
