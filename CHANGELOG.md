@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-06-23
+
 ### Changed
 
 - Align `uploadStatus` and `retryStatus` with other `*Status` props: receipt for whether the trigger was accepted and
