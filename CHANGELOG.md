@@ -217,4 +217,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-This changelog was generated from git history and existing tags (`v0.1.0`, `v0.1.1`, `v0.2.0`, `v0.2.1`, `v0.3.0`).
+This changelog was generated from git history and existing tags (e.g. `v0.1.0`).
