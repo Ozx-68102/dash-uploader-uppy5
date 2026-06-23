@@ -10,7 +10,7 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
 authors = [
-    {name = "Zhixin Ou", email = "ozx1072960726@gmail.com"}
+    { name = "Zhixin Ou" }
 ]
 keywords = ["dash", "plotly", "uppy", "file-upload", "react", "flask", "streaming"]
 classifiers = [
@@ -26,7 +26,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepages = "https://github.com/Ozx-68102/dash-uploader-uppy5"
+Homepage = "https://github.com/Ozx-68102/dash-uploader-uppy5"
 Repository = "https://github.com/Ozx-68102/dash-uploader-uppy5"
 Issues = "https://github.com/Ozx-68102/dash-uploader-uppy5/issues"
 
