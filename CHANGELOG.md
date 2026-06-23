@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix PyPI package metadata: use `Homepage` (not `Homepages`) in `[project.urls]` so Home Page displays on PyPI and
-  pypistats; use name-only `authors` entries so Author displays correctly
+  pypistats; use name-only `authors` entries so Author displays correctly (d83fa6db)
 
 ### Documentation
 

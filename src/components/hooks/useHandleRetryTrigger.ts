@@ -19,6 +19,7 @@ export const useHandleRetryTrigger = (
       lastHandledTriggerRef.current = retryTrigger;
       return;
     }
+
     lastHandledTriggerRef.current = retryTrigger;
 
     if (autoClearOnComplete) {

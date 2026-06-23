@@ -2,6 +2,7 @@ from inspect import Parameter, Signature
 from typing import Literal
 from uuid import uuid4
 
+from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 import dash_uploader_uppy5.settings as settings
@@ -47,7 +48,7 @@ _UPLOAD_API_FIELDS = [
 _SIZE_FIELDS_MB = {"max_file_size", "min_file_size", "max_total_file_size"}
 
 
-def _get_public_default(field_name: str, field_info):
+def _get_public_default(field_name: str, field_info: FieldInfo):
     if field_name in _SIZE_FIELDS_MB:
         # These fields are stored as bytes in the model, but shown as MB in the public API
         if field_info.default is not PydanticUndefined:

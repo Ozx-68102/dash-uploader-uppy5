@@ -23,7 +23,5 @@ export const acquireHideDragOverHintStyle = (uploaderId: string): void => {
 
 export const releaseHideDragOverHintStyle = (uploaderId: string): void => {
   const styleEl = document.getElementById(styleIdForUploader(uploaderId));
-  if (styleEl?.parentNode) {
-    styleEl.parentNode.removeChild(styleEl);
-  }
+  if (styleEl?.parentNode) styleEl.parentNode.removeChild(styleEl);
 };
