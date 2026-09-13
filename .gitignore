@@ -1,0 +1,78 @@
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Operating System & Editor Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.swp
+
+# Python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+sdist/
+wheels/
+
+# Testing & code quality caches
+.cache
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints
+
+
+# Node.js
+# Dependencies
+node_modules/
+jspm_packages/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs & framework artifacts
+/dist/
+/build/
+.next/
+.nuxt/
+.output/
+
+# Caches & tool artifacts
+.npm
+.eslintcache
+.stylelintcache
+.node_repl_history
+*.tgz
+.yarn/cache
+.pnpm-store/
