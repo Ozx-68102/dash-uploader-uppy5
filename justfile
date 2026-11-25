@@ -25,6 +25,19 @@ install:
 package: clean build
     python -m build --wheel
 
+# Format TypeScript (oxfmt) and Python (ruff).
+format:
+    pnpm run format
+    uv run ruff format
+
+# Check formatting and lint without writing changes.
+check:
+    pnpm run format:check
+    pnpm run lint
+    pnpm run typecheck
+    uv run ruff format --check
+    uv run ruff check
+
 # Publish the package to pypi using twine.
 publish: package
     twine upload dist/*
