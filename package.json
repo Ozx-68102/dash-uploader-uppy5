@@ -19,7 +19,10 @@
     "build": "pnpm run build:js && pnpm run build:py && pnpm run build:postpy",
     "watch": "pnpm run build:js::dev -- --watch",
     "dist": "python -m build --sdist --wheel --outdir dist/",
-    "format": "prettier --write src --ignore-path=.prettierignore"
+    "format": "oxfmt src webpack.config.ts",
+    "format:check": "oxfmt --check src webpack.config.ts",
+    "lint": "oxlint src",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
@@ -27,7 +30,8 @@
     "@types/react-dom": "^18.3.7",
     "css-loader": "^7.1.2",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.7.4",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
     "react-docgen": "^8.0.2",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.4",
