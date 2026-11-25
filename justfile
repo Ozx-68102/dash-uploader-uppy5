@@ -23,7 +23,7 @@ install:
 
 # Package the application for distribution using python wheel.
 package: clean build
-    python -m build --wheel
+    uv run python -m build --wheel
 
 # Format TypeScript (oxfmt) and Python (ruff).
 format:
@@ -40,7 +40,7 @@ check:
 
 # Publish the package to pypi using twine.
 publish: package
-    twine upload dist/*
+    uv run twine upload dist/*
 
 # Remove dist & build directories
 clean:
