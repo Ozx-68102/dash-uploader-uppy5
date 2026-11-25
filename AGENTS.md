@@ -64,6 +64,10 @@ Stop and ask before you:
 - Work that changes an option, a callback or a dependency goes on a branch, not straight to `main`.
 - In `CHANGELOG.md`, end each entry with the first 8 characters of the commit hash in parentheses, for example `(9d16437a)`. Add the entry under `## [Unreleased]` and use Keep a Changelog headings (Added, Changed, Fixed, Documentation).
 
+## Working without prompting
+
+When a task needs facts from the code, the web or the machine, read, search or run the command yourself in the same turn. Do not report that you have not checked something and wait for the user to ask. Report only what you could not check after trying, with the error you got.
+
 ## Writing
 
 Before you write any text for a person to read, find the humanizer skill in `~/.agents/skills/humanizer/` and load it. Replies, commit messages, docs and comments all go through it. If you cannot find it, say so and do not write or edit any file.
