@@ -21,6 +21,10 @@ install:
     uv sync
     pnpm install
 
+# Make git blame skip the formatting-only commits (run once per clone).
+setup-git-blame:
+    sh scripts/setup-git-blame.sh
+
 # Package the application for distribution using python wheel.
 package: clean build
     uv run python -m build --wheel

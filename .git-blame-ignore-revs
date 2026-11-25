@@ -1,0 +1,5 @@
+# Formatting-only commits, skipped by `git blame`.
+# Enable locally with: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# style: format TypeScript with oxfmt and Python with ruff
+36bce73cf1d6fec9412ade6f1ceb9ad3296f900f
