@@ -2,7 +2,6 @@ import Uppy from "@uppy/core";
 import XHRUpload from "@uppy/xhr-upload";
 import {UppyCore} from "../types/Uploader";
 
-
 const createUppy = (props: UppyCore) => {
   const {
     uploadUrl: endpoint,
@@ -14,7 +13,7 @@ const createUppy = (props: UppyCore) => {
     maxNumberOfFiles,
     minNumberOfFiles,
     allowedFileTypes,
-    uploadId
+    uploadId,
   } = props;
 
   const uppy = new Uppy({
@@ -36,11 +35,11 @@ const createUppy = (props: UppyCore) => {
     debug: false,
   });
 
-  uppy.setMeta({ uploadId });
+  uppy.setMeta({uploadId});
 
   uppy.use(XHRUpload, {
     endpoint,
-    fieldName: 'file',
+    fieldName: "file",
   });
 
   return uppy;

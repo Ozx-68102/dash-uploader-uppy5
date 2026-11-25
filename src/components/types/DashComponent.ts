@@ -10,15 +10,15 @@
  * order of props with types concatenation.
  */
 type DashComponentProps = {
-    /**
-     * Unique ID to identify this component in Dash callbacks.
-     */
-    id?: string;
+  /**
+   * Unique ID to identify this component in Dash callbacks.
+   */
+  id?: string;
 
-    /**
-     * Update props to trigger callbacks.
-     */
-    setProps: (props: Record<string, any>) => void;
-}
+  /**
+   * Update props to trigger callbacks.
+   */
+  setProps: (props: Record<string, any>) => void;
+};
 
 export default DashComponentProps;

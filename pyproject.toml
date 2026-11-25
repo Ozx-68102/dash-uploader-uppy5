@@ -48,6 +48,7 @@ dev = [
 
 [tool.ruff]
 target-version = "py313"
+line-length = 100
 exclude = [
     ".agents",
     ".cursor",
@@ -83,6 +84,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+"dash_uploader_uppy5/upload.py" = ["E501"]  # Long lines in the user-facing Upload() docstring
+"usage.py" = ["E501"]  # Long setup instructions in the demo comments
 
 [tool.ruff.format]
 quote-style = "double"

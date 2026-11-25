@@ -7,7 +7,7 @@ export const useHandleUploadTrigger = (
   uploadTrigger?: number,
   uploadStatus?: TriggerStatus,
   autoProceed?: boolean,
-  onUploadStatus?: (status: TriggerStatus) => void
+  onUploadStatus?: (status: TriggerStatus) => void,
 ) => {
   const onUploadStatusRef = useRef(onUploadStatus);
   onUploadStatusRef.current = onUploadStatus;
@@ -15,7 +15,10 @@ export const useHandleUploadTrigger = (
 
   useEffect(() => {
     if (uploadTrigger === undefined || uploadTrigger === null || uploadTrigger === 0) return;
-    if (lastHandledTriggerRef.current === uploadTrigger || uploadStatus?.attempt === uploadTrigger) {
+    if (
+      lastHandledTriggerRef.current === uploadTrigger ||
+      uploadStatus?.attempt === uploadTrigger
+    ) {
       lastHandledTriggerRef.current = uploadTrigger;
       return;
     }
@@ -25,7 +28,8 @@ export const useHandleUploadTrigger = (
     if (autoProceed) {
       onUploadStatusRef.current?.({
         status: "error",
-        errorMessage: "Cannot use uploadTrigger when auto_proceed is True. Uploads start automatically when files are added.",
+        errorMessage:
+          "Cannot use uploadTrigger when auto_proceed is True. Uploads start automatically when files are added.",
         attempt: uploadTrigger,
       });
       return;
@@ -44,8 +48,7 @@ export const useHandleUploadTrigger = (
     try {
       // Fire-and-forget: void = don't await; `.catch` (not `.then`) only guards against unhandled rejection.
       // Upload outcomes are reported via uploadedFiles/failedFiles on the complete event.
-      void uppy.upload().catch(() => {
-      });
+      void uppy.upload().catch(() => {});
       onUploadStatusRef.current?.({
         status: "success",
         errorMessage: null,

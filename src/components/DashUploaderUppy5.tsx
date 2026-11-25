@@ -10,7 +10,10 @@ import {useHandleCancelTrigger} from "./hooks/useHandleCancelTrigger";
 import CreateUppyInstance from "./utils/createUppy";
 import CreateStringUnionGuard from "./utils/createStringUnionGuard";
 import buildLocaleString from "./utils/buildLocaleString";
-import {acquireHideDragOverHintStyle, releaseHideDragOverHintStyle} from "./utils/hideDragOverHintStyle";
+import {
+  acquireHideDragOverHintStyle,
+  releaseHideDragOverHintStyle,
+} from "./utils/hideDragOverHintStyle";
 
 import "@uppy/core/css/style.min.css";
 import "@uppy/dashboard/css/style.min.css";
@@ -34,10 +37,32 @@ const DashUploaderUppy5 = (props: Props) => {
     if (props.setProps) props.setProps({[key]: status});
   };
 
-  useHandleClearTrigger(uppy, props.clearTrigger, props.clearStatus, setTriggerStatus("clearStatus"));
-  useHandleUploadTrigger(uppy, props.uploadTrigger, props.uploadStatus, props.autoProceed, setTriggerStatus("uploadStatus"));
-  useHandleRetryTrigger(uppy, props.retryTrigger, props.retryStatus, props.autoClearOnComplete, setTriggerStatus("retryStatus"));
-  useHandleCancelTrigger(uppy, props.cancelTrigger, props.cancelStatus, setTriggerStatus("cancelStatus"));
+  useHandleClearTrigger(
+    uppy,
+    props.clearTrigger,
+    props.clearStatus,
+    setTriggerStatus("clearStatus"),
+  );
+  useHandleUploadTrigger(
+    uppy,
+    props.uploadTrigger,
+    props.uploadStatus,
+    props.autoProceed,
+    setTriggerStatus("uploadStatus"),
+  );
+  useHandleRetryTrigger(
+    uppy,
+    props.retryTrigger,
+    props.retryStatus,
+    props.autoClearOnComplete,
+    setTriggerStatus("retryStatus"),
+  );
+  useHandleCancelTrigger(
+    uppy,
+    props.cancelTrigger,
+    props.cancelStatus,
+    setTriggerStatus("cancelStatus"),
+  );
 
   useEffect(() => {
     const uploaderId = props.id;
@@ -70,7 +95,9 @@ const DashUploaderUppy5 = (props: Props) => {
       showSelectedFiles={props.showSelectedFiles}
       singleFileFullScreen={props.singleFileFullScreen}
       fileManagerSelectionType={
-        isValidSelectType(props.fileManagerSelectionType) ? props.fileManagerSelectionType : undefined
+        isValidSelectType(props.fileManagerSelectionType)
+          ? props.fileManagerSelectionType
+          : undefined
       }
       doneButtonHandler={props.disableDoneButton ? null : undefined}
 
@@ -82,6 +109,6 @@ const DashUploaderUppy5 = (props: Props) => {
       proudlyDisplayPoweredByUppy={false}
     />
   );
-}
+};
 
 export default DashUploaderUppy5;

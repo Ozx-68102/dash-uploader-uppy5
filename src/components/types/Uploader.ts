@@ -1,10 +1,9 @@
-import DashComponentProps from './DashComponent';
+import DashComponentProps from "./DashComponent";
 
 // Many API descriptions comes from here:
 // https://uppy.io/docs/uppy/
 // and here:
 // https://uppy.io/docs/dashboard/
-
 
 interface DashboardSize {
   /**
@@ -330,8 +329,6 @@ export interface Triggers {
   retryStatus?: TriggerStatus;
 }
 
-
 type Props = UppyCore & UppyDashboard & UppyCallbacks & DashComponentProps & Triggers;
-
 
 export default Props;

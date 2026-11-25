@@ -5,21 +5,22 @@ import sys as _sys
 import dash as _dash
 
 from dash_uploader_uppy5.configurator import configurator
-from dash_uploader_uppy5.models import UploadConfig, LocaleStringConfig, SizeConfig
+from dash_uploader_uppy5.models import LocaleStringConfig, SizeConfig, UploadConfig
 from dash_uploader_uppy5.upload import Upload
 from dash_uploader_uppy5.uploadhandler import UploadHandler
+
 # noinspection PyUnresolvedReferences
-from .build._imports_ import *  # noqa: F403,F401
+from .build._imports_ import *  # noqa: F403
 from .build._imports_ import __all__ as build_all
 
 # Defines all exposed APIs of this package.
 __all__ = [
-    "configurator",
-    "UploadConfig",
     "LocaleStringConfig",
     "SizeConfig",
-    "UploadHandler",
     "Upload",
+    "UploadConfig",
+    "UploadHandler",
+    "configurator",
 ]
 
 if not hasattr(_dash, "development"):
@@ -44,7 +45,11 @@ _current_path = _os.path.dirname(_os.path.abspath(__file__))
 _this_module = _sys.modules[__name__]
 _js_dist = [
     {"relative_package_path": "build/dash_uploader_uppy5.js", "namespace": package_name},
-    {"relative_package_path": "build/dash_uploader_uppy5.js.map", "namespace": package_name, "dynamic": True},
+    {
+        "relative_package_path": "build/dash_uploader_uppy5.js.map",
+        "namespace": package_name,
+        "dynamic": True,
+    },
     {"dev_package_path": "build/proptypes.js", "dev_only": True, "namespace": package_name},
 ]
 

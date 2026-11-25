@@ -4,7 +4,7 @@ import re
 import traceback
 from uuid import uuid4
 
-from flask import request, abort, jsonify, Response
+from flask import Response, abort, jsonify, request
 from werkzeug.datastructures import FileStorage
 
 logger = logging.getLogger(__name__)
@@ -17,10 +17,11 @@ class UploadHandler:
 
     def get_secure_filename(self, filename: str | None) -> str:
         random_name = f"invalid_filename_{uuid4().hex[:10]}"
-        if filename is None: return random_name
+        if filename is None:
+            return random_name
 
         name = os.path.basename(filename)
-        name = re.sub(r'[\\/:*?"<>|]', "_", name).strip().strip('.')
+        name = re.sub(r'[\\/:*?"<>|]', "_", name).strip().strip(".")
         return name if name else random_name
 
     def resolve_upload_path(self, upload_id: str) -> str:
@@ -36,14 +37,14 @@ class UploadHandler:
         return filename
 
     def upload(self) -> Response:
-        if 'file' not in request.files:
-            return abort(400, 'No file part')
+        if "file" not in request.files:
+            return abort(400, "No file part")
 
-        file = request.files['file']
-        if file.filename == '':
-            return abort(400, 'No selected file')
+        file = request.files["file"]
+        if file.filename == "":
+            return abort(400, "No selected file")
 
-        raw_upload_id = request.form.get('uploadId')
+        raw_upload_id = request.form.get("uploadId")
         upload_id = self.get_secure_filename(raw_upload_id) if raw_upload_id else ""
         target = self.resolve_upload_path(upload_id=upload_id)
         os.makedirs(target, exist_ok=True)
@@ -54,4 +55,4 @@ class UploadHandler:
             logger.error(traceback.format_exc())
             return abort(500, str(e))
 
-        return jsonify({'status': 'ok', 'filename': saved_filename})
+        return jsonify({"status": "ok", "filename": saved_filename})

@@ -1,6 +1,14 @@
 from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, field_serializer, model_validator, ValidationInfo
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    ValidationInfo,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
 
 
 class SizeConfig(BaseModel):
@@ -30,9 +38,11 @@ class UploadConfig(BaseModel):
     disable_done_button: bool = Field(default=False, alias="disableDoneButton")
     disable_status_bar: bool = Field(default=False, alias="disableStatusBar")
     auto_proceed: bool = Field(default=False, alias="autoProceed")
-    max_file_size: int | None = Field(default=1024 ** 3, alias="maxFileSize", description="in Bytes")
+    max_file_size: int | None = Field(default=1024**3, alias="maxFileSize", description="in Bytes")
     min_file_size: int | None = Field(default=None, alias="minFileSize", description="in Bytes")
-    max_total_file_size: int | None = Field(default=None, alias="maxTotalFileSize", description="in Bytes")
+    max_total_file_size: int | None = Field(
+        default=None, alias="maxTotalFileSize", description="in Bytes"
+    )
     max_number_of_files: int | None = Field(default=1, alias="maxNumberOfFiles")
     min_number_of_files: int | None = Field(default=None, alias="minNumberOfFiles")
     upload_id: str | None = Field(default=None, alias="uploadId")
@@ -42,7 +52,9 @@ class UploadConfig(BaseModel):
     size: SizeConfig = Field(default_factory=SizeConfig)
     hide_progress_details: bool = Field(default=False, alias="hideProgressDetails")
     disable_thumbnail_generator: bool = Field(default=True, alias="disableThumbnailGenerator")
-    wait_for_thumbnails_before_upload: bool = Field(default=False, alias="waitForThumbnailsBeforeUpload")
+    wait_for_thumbnails_before_upload: bool = Field(
+        default=False, alias="waitForThumbnailsBeforeUpload"
+    )
     show_selected_files: bool = Field(default=True, alias="showSelectedFiles")
     single_file_full_screen: bool = Field(default=False, alias="singleFileFullScreen")
     locale_string: LocaleStringConfig | None = Field(default=None, alias="localeString")
@@ -60,7 +72,7 @@ class UploadConfig(BaseModel):
     @field_validator("max_file_size", "min_file_size", "max_total_file_size", mode="before")
     @classmethod
     def convert_mb_to_bytes(cls, v: int | None) -> int | None:
-        return v * 1024 ** 2 if v is not None else None
+        return v * 1024**2 if v is not None else None
 
     @field_validator("max_number_of_files", "min_number_of_files")
     @classmethod
@@ -74,9 +86,9 @@ class UploadConfig(BaseModel):
     @model_validator(mode="after")
     def validate_file_count_range(self) -> Self:
         if (
-                self.max_number_of_files is not None
-                and self.min_number_of_files is not None
-                and self.max_number_of_files < self.min_number_of_files
+            self.max_number_of_files is not None
+            and self.min_number_of_files is not None
+            and self.max_number_of_files < self.min_number_of_files
         ):
             raise ValueError(
                 "`max_number_of_files` must be greater than or equal to `min_number_of_files`."

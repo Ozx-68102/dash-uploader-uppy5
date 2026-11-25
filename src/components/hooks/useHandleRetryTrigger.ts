@@ -7,7 +7,7 @@ export const useHandleRetryTrigger = (
   retryTrigger?: number,
   retryStatus?: TriggerStatus,
   autoClearOnComplete?: boolean,
-  onRetryStatus?: (status: TriggerStatus) => void
+  onRetryStatus?: (status: TriggerStatus) => void,
 ) => {
   const onRetryStatusRef = useRef(onRetryStatus);
   onRetryStatusRef.current = onRetryStatus;
@@ -25,7 +25,8 @@ export const useHandleRetryTrigger = (
     if (autoClearOnComplete) {
       onRetryStatusRef.current?.({
         status: "error",
-        errorMessage: "Cannot use retryTrigger when auto_clear_on_complete is True. Failed files are cleared on complete.",
+        errorMessage:
+          "Cannot use retryTrigger when auto_clear_on_complete is True. Failed files are cleared on complete.",
         attempt: retryTrigger,
       });
       return;
@@ -34,8 +35,7 @@ export const useHandleRetryTrigger = (
     try {
       // Fire-and-forget: void = don't await; `.catch` (not `.then`) only guards against unhandled rejection.
       // Retry outcomes are reported via uploadedFiles/failedFiles on the complete event.
-      void uppy.retryAll().catch(() => {
-      });
+      void uppy.retryAll().catch(() => {});
       onRetryStatusRef.current?.({
         status: "success",
         errorMessage: null,

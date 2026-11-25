@@ -6,7 +6,7 @@ export const useHandleClearTrigger = (
   uppy: Uppy,
   clearTrigger?: number,
   clearStatus?: TriggerStatus,
-  onClearStatus?: (status: TriggerStatus) => void
+  onClearStatus?: (status: TriggerStatus) => void,
 ) => {
   const onClearStatusRef = useRef(onClearStatus);
   onClearStatusRef.current = onClearStatus;

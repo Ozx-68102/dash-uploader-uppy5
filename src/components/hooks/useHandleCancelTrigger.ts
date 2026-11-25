@@ -6,7 +6,7 @@ export const useHandleCancelTrigger = (
   uppy: Uppy,
   cancelTrigger?: number,
   cancelStatus?: TriggerStatus,
-  onCancelStatus?: (status: TriggerStatus) => void
+  onCancelStatus?: (status: TriggerStatus) => void,
 ) => {
   const onCancelStatusRef = useRef(onCancelStatus);
   onCancelStatusRef.current = onCancelStatus;
@@ -14,7 +14,10 @@ export const useHandleCancelTrigger = (
 
   useEffect(() => {
     if (cancelTrigger === undefined || cancelTrigger === null || cancelTrigger === 0) return;
-    if (lastHandledTriggerRef.current === cancelTrigger || cancelStatus?.attempt === cancelTrigger) {
+    if (
+      lastHandledTriggerRef.current === cancelTrigger ||
+      cancelStatus?.attempt === cancelTrigger
+    ) {
       lastHandledTriggerRef.current = cancelTrigger;
       return;
     }

@@ -7,31 +7,31 @@ export const useSetupUppyEventHandlers = (
     uploadId?: string;
     setProps?: (props: Record<string, any>) => void;
     autoClearOnComplete?: boolean;
-  }
+  },
 ) => {
-  useUppyEvent(uppy, 'upload', () => {
+  useUppyEvent(uppy, "upload", () => {
     if (!props.setProps) return;
 
     props.setProps({isUploading: true});
   });
 
-  useUppyEvent(uppy, 'complete', (result) => {
+  useUppyEvent(uppy, "complete", (result) => {
     if (!props.setProps) return;
 
-    const uploadedFiles = result.successful?.map(f => ({
+    const uploadedFiles = result.successful?.map((f) => ({
       name: f.name,
       size: f.size,
       type: f.type,
-      upload_id: props.uploadId || '',
+      upload_id: props.uploadId || "",
       response: {
         status: f.response?.status || 200,
-        filename: f.response?.body?.filename || f.name
-      }
+        filename: f.response?.body?.filename || f.name,
+      },
     }));
 
-    const failedFiles = result.failed?.map(f => ({
+    const failedFiles = result.failed?.map((f) => ({
       name: f.name,
-      error: f.error || 'Unknown error'
+      error: f.error || "Unknown error",
     }));
 
     props.setProps({

@@ -1,6 +1,5 @@
-import shutil
 import os
-
+import shutil
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent
@@ -17,7 +16,7 @@ generated_files = [
     "package-info.json",
     "proptypes.js",
     "dash_uploader_uppy5.js",
-    "dash_uploader_uppy5.js.LICENSE.txt"
+    "dash_uploader_uppy5.js.LICENSE.txt",
 ]
 
 print(f"Moving generated files to {build_dir}...")
