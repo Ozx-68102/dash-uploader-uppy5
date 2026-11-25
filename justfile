@@ -2,24 +2,24 @@ set dotenv-load := false
 
 # Generate components and build the bundle
 build:
-    npm run build
+    pnpm run build
 
 # Build the webpack bundle
 build-js:
-    npm run build:js
+    pnpm run build:js
 
 # Generate the components
 generate:
-    npm run build:backends
+    pnpm run build:py
 
 # Rebuild the bundle on change
 watch:
-    npm run watch
+    pnpm run watch
 
-# Install  pip requirements & node modules.
+# Install Python and Node dependencies.
 install:
-    pip install -r requirements.txt
-    npm install
+    uv sync
+    pnpm install
 
 # Package the application for distribution using python wheel.
 package: clean build
@@ -33,3 +33,4 @@ publish: package
 clean:
     rm -rf dist
     rm -rf build
+    rm -rf dash_uploader_uppy5/build
